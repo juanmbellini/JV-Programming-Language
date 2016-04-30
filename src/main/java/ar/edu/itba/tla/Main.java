@@ -3,6 +3,7 @@ package ar.edu.itba.tla;
 import org.apache.commons.cli.*;
 
 public class Main {
+    private static String NAME = "cafe";
     public static void main(String[] args) {
         CommandLineParser parser = new DefaultParser();
         Options options = getCommandLineOptions();
@@ -10,10 +11,10 @@ public class Main {
         try {
             CommandLine line = parser.parse(options, args);
             if (line.hasOption("h")) {
-                formatter.printHelp("cafe", options);
+                formatter.printHelp(NAME, options);
             }
         } catch (ParseException e) {
-            formatter.printHelp("cafe", options);
+            formatter.printHelp(NAME, options);
         }
     }
 

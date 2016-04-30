@@ -3,8 +3,10 @@ version '0.0.1'
 
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'application'
 
 sourceCompatibility = 1.5
+mainClassName = "ar.edu.itba.tla.Main"
 
 repositories {
     mavenCentral()

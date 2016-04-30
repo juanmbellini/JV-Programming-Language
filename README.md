@@ -17,3 +17,11 @@ From the root of the repository run:
 ```
 ./gradlew eclipse
 ```
+## Running from console
+```
+./gradlew run
+```
+## Packaging for distribution
+```
+./gradlew assembleDist
+```

@@ -26,6 +26,20 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 %eofval}
 
 
+/*
+  Macro Declarations
+  
+  These declarations are regular expressions that will be used latter
+  in the Lexical Rules Section.  
+*/
+   
+/* A line terminator is a \r (carriage return), \n (line feed), or
+   \r\n. */
+LineTerminator = \r|\n|\r\n
+   
+/* White space is a line terminator, space, tab, or line feed. */
+WhiteSpace     = {LineTerminator} | [ \t\f]
+
 %%
 "dd"            { return symbol(sym.DO); }
 "whl"         { return symbol(sym.WHILE); }

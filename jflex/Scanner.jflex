@@ -25,12 +25,30 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
     return sf.newSymbol("EOF",sym.EOF);
 %eofval}
 
+
 %%
-";" { return symbol("Semicolon",sym.SEMI); }
-"+" { return symbol("Plus",sym.PLUS); }
-"*" { return symbol("Times",sym.TIMES); }
-"(" { return symbol("Left Bracket",sym.LPAREN); }
-")" { return symbol("Right Bracket",sym.RPAREN); }
-[0-9]+ { return symbol("Integral Number",sym.NUMBER, new Integer(yytext())); }
-[ \t\r\n\f] { /* ignore white space. */ }
+"do"            { return symbol(sym.DO); }
+"while"         { return symbol(sym.WHILE); }
+"ff"            { return symbol(sym.IF); }
+"ls"            { return symbol(sym.ELSE); }
+"+" 			{ return symbol(sym.PLUS); }
+"*" 			{ return symbol(sym.TIMES); }
+"-"             { return newSym(sym.MINUS); }
+"/"             { return newSym(sym.DIVIDE); }
+"(" 			{ return symbol("Left Bracket",sym.LPAREN); }
+")" 			{ return symbol("Right Bracket",sym.RPAREN); }
+"="             { return newSym(sym.EQ); }
+"<"             { return newSym(sym.GTR); }
+">"             { return newSym(sym.LESS); }
+"<="            { return newSym(sym.LESS_EQ); }
+">="            { return newSym(sym.GTR_EQ); }
+"!="            { return newSym(sym.NOT_EQ); }
+[0-9]+ 			{ return symbol("Integral Number",sym.NUMBER, new Integer(yytext())); }
+
+"int"           { return symbol("Int" , sym.INT); }
+
+"true"          { return symbol("True", sym.BOOLEAN_LITERAL, new Boolean(true)); }
+"false"         { return symbol("False", sym.BOOLEAN_LITERAL, new Boolean(false)); }
 . { System.err.println("Illegal character: "+yytext()); }
+
+

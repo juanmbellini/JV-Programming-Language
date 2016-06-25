@@ -63,8 +63,28 @@ parser code {:
     }
 :}
 
-terminal SEMI, PLUS, TIMES, LPAREN, RPAREN, DO, WHILE, IF, ELSE, MINUS, DIVIDE, EQ, GTR, LESS, LESS_EQ, GTR_EQ, NOT_EQ; 
+terminal SEMI;
+terminal PLUS;
+terminal TIMES;
+terminal LPAREN;
+terminal RPAREN; 
+terminal DO;
+terminal WHILE;
+terminal IF;
+terminal ELSE;
+terminal MINUS; 
+terminal DIVIDE;
+terminal EQ;
+terminal GTR;
+terminal LESS;
+terminal LESS_EQ;
+terminal GTR_EQ; 
+terminal NOT_EQ; 
 terminal Integer NUMBER;
+
+
+
+
 
 non terminal expr_list, expr_part;
 non terminal Expr expr;
@@ -86,6 +106,8 @@ non terminal EXP_BOOL;
 non terminal TERM_BOOL;
 non terminal FACT_BOOL;
 non terminal COMPARATOR;
+non terminal BOOL_RESULT;
+non terminal NUM_RESULT;
 
 
 

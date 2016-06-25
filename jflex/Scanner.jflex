@@ -27,8 +27,8 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 
 
 %%
-"do"            { return symbol(sym.DO); }
-"while"         { return symbol(sym.WHILE); }
+"dd"            { return symbol(sym.DO); }
+"whl"         { return symbol(sym.WHILE); }
 "ff"            { return symbol(sym.IF); }
 "ls"            { return symbol(sym.ELSE); }
 "+" 			{ return symbol(sym.PLUS); }
@@ -37,13 +37,25 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 "/"             { return newSym(sym.DIVIDE); }
 "(" 			{ return symbol("Left Bracket",sym.LPAREN); }
 ")" 			{ return symbol("Right Bracket",sym.RPAREN); }
-"="             { return newSym(sym.EQ); }
+"=="             { return newSym(sym.EQ); }
 "<"             { return newSym(sym.GTR); }
 ">"             { return newSym(sym.LESS); }
 "<="            { return newSym(sym.LESS_EQ); }
 ">="            { return newSym(sym.GTR_EQ); }
 "!="            { return newSym(sym.NOT_EQ); }
 [0-9]+ 			{ return symbol("Integral Number",sym.NUMBER, new Integer(yytext())); }
+
+"rd"
+"wv"
+"wr"
+"nl"
+" "
+"||"
+"&&"
+"\n"
+"\t"
+
+
 
 "int"           { return symbol("Int" , sym.INT); }
 

@@ -1,0 +1,10 @@
+mn
+	wr Ingrese el numero al que le quiere calcular el factorial:
+	int nro
+	rd nro
+	int res nro
+	whl nro > 0
+		res res * (nro - 1)
+		nro nro - 1
+	wr El factorial es: 
+	wv res

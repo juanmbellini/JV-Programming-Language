@@ -14,13 +14,20 @@ rd-wr-nl-wv	---> read-write-newline-writevar
 
 
 mn
-	str foo  Hola Mundo
-	wv foo
-	wr Ingrese un numero: 
-	int nro
-	rd nro
-	wr El numero es
+	str ex_str_1  Hola Mundo
+	int ex_int_1 22
+	str ex_str_2
+	int ex_int_2
+
+	wv ex_str_1 // Imprime la variable "Hola Mundo"
+	wr Ingrese un numero: // Imprime "Ingrese un numero: "
+	ex_int_2 42 // seteo 42 a la variable numerica.
+	ex_str_2 Chau // setea Chau a la variable string.
+	
+	str ex_str_3
+	rd ex_str_3
 	nl
+	wr El numero es 
 	wr nro
 
 

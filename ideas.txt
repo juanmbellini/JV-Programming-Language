@@ -13,13 +13,6 @@ rd-wr-nl-wv	---> read-write-newline-writevar
 
 
 
-mn:
-	str foo  Hola Mundo
-	wv foo
-	wr Ingrese un numero: 
-	int nro = rd
-	wr El numero es
-	nl
-	wr nro
+
 
 

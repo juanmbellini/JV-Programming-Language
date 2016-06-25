@@ -9,15 +9,15 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 %char
 %class Scanner
 %{
-	public Scanner(java.io.InputStream r, ComplexSymbolFactory sf){
+	public Scanner(java.io.InputStream r, ComplexSymbolFactory sf) {
 		this(r);
-		this.sf=sf;
+		this.sf = sf;
 	}
-	public Symbol symbol(String plaintext,int code){
-	    return sf.newSymbol(plaintext,code,new Location("",yyline+1, yycolumn +1,yychar), new Location("",yyline+1,yycolumn+yylength(),yychar));
+	public Symbol symbol(String plaintext, int code) {
+	    return sf.newSymbol(plaintext, code, new Location("", yyline + 1, yycolumn + 1, yychar), new Location("", yyline + 1, yycolumn + yylength(), yychar));
 	}
-	public Symbol symbol(String plaintext,int code,Integer number){
-	    return sf.newSymbol(plaintext,code,new Location("",yyline+1, yycolumn +1,yychar), new Location("",yyline+1,yycolumn+yylength(),yychar),number);
+	public Symbol symbol(String plaintext, int code, Integer number) {
+	    return sf.newSymbol(plaintext, code, new Location("", yyline + 1, yycolumn + 1, yychar), new Location("", yyline + 1, yycolumn + yylength(), yychar), number);
 	}
 	private ComplexSymbolFactory sf;
 %}

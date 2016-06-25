@@ -63,7 +63,7 @@ parser code {:
     }
 :}
 
-terminal SEMI, PLUS, TIMES, LPAREN, RPAREN;
+terminal SEMI, PLUS, TIMES, LPAREN, RPAREN, DO, WHILE, IF, ELSE, MINUS, DIVIDE, EQ, GTR, LESS, LESS_EQ, GTR_EQ, NOT_EQ; 
 terminal Integer NUMBER;
 
 non terminal expr_list, expr_part;

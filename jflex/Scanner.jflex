@@ -19,6 +19,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 %{
 
 	private ComplexSymbolFactory symbolFactory;
+	StringBuffer string = new StringBuffer();
 
 	public Scanner(java.io.InputStream inputStream, ComplexSymbolFactory symbolFactory) {
 		
@@ -32,12 +33,26 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 	    	new Location("", yyline + 1, yycolumn + 1, yychar),
 	    	new Location("", yyline + 1, yycolumn + yylength(), yychar));
 	}
+	
 	public Symbol createSymbol(String plaintext, int code, Object object) {
 	    
 	    return symbolFactory.newSymbol(plaintext, code, 
 	    	new Location("", yyline + 1, yycolumn + 1, yychar),
 	    	new Location("", yyline + 1, yycolumn + yylength(), yychar),
 	    	object);
+	}
+	
+	public Symbol createSymbol(String plaintext, int code, Object object, int buffLength) {
+
+		return symbolFactory.newSymbol(plaintext, code, 
+	    	new Location(yyline + 1, yycolumn ++ yylength() - buffLength, yychar + yylength() - buffLength),
+	    	new Location(yyline + 1, yycolumn ++ yylength(), yychar + yylength()),
+	    	object);
+	}
+
+	public void printError(String symbol) {
+
+		System.err.println("Invalid symbol <" + string + ">");
 	}
 	/*
 	public Symbol createSymbol(String plaintext, int code, Integer number) {
@@ -140,52 +155,74 @@ VarName = [a-zA-Z_][a-zA-Z0-9_]*
 
 %%
 
-{EndOfLine}			{ return createSymbol("End of Line", sym.END_OF_LINE); }
-{Tab}				{ return  createSymbol("Tab", sym.TAB); }
-{WhiteSpace}		{ return createSymbol("Space", sym.SPACE)}
+<YYINITIAL> {
 
+	/* Code Structure */
+	{EndOfLine}			{ return createSymbol("End of Line", sym.END_OF_LINE); }
+	{Tab}				{ return  createSymbol("Tab", sym.TAB); }
+	{WhiteSpace}		{ return createSymbol("Space", sym.SPACE)}
 
-"int"				{ return createSymbol("Integer", sym.INT_TYPE); }
-"bln"				{ return createSymbol("Boolean", sym.BOOL_TYPE); }
-"str"				{ return createSymbol("String", sym.STR_TYPE); }
+	/* Data types */
+	"int"				{ return createSymbol("Integer", sym.INT_TYPE); }
+	"bln"				{ return createSymbol("Boolean", sym.BOOL_TYPE); }
+	"str"				{ return createSymbol("String", sym.STR_TYPE); }
 
-"rd"				{ return createSymbol("Read", sym.READ); }
-"wr"				{ return createSymbol("Read", sym.WRITE); }
-"wv"				{ return createSymbol("Read", sym.WRITE_VAR); }
-"nl"				{ return createSymbol("Read", sym.NEW_LINE); }
+	/* Commands */
+	"rd"				{ return createSymbol("Read", sym.READ); }
+	"wr"				{ return createSymbol("Read", sym.WRITE); }
+	"wv"				{ return createSymbol("Read", sym.WRITE_VAR); }
+	"nl"				{ return createSymbol("Read", sym.NEW_LINE); }
 
-"ff"				{ return createSymbol("If", sym.IF); }
-"lsff"				{ return createSymbol("Else-If", sym.ELSE_IF); }
-"ls"				{ return createSymbol("Else", sym.ELSE); }
-"dd"				{ return createSymbol("Do", sym.DO); }
-"whl"				{ return createSymbol("While", sym.WHILE)}
+	/* Decision and repetition structures */
+	"ff"				{ return createSymbol("If", sym.IF); }
+	"lsff"				{ return createSymbol("Else-If", sym.ELSE_IF); }
+	"ls"				{ return createSymbol("Else", sym.ELSE); }
+	"dd"				{ return createSymbol("Do", sym.DO); }
+	"whl"				{ return createSymbol("While", sym.WHILE)}
 
-"(" 				{ return createSymbol("Left Bracket",sym.LPAREN); }
-")" 				{ return createSymbol("Right Bracket",sym.RPAREN); }
-"+" 				{ return createSymbol("Plus",sym.PLUS); }
-"-" 				{ return createSymbol("Minus", sym.MINUS); }
-"*" 				{ return createSymbol("Times",sym.TIMES); }
-"/" 				{ return createSymbol("Divide", sym.DIVIDE); }
-"!" 				{ return createSymbol("Not", sym.NOT); }
-"&&" 				{ return createSymbol("And", sym.AND); }
-"||" 				{ return createSymbol("Or", sym.OR); }
-"<" 				{ return createSymbol("Lower Than", sym.LOWER_THAN); }
-">" 				{ return createSymbol("Greater than", sym.GREATER_THAN); }
-"<=" 				{ return createSymbol("Lower than or equal to", sym.LOWER_THAN_OR_EQUAL_TO); }
-">=" 				{ return createSymbol("greater than or equal to", sym.GREATER_THAN_OR_EQUAL_TO); }
-"==" 				{ return createSymbol("Equal to", sym.EQUAL_TO); }
-"!=" 				{ return createSymbol("Not equal to", sym.NOT_EQUAL_TO); }
+	/* Operators */
+	"(" 				{ return createSymbol("Left Bracket",sym.LPAREN); }
+	")" 				{ return createSymbol("Right Bracket",sym.RPAREN); }
+	"+" 				{ return createSymbol("Plus",sym.PLUS); }
+	"-" 				{ return createSymbol("Minus", sym.MINUS); }
+	"*" 				{ return createSymbol("Times",sym.TIMES); }
+	"/" 				{ return createSymbol("Divide", sym.DIVIDE); }
+	"!" 				{ return createSymbol("Not", sym.NOT); }
+	"&&" 				{ return createSymbol("And", sym.AND); }
+	"||" 				{ return createSymbol("Or", sym.OR); }
+	"<" 				{ return createSymbol("Lower Than", sym.LOWER_THAN); }
+	">" 				{ return createSymbol("Greater than", sym.GREATER_THAN); }
+	"<=" 				{ return createSymbol("Lower than or equal to", sym.LOWER_THAN_OR_EQUAL_TO); }
+	">=" 				{ return createSymbol("greater than or equal to", sym.GREATER_THAN_OR_EQUAL_TO); }
+	"==" 				{ return createSymbol("Equal to", sym.EQUAL_TO); }
+	"!=" 				{ return createSymbol("Not equal to", sym.NOT_EQUAL_TO); }
 
+	/* Literal */
+	{IntegerLiteral} 	{ return createSymbol("Integer", sym.INTCONST, new Boolean(yytext())); }
+	{BooleanLiteral} 	{ return createSymbol("Boolean", sym.BOOLCONST, new Boolean(yytext())); }
 
-{IntegerLiteral} 	{ return createSymbol("Integer", sym.INTCONST, new Boolean(yytext())); }
-{BooleanLiteral} 	{ return createSymbol("Boolean", sym.BOOLCONST, new Boolean(yytext())); }
+	/* Comments */
+	{Comment}			{ /* Do Nothing */	}
 
-{Comment}			{ /* Do Nothing */	}
+	/* Identifiers */
+	{VarName} 			{ return createSymbol("Var Name", sym.VAR_NAME, yytext(); }
 
-{VarName} 			{ return createSymbol("Var Name", sym.VAR_NAME, yytext(); }
+}
 
+	<STRING> {
+	\"	/* " /**/		{ yybegin(YYINITIAL); return createSymbol("String Const", string.toString(), string.length()); }
+	[^\n\r\"\\]+ /*"/**/{ string.append(yytext()); }
+	\\t 				{ string.append('\t'); }
+	\\n 				{ string.append('\n'); }
+	\\r 				{ string.append('\r'); }
+	\"		/* " /**/	{ string.append('\"'); }
+	\\					{ string.append('\\'); }
 
-. { System.err.println("Illegal symbol <" + yytext() + ">"); }
+}
+	/* Those "comments" are there to make syntax highlight work. PLEASE, IGNORE THEM */
+
+// Error fallback
+. 						{ printError(yytext()); }
 
 
 

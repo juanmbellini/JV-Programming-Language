@@ -50,6 +50,18 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 	    	object);
 	}
 
+	public Boolean createBoolean(String str) {
+
+		if (str == NULL || (!str.equals("yes") && !str.equals("no"))) {
+			throw new IllegalArgumentException();
+		}
+		if (str.equals("no")) {
+			return false;
+		}
+		return true;
+
+	}
+
 	public void printError(String symbol) {
 
 		System.err.println("Invalid symbol <" + string + ">");
@@ -94,7 +106,7 @@ Comment = "~" {CommentContent} 		// A comment starts with the '~' character and 
 
 
 IntegerLiteral = 0 | [1-9][0-9]* 	// Integer can be a 0 or an infinite amount of any digit preceded by any digit from 1 to 9
-BooleanLiteral = "true" | "false"	// 	
+BooleanLiteral = "yes" | "no"	// 	
 String = ""
 
 CommentContent = [^{EndOfLine}]*	// A comment content can have any character as long as it's not a line terminator
@@ -199,7 +211,7 @@ VarName = [a-zA-Z_][a-zA-Z0-9_]*
 
 	/* Literal */
 	{IntegerLiteral} 	{ return createSymbol("Integer", sym.INTCONST, new Boolean(yytext())); }
-	{BooleanLiteral} 	{ return createSymbol("Boolean", sym.BOOLCONST, new Boolean(yytext())); }
+	{BooleanLiteral} 	{ return createSymbol("Boolean", sym.BOOLCONST, createBoolean(yytext())); }
 
 	/* Comments */
 	{Comment}			{ /* Do Nothing */	}

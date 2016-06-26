@@ -95,6 +95,25 @@ VarName = [a-zA-Z_][a-zA-Z0-9_]*
 /*
  * SYMBOLS
  *
+ *	END_OF_LINE
+ *	TAB
+ *	SPACE
+ *
+ *	INT_TYPE
+ *	BOOL_TYPE
+ *	STR_TYPE
+ *
+ *	READ
+ *	WRITE
+ *	WRITE_VAR
+ *	NEW_LINE
+ *
+ * 	IF
+ * 	ELSE_IF
+ *	ELSE
+ *	DO
+ *	WHILE
+ *
  *	LPAREN
  *	RPAREN
  *	PLUS
@@ -111,39 +130,62 @@ VarName = [a-zA-Z_][a-zA-Z0-9_]*
  *	EQUAL_TO
  *	NOT_EQUAL_TO
  *	
- *	VAR_NAME
  *	INTCONST
  *	BOOLCONST
+ *
+ *	VAR_NAME
  *
  *
  */
 
 %%
 
-"(" { return createSymbol("Left Bracket",sym.LPAREN); }
-")" { return createSymbol("Right Bracket",sym.RPAREN); }
-"+" { return createSymbol("Plus",sym.PLUS); }
-"-" { return createSymbol("Minus", sym.MINUS); }
-"*" { return createSymbol("Times",sym.TIMES); }
-"/" { return createSymbol("Divide", sym.DIVIDE); }
-"!" { return createSymbol("Not", sym.NOT); }
-"&&" { return createSymbol("Not", sym.AND); }
-"||" { return createSymbol("Not", sym.OR); }
-"<" { return createSymbol("Not", sym.LOWER_THAN); }
-">" { return createSymbol("Not", sym.GREATER_THAN); }
-"<=" { return createSymbol("Not", sym.LOWER_THAN_OR_EQUAL_TO); }
-">=" { return createSymbol("Not", sym.GREATER_THAN_OR_EQUAL_TO); }
-"==" { return createSymbol("Not", sym.EQUAL_TO); }
-"!=" { return createSymbol("Not", sym.NOT_EQUAL_TO); }
+{EndOfLine}			{ return createSymbol("End of Line", sym.END_OF_LINE); }
+{Tab}				{ return  createSymbol("Tab", sym.TAB); }
+{WhiteSpace}		{ return createSymbol("Space", sym.SPACE)}
 
 
-{VarName} { return createSymbol("Integer", sym.VAR_NAME, yytext(); }
-{IntegerLiteral} { return createSymbol("Integer", sym.INTCONST, new Boolean(yytext())); }
-{BooleanLiteral} { return createSymbol("Boolean", sym.BOOLCONST, new Boolean(yytext())); }
+"int"				{ return createSymbol("Integer", sym.INT_TYPE); }
+"bln"				{ return createSymbol("Boolean", sym.BOOL_TYPE); }
+"str"				{ return createSymbol("String", sym.STR_TYPE); }
+
+"rd"				{ return createSymbol("Read", sym.READ); }
+"wr"				{ return createSymbol("Read", sym.WRITE); }
+"wv"				{ return createSymbol("Read", sym.WRITE_VAR); }
+"nl"				{ return createSymbol("Read", sym.NEW_LINE); }
+
+"ff"				{ return createSymbol("If", sym.IF); }
+"lsff"				{ return createSymbol("Else-If", sym.ELSE_IF); }
+"ls"				{ return createSymbol("Else", sym.ELSE); }
+"dd"				{ return createSymbol("Do", sym.DO); }
+"whl"				{ return createSymbol("While", sym.WHILE)}
+
+"(" 				{ return createSymbol("Left Bracket",sym.LPAREN); }
+")" 				{ return createSymbol("Right Bracket",sym.RPAREN); }
+"+" 				{ return createSymbol("Plus",sym.PLUS); }
+"-" 				{ return createSymbol("Minus", sym.MINUS); }
+"*" 				{ return createSymbol("Times",sym.TIMES); }
+"/" 				{ return createSymbol("Divide", sym.DIVIDE); }
+"!" 				{ return createSymbol("Not", sym.NOT); }
+"&&" 				{ return createSymbol("And", sym.AND); }
+"||" 				{ return createSymbol("Or", sym.OR); }
+"<" 				{ return createSymbol("Lower Than", sym.LOWER_THAN); }
+">" 				{ return createSymbol("Greater than", sym.GREATER_THAN); }
+"<=" 				{ return createSymbol("Lower than or equal to", sym.LOWER_THAN_OR_EQUAL_TO); }
+">=" 				{ return createSymbol("greater than or equal to", sym.GREATER_THAN_OR_EQUAL_TO); }
+"==" 				{ return createSymbol("Equal to", sym.EQUAL_TO); }
+"!=" 				{ return createSymbol("Not equal to", sym.NOT_EQUAL_TO); }
 
 
+{IntegerLiteral} 	{ return createSymbol("Integer", sym.INTCONST, new Boolean(yytext())); }
+{BooleanLiteral} 	{ return createSymbol("Boolean", sym.BOOLCONST, new Boolean(yytext())); }
 
-. { System.err.println("Illegal character: "+yytext()); }
+{Comment}			{ /* Do Nothing */	}
+
+{VarName} 			{ return createSymbol("Var Name", sym.VAR_NAME, yytext(); }
+
+
+. { System.err.println("Illegal symbol <" + yytext() + ">"); }
 
 
 

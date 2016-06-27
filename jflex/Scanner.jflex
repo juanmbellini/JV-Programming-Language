@@ -3,9 +3,9 @@ package atlc;
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 
-	/**
-     * This class represents the scanner.
-     */
+/**
+ * This class represents the scanner.
+ */
 
 
 %%
@@ -18,78 +18,52 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 
 %{
 
-	private ComplexSymbolFactory symbolFactory;
-	StringBuffer string = new StringBuffer();
+    private ComplexSymbolFactory symbolFactory;
+    StringBuffer string = new StringBuffer();
 
-	public Scanner(java.io.InputStream inputStream, ComplexSymbolFactory symbolFactory) {
-		
-		this(inputStream);
-		this.symbolFactory = symbolFactory;
-	}
+    public Scanner(java.io.InputStream inputStream, ComplexSymbolFactory symbolFactory) {
+        this(inputStream);
+        this.symbolFactory = symbolFactory;
+    }
 
-	public Symbol createSymbol(String plaintext, int code) {
-	    
-	    return symbolFactory.newSymbol(plaintext, code, 
-	    	new Location("", yyline + 1, yycolumn + 1, yychar),
-	    	new Location("", yyline + 1, yycolumn + yylength(), yychar));
-	}
-	
-	public Symbol createSymbol(String plaintext, int code, Object object) {
-	    
-	    return symbolFactory.newSymbol(plaintext, code, 
-	    	new Location("", yyline + 1, yycolumn + 1, yychar),
-	    	new Location("", yyline + 1, yycolumn + yylength(), yychar),
-	    	object);
-	}
-	
-	public Symbol createSymbol(String plaintext, int code, Object object, int buffLength) {
+    public Symbol createSymbol(String plaintext, int code) {
+        return symbolFactory.newSymbol(plaintext, code,
+            new Location("", yyline + 1, yycolumn + 1, yychar),
+            new Location("", yyline + 1, yycolumn + yylength(), yychar));
+    }
 
-		return symbolFactory.newSymbol(plaintext, code, 
-	    	new Location(yyline + 1, yycolumn ++ yylength() - buffLength, yychar + yylength() - buffLength),
-	    	new Location(yyline + 1, yycolumn ++ yylength(), yychar + yylength()),
-	    	object);
-	}
+    public Symbol createSymbol(String plaintext, int code, Object object) {
+        return symbolFactory.newSymbol(plaintext, code,
+            new Location("", yyline + 1, yycolumn + 1, yychar),
+            new Location("", yyline + 1, yycolumn + yylength(), yychar),
+            object);
+    }
 
-	public Boolean createBoolean(String str) {
+    public Symbol createSymbol(String plaintext, int code, Object object, int buffLength) {
 
-		if (str == NULL || (!str.equals("yes") && !str.equals("no"))) {
-			throw new IllegalArgumentException();
-		}
-		if (str.equals("no")) {
-			return false;
-		}
-		return true;
+        return symbolFactory.newSymbol(plaintext, code,
+            new Location(yyline + 1, yycolumn ++ yylength() - buffLength, yychar + yylength() - buffLength),
+            new Location(yyline + 1, yycolumn ++ yylength(), yychar + yylength()),
+            object);
+    }
 
-	}
+    public Boolean createBoolean(String str) {
 
-	public void printError(String symbol) {
+        if (str == NULL || (!str.equals("yes") && !str.equals("no"))) {
+            throw new IllegalArgumentException();
+        }
+        if (str.equals("no")) {
+            return false;
+        }
+        return true;
 
-		System.err.println("Invalid symbol <" + string + ">");
-	}
-	/*
-	public Symbol createSymbol(String plaintext, int code, Integer number) {
-	    
-	    return symbolFactory.newSymbol(plaintext, code, 
-	    	new Location("", yyline + 1, yycolumn + 1, yychar),
-	    	new Location("", yyline + 1, yycolumn + yylength(), yychar),
-	    	number);
-	}
-	public Symbol createSymbol(String plaintext, int code, Boolean boolean) {
-	    
-	    return symbolFactory.newSymbol(plaintext, code, 
-	    	new Location("", yyline + 1, yycolumn + 1, yychar),
-	    	new Location("", yyline + 1, yycolumn + yylength(), yychar),
-	    	boolean);
-	}
-	public Symbol createSymbol(String plaintext, int code, String string) {
-	    
-	    return symbolFactory.newSymbol(plaintext, code, 
-	    	new Location("", yyline + 1, yycolumn + 1, yychar),
-	    	new Location("", yyline + 1, yycolumn + yylength(), yychar),
-	    	string);
-	}*/
-	
-	
+    }
+
+    public void printError(String symbol) {
+
+        System.err.println("Invalid symbol <" + string + ">");
+    }
+
 %}
 %eofval{
     return symbolFactory.newSymbol("EOF",sym.EOF);

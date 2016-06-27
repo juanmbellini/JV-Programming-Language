@@ -140,8 +140,8 @@ VarName = [:jletter:] [:jletterdigit:]*
     "mn"                { return createSymbol("Main", sym.MAIN); }
 	/* Code Structure */
 	{EndOfLine}			{ return createSymbol("End of Line", sym.EOL); }
-	{Tab}				{ return createSymbol("Tab", sym.TAB); }
-	{WhiteSpace}		{ return createSymbol("Space", sym.SPACE); }
+	[\t]				{ return createSymbol("Tab", sym.TAB); }
+	" "					{ return createSymbol("Space", sym.SPACE); }
 
 	/* Data types */
 	"int"				{ return createSymbol("Integer", sym.TYPE_INT); }

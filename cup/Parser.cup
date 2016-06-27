@@ -86,6 +86,7 @@ non terminal expr_list, expr_part;
 non terminal Expr expr;
 
 non terminal S;
+non terminal MAIN;
 non terminal BLOCK;
 non terminal LINE;
 non terminal INSTRUCTION;
@@ -110,7 +111,7 @@ non terminal COMMENT;
 // ESTRUCTURA
 start with S;
 
-S ::= mn \n BLOCK;
+S ::= MAIN \n BLOCK;
 
 BLOCK ::= \n BLOCK | LINE;
 

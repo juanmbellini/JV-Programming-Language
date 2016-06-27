@@ -169,6 +169,8 @@ VarName = [a-zA-Z_][a-zA-Z0-9_]*
 
 <YYINITIAL> {
 
+    /* Main */
+    "mn"                { return createSymbol("Main", sym.MAIN); }
 	/* Code Structure */
 	{EndOfLine}			{ return createSymbol("End of Line", sym.END_OF_LINE); }
 	{Tab}				{ return  createSymbol("Tab", sym.TAB); }

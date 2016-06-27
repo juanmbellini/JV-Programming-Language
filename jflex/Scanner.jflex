@@ -173,8 +173,8 @@ VarName = [:jletter:] [:jletterdigit:]*
 	"||" 				{ return createSymbol("Or", sym.OR); }
 	"<" 				{ return createSymbol("Lower Than", sym.LT); }
 	">" 				{ return createSymbol("Greater than", sym.GT); }
-	"<=" 				{ return createSymbol("Lower than or equal to", sym.LTE); }
-	">=" 				{ return createSymbol("greater than or equal to", sym.GTE); }
+	"<=" 				{ return createSymbol("Lower than or equal to", sym.LE); }
+	">=" 				{ return createSymbol("greater than or equal to", sym.GE); }
 	"==" 				{ return createSymbol("Equal to", sym.EQ); }
 	"!=" 				{ return createSymbol("Not equal to", sym.NEQ); }
 

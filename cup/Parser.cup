@@ -85,8 +85,8 @@ terminal EQ;
 terminal NEQ;
 terminal GT;
 terminal LT;
-terminal LTE;
-terminal GTE;
+terminal LE;
+terminal GE;
 terminal NOT;
 terminal OR;
 terminal AND;
@@ -221,8 +221,8 @@ BOOL_RESULT
 COMPARATOR
 	::= EXP_NUM LT EXP_NUM
 	| EXP_NUM GT EXP_NUM
-	| EXP_NUM LTE EXP_NUM
-	| EXP_NUM GTE EXP_NUM
+	| EXP_NUM LE EXP_NUM
+	| EXP_NUM GE EXP_NUM
 	| EXP_NUM EQ EXP_NUM
 	| EXP_NUM NEQ EXP_NUM
 ;

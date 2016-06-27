@@ -62,31 +62,62 @@ parser code {:
     // Mute legacy Error Printing
     }
 :}
+// Main
+terminal MAIN;
 
-terminal SEMI;
+// Arithmetic
 terminal PLUS;
 terminal TIMES;
-terminal LPAREN;
-terminal RPAREN;
-terminal DO;
-terminal WHILE;
-terminal IF;
-terminal ELSE;
 terminal MINUS;
 terminal DIVIDE;
+
+// Looping
+terminal DO;
+terminal WHILE;
+
+// Conditional
+terminal IF;
+terminal ELSE;
+terminal ELSE_IF;
+
+// Boolean operations
 terminal EQ;
-terminal GTR;
-terminal LESS;
-terminal LESS_EQ;
-terminal GTR_EQ;
-terminal NOT_EQ;
-terminal Integer NUMBER;
+terminal NEQ;
+terminal GT;
+terminal LT;
+terminal LTE;
+terminal GTE;
+terminal NOT;
+terminal OR;
+terminal AND;
+
+// Literals
+terminal Integer LIT_INT;
+terminal Boolean LIT_BOOL;
+terminal String  LIT_STR;
+
+// Types
+terminal TYPE_INT;
+terminal TYPE_STR;
+terminal TYPE_BOOL;
+terminal VAR_NAME;
+terminal NEW_LINE;
+
+// IO
+terminal WRITE;
+terminal WRITE_VAR;
+terminal READ;
+
+// Misc
+terminal LPAREN;
+terminal RPAREN;
+terminal String EOL;
+terminal String TAB;
 
 non terminal expr_list, expr_part;
 non terminal Expr expr;
 
 non terminal S;
-non terminal MAIN;
 non terminal BLOCK;
 non terminal LINE;
 non terminal INSTRUCTION;
@@ -94,8 +125,6 @@ non terminal ASSIGNMENT;
 non terminal BLOCK_IF;
 non terminal BLOCK_WHILE;
 non terminal COMMAND;
-non terminal BLOCK_IF_ELSIF;
-non terminal BLOCK_IF_ELSIF_ELSE;
 non terminal EXP_NUM;
 non terminal TERM_NUM;
 non terminal FACT_NUM;
@@ -105,85 +134,124 @@ non terminal FACT_BOOL;
 non terminal COMPARATOR;
 non terminal BOOL_RESULT;
 non terminal NUM_RESULT;
-non terminal COMMENT;
+// non terminal COMMENT;
+// non terminal BLOCK_IF_ELSIF;
+// non terminal BLOCK_IF_ELSIF_ELSE;
 
 
 // ESTRUCTURA
 start with S;
 
-S ::= MAIN \n BLOCK;
+S
+	::= MAIN EOL BLOCK;
 
-BLOCK ::= \n BLOCK | LINE;
+BLOCK
+	::= EOL BLOCK
+	| LINE
+;
 
-LINE ::= \t LINE | INSTRUCTION COMMENT | COMMENT;
+// LINE ::= TAB LINE | INSTRUCTION COMMENT | COMMENT; < Está mal comment
+LINE 
+	::= TAB LINE
+	| INSTRUCTION
+;
 
-INSTRUCTION ::= ASSIGNMENT | BLOCK_IF | BLOCK_WHILE | COMMAND;
+INSTRUCTION
+	::= ASSIGNMENT
+	| BLOCK_IF
+	| BLOCK_WHILE
+	| COMMAND
+;
 
-COMMENT ::= ~ comment;
+// COMMENT ::= ~ comment;
 
 
 // ASIGNACIONES
 
-ASSIGNMENT ::= int var_name | int var_name EXP_NUM;
-ASSIGNMENT ::= str var_name | str var_name string;
-ASSIGNMENT ::= bln var_name | bln var_name EXP_BOOL;
+ASSIGNMENT
+	::= TYPE_INT VAR_NAME
+	| TYPE_INT VAR_NAME EXP_NUM
+	| TYPE_STR VAR_NAME
+	| TYPE_STR VAR_NAME LIT_STR
+	| TYPE_BOOL VAR_NAME
+	| TYPE_BOOL VAR_NAME EXP_BOOL
+;
 
 // ESTRUCTURAS DE DECISION
 
-BLOCK_IF ::= ff (EXP_BOOL) BLOCK;
-BLOCK_IF ::= ff (EXP_BOOL) BLOCK \n ls BLOCK;
-BLOCK_IF ::= ff (EXP_BOOL) BLOCK BLOCK_IF_ELSIF;
-BLOCK_IF ::= ff (EXP_BOOL) BLOCK BLOCK_IF_ELSIF_ELSE;
+BLOCK_IF
+	::= IF LPAREN EXP_BOOL RPAREN EOL BLOCK
+	| IF LPAREN EXP_BOOL RPAREN BLOCK EOL ELSE BLOCK
+;
+// BLOCK_IF ::= IF LPAREN EXP_BOOL RPAREN BLOCK BLOCK_IF_ELSIF;
+// BLOCK_IF ::= IF LPAREN EXP_BOOL RPAREN BLOCK BLOCK_IF_ELSIF_ELSE;
 
-BLOCK_IF_ELSIF ::= BLOCK_ELSE_IF\n lsff ( EXP_BOOL) BLOCK;
-BLOCK_IF_ELSIF ::= \n lsff ( EXP_BOOL) BLOCK;
-BLOCK_IF_ELSIF_ELSE ::= BLOCK_ELSE_IF\n lsff ( EXP_BOOL) BLOCK\n ls BLOCK;
+// BLOCK_IF_ELSIF ::= BLOCK_ELSE_IF EOL ELSE_IF LPAREN EXP_BOOL RPAREN BLOCK;
+// BLOCK_IF_ELSIF ::= EOL ELSE_IF LPAREN EXP_BOOL RPAREN BLOCK;
+// BLOCK_IF_ELSIF_ELSE ::= BLOCK_ELSE_IF EOL ELSE_IF LPAREN EXP_BOOL RPAREN BLOCK EOL ELSE BLOCK;
 
 // COMANDOS
 
-COMMAND ::= rd var_name;
-COMMAND ::= wv var_name;
-COMMAND ::= wr string;
-COMMAND ::= nl;
-COMMAND ::= nl value;
+COMMAND
+	::= READ VAR_NAME
+	| WRITE_VAR VAR_NAME
+	| WRITE LIT_STR
+	| NEW_LINE
+	| NEW_LINE LIT_INT
+;
 
 
 // ESTRUCTURAS DE REPETICION
 
-BLOCK_WHILE ::= dd BLOCK whl ( EXP_BOOL )  | whl ( EXP_BOOL ) BLOCK;
+BLOCK_WHILE
+	::= DO EOL BLOCK WHILE LPAREN EXP_BOOL RPAREN
+	| WHILE LPAREN EXP_BOOL RPAREN EOL BLOCK
+;
 
 // NUM_RESULT
 
-NUM_RESULT ::= value | var_name;
+NUM_RESULT
+	::= LIT_INT
+	| VAR_NAME
+;
 
 // BOOL_RESULT
 
-BOOL_RESULT ::= COMPARATOR | boolean | var_name;
-
-COMPARATOR ::= EXP_NUM < EXP_NUM;
-COMPARATOR ::= EXP_NUM > EXP_NUM;
-COMPARATOR ::= EXP_NUM => EXP_NUM;
-COMPARATOR ::= EXP_NUM => EXP_NUM;
-COMPARATOR ::= EXP_NUM == EXP_NUM;
-COMPARATOR ::= EXP_NUM != EXP_NUM;
-
+BOOL_RESULT
+	::= COMPARATOR
+	| LIT_BOOL
+	| VAR_NAME
+;
 
 // -- GRAMATICAS AMBIGUAS --
 
+COMPARATOR
+	::= EXP_NUM LT EXP_NUM
+	| EXP_NUM GT EXP_NUM
+	| EXP_NUM LTE EXP_NUM
+	| EXP_NUM GTE EXP_NUM
+	| EXP_NUM EQ EXP_NUM
+	| EXP_NUM NEQ EXP_NUM
+;
+
 // EXPRESIONES NUMERICAS
 
-EXP_NUM ::= EXP_NUM + EXP_NUM;
-EXP_NUM ::= EXP_NUM - EXP_NUM;
-EXP_NUM ::= EXP_NUM * EXP_NUM;
-EXP_NUM ::= EXP_NUM / EXP_NUM;
-EXP_NUM ::= (EXP_NUM);
-EXP_NUM ::= -EXP_NUM;
-EXP_NUM ::= NUM_RESULT;
+EXP_NUM
+	::= EXP_NUM PLUS EXP_NUM
+	| EXP_NUM MINUS EXP_NUM
+	| EXP_NUM TIMES EXP_NUM
+	| EXP_NUM DIVIDE EXP_NUM
+	| LPAREN EXP_NUM RPAREN
+	| MINUS EXP_NUM
+	| NUM_RESULT
+;
 
 // EXPRESIONES BOOLEANAS
 
-EXP_BOOL ::= EXP_BOOL || EXP_BOOL;
-EXP_BOOL ::= EXP_BOOL && EXP_BOOL;
-EXP_BOOL ::= !EXP_BOOL;
-EXP_BOOL ::= (EXP_BOOL);
-EXP_BOOL ::= BOOL_RESULT;
+EXP_BOOL
+	::= EXP_BOOL OR EXP_BOOL
+	| EXP_BOOL AND EXP_BOOL
+	| NOT EXP_BOOL
+	| LPAREN EXP_BOOL RPAREN
+	| BOOL_RESULT
+;

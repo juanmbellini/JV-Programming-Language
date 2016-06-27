@@ -17,7 +17,6 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 %char
 
 %{
-
     private ComplexSymbolFactory symbolFactory;
     StringBuffer string = new StringBuffer();
 
@@ -48,19 +47,13 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
     }
 
     public Boolean createBoolean(String str) {
-
         if (str == NULL || (!str.equals("yes") && !str.equals("no"))) {
             throw new IllegalArgumentException();
         }
-        if (str.equals("no")) {
-            return false;
-        }
-        return true;
-
+        return str.equals("yes");
     }
 
     public void printError(String symbol) {
-
         System.err.println("Invalid symbol <" + string + ">");
     }
 
@@ -73,25 +66,25 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 
 
 // Macros
-EndOfLine = \n | \r\n | \r 			// For Unix and Windows files
-Tab = \t 							// Tab character
-WhiteSpace = [ ] 					// We only accept ' ' as a white space
-Comment = "~" {CommentContent} 		// A comment starts with the '~' character and continues with its content
+// For Unix and Windows files
+EndOfLine = \n | \r\n | \r
+// Tab character
+Tab = \t
+// We only accept ' ' as a white space
+WhiteSpace = [ ]
+// A comment starts with the '~' character and continues with its content
+Comment = "~" {StringLiteral} \n
 
 
-IntegerLiteral = 0 | [1-9][0-9]* 	// Integer can be a 0 or an infinite amount of any digit preceded by any digit from 1 to 9
-BooleanLiteral = "yes" | "no"	// 	
-String = ""
+// Integer can be a 0 or an infinite amount of any digit preceded by any digit from 1 to 9
+IntegerLiteral = 0 | [1-9][0-9]*
+BooleanLiteral = "yes" | "no"
+// A string can have any character as long as it's not a line terminator
+StringLiteral = [^\n]*
 
-CommentContent = [^{EndOfLine}]*	// A comment content can have any character as long as it's not a line terminator
+VarName = [:jletter:] [:jletterdigit:]*
 
-EntryPoint = "mn"
-VarName = [a-zA-Z_][a-zA-Z0-9_]*
-
-
-
-
-%state STRING
+// %state STRING
 
 /*
  * SYMBOLS
@@ -146,20 +139,20 @@ VarName = [a-zA-Z_][a-zA-Z0-9_]*
     /* Main */
     "mn"                { return createSymbol("Main", sym.MAIN); }
 	/* Code Structure */
-	{EndOfLine}			{ return createSymbol("End of Line", sym.END_OF_LINE); }
-	{Tab}				{ return  createSymbol("Tab", sym.TAB); }
+	{EndOfLine}			{ return createSymbol("End of Line", sym.EOL); }
+	{Tab}				{ return createSymbol("Tab", sym.TAB); }
 	{WhiteSpace}		{ return createSymbol("Space", sym.SPACE)}
 
 	/* Data types */
-	"int"				{ return createSymbol("Integer", sym.INT_TYPE); }
-	"bln"				{ return createSymbol("Boolean", sym.BOOL_TYPE); }
-	"str"				{ return createSymbol("String", sym.STR_TYPE); }
+	"int"				{ return createSymbol("Integer", sym.TYPE_INT); }
+	"bln"				{ return createSymbol("Boolean", sym.TYPE_BOOL); }
+	"str"				{ return createSymbol("String", sym.TYPE_STR); }
 
 	/* Commands */
 	"rd"				{ return createSymbol("Read", sym.READ); }
-	"wr"				{ return createSymbol("Read", sym.WRITE); }
-	"wv"				{ return createSymbol("Read", sym.WRITE_VAR); }
-	"nl"				{ return createSymbol("Read", sym.NEW_LINE); }
+	"wr"				{ return createSymbol("Write", sym.WRITE); }
+	"wv"				{ return createSymbol("Write var", sym.WRITE_VAR); }
+	"nl"				{ return createSymbol("Write new line", sym.NEW_LINE); }
 
 	/* Decision and repetition structures */
 	"ff"				{ return createSymbol("If", sym.IF); }
@@ -178,42 +171,23 @@ VarName = [a-zA-Z_][a-zA-Z0-9_]*
 	"!" 				{ return createSymbol("Not", sym.NOT); }
 	"&&" 				{ return createSymbol("And", sym.AND); }
 	"||" 				{ return createSymbol("Or", sym.OR); }
-	"<" 				{ return createSymbol("Lower Than", sym.LOWER_THAN); }
-	">" 				{ return createSymbol("Greater than", sym.GREATER_THAN); }
-	"<=" 				{ return createSymbol("Lower than or equal to", sym.LOWER_THAN_OR_EQUAL_TO); }
-	">=" 				{ return createSymbol("greater than or equal to", sym.GREATER_THAN_OR_EQUAL_TO); }
-	"==" 				{ return createSymbol("Equal to", sym.EQUAL_TO); }
-	"!=" 				{ return createSymbol("Not equal to", sym.NOT_EQUAL_TO); }
+	"<" 				{ return createSymbol("Lower Than", sym.LT); }
+	">" 				{ return createSymbol("Greater than", sym.GT); }
+	"<=" 				{ return createSymbol("Lower than or equal to", sym.LTE); }
+	">=" 				{ return createSymbol("greater than or equal to", sym.GTE); }
+	"==" 				{ return createSymbol("Equal to", sym.EQ); }
+	"!=" 				{ return createSymbol("Not equal to", sym.NEQ); }
 
 	/* Literal */
-	{IntegerLiteral} 	{ return createSymbol("Integer", sym.INTCONST, new Integer(yytext())); }
-	{BooleanLiteral} 	{ return createSymbol("Boolean", sym.BOOLCONST, createBoolean(yytext())); }
+	{IntegerLiteral} 	{ return createSymbol("Integer", sym.LIT_INT, new Integer(yytext())); }
+	{BooleanLiteral} 	{ return createSymbol("Boolean", sym.LIT_BOOL, createBoolean(yytext())); }
+	{StringLiteral} 	{ return createSymbol("String", sym.LIT_STR, yytext()); }
 
 	/* Comments */
 	{Comment}			{ /* Do Nothing */	}
 
 	/* Identifiers */
-	{VarName} 			{ return createSymbol("Var Name", sym.VAR_NAME, yytext(); }
+	{VarName} 			{ return createSymbol("Var Name", sym.VAR_NAME, yytext()); }
+	.					{ throw new Error("Illegal character <" + yytext() + ">");}
 
 }
-
-	<STRING> {
-	\"	/* " /**/		{ yybegin(YYINITIAL); return createSymbol("String Const", string.toString(), string.length()); }
-	[^\n\r\"\\]+ /*"/**/{ string.append(yytext()); }
-	\\t 				{ string.append('\t'); }
-	\\n 				{ string.append('\n'); }
-	\\r 				{ string.append('\r'); }
-	\"		/* " /**/	{ string.append('\"'); }
-	\\					{ string.append('\\'); }
-
-}
-	/* Those "comments" are there to make syntax highlight work. PLEASE, IGNORE THEM */
-
-// Error fallback
-. 						{ printError(yytext()); }
-
-
-
-
-
-

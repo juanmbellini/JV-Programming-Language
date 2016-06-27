@@ -26,6 +26,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
     }
 
     public Symbol createSymbol(String plaintext, int code) {
+        System.out.println("parsed: " + plaintext);
         return symbolFactory.newSymbol(plaintext, code,
             new Location("", yyline + 1, yycolumn + 1, yychar),
             new Location("", yyline + 1, yycolumn + yylength(), yychar));
@@ -59,6 +60,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 
 %}
 %eofval{
+    System.out.println("parsed: EOF");
     return symbolFactory.newSymbol("EOF",sym.EOF);
 %eofval}
 

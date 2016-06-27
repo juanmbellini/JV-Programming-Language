@@ -32,6 +32,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
     }
 
     public Symbol createSymbol(String plaintext, int code, Object object) {
+        System.out.println("parsed: " + plaintext +" :: " + object);
         return symbolFactory.newSymbol(plaintext, code,
             new Location("", yyline + 1, yycolumn + 1, yychar),
             new Location("", yyline + 1, yycolumn + yylength(), yychar),
@@ -39,7 +40,6 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
     }
 
     public Symbol createSymbol(String plaintext, int code, Object object, int buffLength) {
-
         return symbolFactory.newSymbol(plaintext, code,
             new Location(yyline + 1, yycolumn + yylength() - buffLength, yychar + yylength() - buffLength),
             new Location(yyline + 1, yycolumn + yylength(), yychar + yylength()),

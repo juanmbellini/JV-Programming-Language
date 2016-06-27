@@ -113,6 +113,7 @@ terminal LPAREN;
 terminal RPAREN;
 terminal String EOL;
 terminal String TAB;
+terminal String SPACE;
 
 non terminal S;
 non terminal BLOCK;

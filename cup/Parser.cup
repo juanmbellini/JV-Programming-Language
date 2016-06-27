@@ -114,9 +114,6 @@ terminal RPAREN;
 terminal String EOL;
 terminal String TAB;
 
-non terminal expr_list, expr_part;
-non terminal Expr expr;
-
 non terminal S;
 non terminal BLOCK;
 non terminal LINE;
@@ -126,11 +123,7 @@ non terminal BLOCK_IF;
 non terminal BLOCK_WHILE;
 non terminal COMMAND;
 non terminal EXP_NUM;
-non terminal TERM_NUM;
-non terminal FACT_NUM;
 non terminal EXP_BOOL;
-non terminal TERM_BOOL;
-non terminal FACT_BOOL;
 non terminal COMPARATOR;
 non terminal BOOL_RESULT;
 non terminal NUM_RESULT;

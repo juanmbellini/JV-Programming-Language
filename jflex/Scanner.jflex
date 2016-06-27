@@ -84,7 +84,7 @@ BooleanLiteral = "yes" | "no"
 // A string can have any character as long as it's not a line terminator
 StringLiteral = [ ][^\n]*
 
-VarName = [:jletter:] [:jletterdigit:]*
+VarName = [ ] [:jletter:] [:jletterdigit:]*
 
 // %state STRING
 
@@ -180,6 +180,10 @@ VarName = [:jletter:] [:jletterdigit:]*
 	"==" 				{ return createSymbol("Equal to", sym.EQ); }
 	"!=" 				{ return createSymbol("Not equal to", sym.NEQ); }
 
+	/* Identifiers */
+    // TODO: Space is being added before var name
+	{VarName} 			{ return createSymbol("Var Name", sym.VAR_NAME, yytext()); }
+
 	/* Literal */
 	{IntegerLiteral} 	{ return createSymbol("Integer", sym.LIT_INT, new Integer(yytext())); }
 	{BooleanLiteral} 	{ return createSymbol("Boolean", sym.LIT_BOOL, createBoolean(yytext())); }
@@ -188,8 +192,6 @@ VarName = [:jletter:] [:jletterdigit:]*
 	/* Comments */
 	{Comment}			{ /* Do Nothing */	}
 
-	/* Identifiers */
-	{VarName} 			{ return createSymbol("Var Name", sym.VAR_NAME, yytext()); }
 	.					{ throw new Error("Illegal character <" + yytext() + ">");}
 
 }

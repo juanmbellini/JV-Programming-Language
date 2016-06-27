@@ -146,8 +146,7 @@ S
 	::= MAIN EOL BLOCK;
 
 BLOCK
-	::= EOL BLOCK
-	| LINE
+	::= LINE
 ;
 
 // LINE ::= TAB LINE | INSTRUCTION COMMENT | COMMENT; < Está mal comment

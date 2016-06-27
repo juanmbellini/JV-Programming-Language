@@ -138,6 +138,8 @@ precedence left EQ, NEQ;
 precedence left GT, LT, GE, LE;
 precedence left PLUS, MINUS;
 precedence left TIMES, DIVIDE;
+precedence left RPAREN, LPAREN;
+precedence left VAR_NAME;
 
 // ESTRUCTURA
 start with S;

@@ -131,6 +131,13 @@ non terminal NUM_RESULT;
 // non terminal BLOCK_IF_ELSIF;
 // non terminal BLOCK_IF_ELSIF_ELSE;
 
+precedence left OR;
+precedence left AND;
+precedence left NOT;
+precedence left EQ, NEQ;
+precedence left GT, LT, GE, LE;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE;
 
 // ESTRUCTURA
 start with S;

@@ -80,7 +80,7 @@ Comment = "~" {StringLiteral} \n
 IntegerLiteral = 0 | [1-9][0-9]*
 BooleanLiteral = "yes" | "no"
 // A string can have any character as long as it's not a line terminator
-StringLiteral = [^\n]*
+StringLiteral = [ ][^\n]*
 
 VarName = [:jletter:] [:jletterdigit:]*
 

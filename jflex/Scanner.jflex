@@ -210,7 +210,7 @@ VarName = [a-zA-Z_][a-zA-Z0-9_]*
 	"!=" 				{ return createSymbol("Not equal to", sym.NOT_EQUAL_TO); }
 
 	/* Literal */
-	{IntegerLiteral} 	{ return createSymbol("Integer", sym.INTCONST, new Boolean(yytext())); }
+	{IntegerLiteral} 	{ return createSymbol("Integer", sym.INTCONST, new Integer(yytext())); }
 	{BooleanLiteral} 	{ return createSymbol("Boolean", sym.BOOLCONST, createBoolean(yytext())); }
 
 	/* Comments */

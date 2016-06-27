@@ -108,6 +108,7 @@ non terminal COMMENT;
 
 
 // ESTRUCTURA
+start with S;
 
 S ::= mn \n BLOCK;
 

@@ -185,24 +185,3 @@ EXP_BOOL ::= EXP_BOOL && EXP_BOOL;
 EXP_BOOL ::= !EXP_BOOL;
 EXP_BOOL ::= (EXP_BOOL);
 EXP_BOOL ::= BOOL_RESULT;
-
-
-
-
-
-precedence left PLUS;
-precedence left TIMES;
-
-expr_list ::= expr_list expr_part | expr_part;
-expr_part ::= expr:e {: System.out.println(" = "+e.eval()+";"); :} SEMI
-            | error:e SEMI:s {: parser.report_error("Syntax error in input from "+exleft +" to "+sxright,e); :}
-            ;
-expr      ::= NUMBER:n
-              {: RESULT= new Expr.Const(nxleft,n,nxright); :}
-            | expr:l PLUS expr:r
-        {: RESULT=new Expr.BinExpr(l,sym.PLUS,r); :}
-        | expr:l TIMES expr:r
-        {: RESULT=new Expr.BinExpr(l,sym.TIMES,r); :}
-        | LPAREN expr:e RPAREN
-          {: RESULT=e; :}
-        ;

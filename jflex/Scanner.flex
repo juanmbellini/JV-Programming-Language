@@ -86,7 +86,7 @@ StringLiteral = [ ][^\n]*
 
 VarName = [ ] [:jletter:] [:jletterdigit:]*
 
-// %state STRING
+%state STRING
 
 /*
  * SYMBOLS
@@ -188,7 +188,7 @@ VarName = [ ] [:jletter:] [:jletterdigit:]*
 	/* Literal */
 	{IntegerLiteral} 	{ return createSymbol("Integer", sym.LIT_INT, new Integer(yytext())); }
 	{BooleanLiteral} 	{ return createSymbol("Boolean", sym.LIT_BOOL, createBoolean(yytext())); }
-	// {StringLiteral} 	{ return createSymbol("String", sym.LIT_STR, yytext()); }
+	\"                  { string.setLength(0); yybegin(STRING); }
 
 	/* Comments */
 	{Comment}			{ /* Do Nothing */	}
@@ -196,16 +196,14 @@ VarName = [ ] [:jletter:] [:jletterdigit:]*
 }
 
 <STRING> {
-+	\"	/* " /**/		{ yybegin(YYINITIAL); return createSymbol("String Const", string.toString(), string.length()); }
-+	[^\n\r\"\\]+ /*"/**/{ string.append(yytext()); }
-+	\\t 				{ string.append('\t'); }
-+	\\n 				{ string.append('\n'); }
-+	\\r 				{ string.append('\r'); }
-+	\"		/* " /**/	{ string.append('\"'); }
-Add a comment to this line
-+	\\					{ string.append('\\'); }
-+
-+}
-+	/* Those "comments" are there to make syntax highlight work. PLEASE, IGNORE THEM */
+  \"                             { yybegin(YYINITIAL); 
+                                   return createSymbol("String", sym.LIT_STR, string.toString()); }
+  [^\n\r\"\\]+                   { string.append( yytext() ); }
+  \\t                            { string.append('\t'); }
+  \\n                            { string.append('\n'); }
+  \\r                            { string.append('\r'); }
+  \\\"                           { string.append('\"'); }
+  \\                             { string.append('\\'); }
+}
 
-.					{ throw new Error("Illegal character <" + yytext() + ">");}
+[^]                              { throw new Error("Illegal character <" + yytext() + ">"); }

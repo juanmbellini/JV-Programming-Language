@@ -61,6 +61,7 @@ terminal VAR_NAME;
 terminal WRITE;
 terminal WRITE_VAR;
 terminal READ;
+terminal NEW_LINE;
 
 // Misc
 terminal LPAREN;
@@ -101,6 +102,7 @@ start with S;
 
 S
 	::= MAIN EOL BLOCK;
+
 
 BLOCK
 	::= EOL BLOCK | LINE
@@ -154,8 +156,6 @@ COMMAND
 	| WRITE LIT_STR
 	| NEW_LINE
 	| NEW_LINE SPACE LIT_INT
-	| EOL
-	| EOL LIT_INT
 ;
 
 

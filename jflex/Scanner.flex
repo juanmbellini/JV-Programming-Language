@@ -144,7 +144,7 @@ VarName = [ ] [:jletter:] [:jletterdigit:]*
 	/* Code Structure */
 	{EndOfLine}			{ return createSymbol("End of Line", sym.EOL); }
 	{Tab}				{ return createSymbol("Tab", sym.TAB); }
-	{WhiteSpace}					{ return createSymbol("Space", sym.SPACE); }
+	{WhiteSpace}		{ return createSymbol("Space", sym.SPACE); }
 
 	/* Data types */
 	"int"				{ return createSymbol("Integer", sym.TYPE_INT); }

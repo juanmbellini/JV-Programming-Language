@@ -46,7 +46,7 @@
   <!-- Test the parser in a single run -->
   <target name="run" depends="jar">
     <java jar="${dist}/Compiler.jar" fork="true">
-        <arg value="examples/jv/example2.jv" />
+        <arg value="examples/jv/factorial.jv" />
     </java>
   </target>
 

@@ -3,4 +3,3 @@ mn
 	rd var
 	ff (4 >= 3)
 		wr "Hola, mundo!"
-

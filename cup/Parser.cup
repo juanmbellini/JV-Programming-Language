@@ -103,6 +103,8 @@ non terminal LAMBDA;
 // non terminal BLOCK_IF_ELSIF;
 // non terminal BLOCK_IF_ELSIF_ELSE;
 
+precedence right EOL;	// Inserted by Eclipse plugin
+precedence nonassoc ELSE;	// Inserted by Eclipse plugin
 precedence nonassoc WHILE;	// Inserted by Eclipse plugin
 precedence left OR;
 precedence left AND;
@@ -118,11 +120,11 @@ precedence left VAR_NAME;
 start with S;
 
 S
-	::= MAIN EOL BLOCK;
+	::= MAIN BLOCK EOL;
 
 
 BLOCK
-	::= LINE EOL BLOCK | LINE EOL
+	::= EOL LINE BLOCK | EOL LINE
 ;
 
 // LINE ::= TAB LINE | INSTRUCTION COMMENT | COMMENT; < Está mal comment
@@ -210,16 +212,16 @@ COMMAND
 ;
 
 WHILE_B
-    ::= WHILE SPACE LPAREN BOOL_EXP RPAREN EOL BLOCK
-    | DO EOL BLOCK WHILE SPACE LPAREN BOOL_EXP RPAREN
+    ::= WHILE SPACE LPAREN BOOL_EXP RPAREN BLOCK
+    | DO BLOCK WHILE SPACE LPAREN BOOL_EXP RPAREN
 ;
 
 IF_B
-    ::= IF SPACE LPAREN BOOL_EXP RPAREN EOL BLOCK ELSE_B
+    ::= IF SPACE LPAREN BOOL_EXP RPAREN BLOCK ELSE_B
 ;
 
 ELSE_B
-    ::= ELSE EOL BLOCK
+    ::= ELSE BLOCK
     | LAMBDA
 ;
 

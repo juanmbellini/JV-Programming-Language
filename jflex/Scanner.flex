@@ -3,11 +3,6 @@ package atlc;
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 
-/**
- * This class represents the scanner.
- */
-
-
 %%
 
 %class Scanner
@@ -64,9 +59,6 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
     return symbolFactory.newSymbol("EOF",sym.EOF);
 %eofval}
 
-
-
-
 // Macros
 // For Unix and Windows files
 EndOfLine = \n | \r\n | \r
@@ -77,7 +69,6 @@ WhiteSpace = " "
 // A comment starts with the '~' character and continues with its content
 Comment = "~" {StringLiteral} \n
 
-
 // Integer can be a 0 or an infinite amount of any digit preceded by any digit from 1 to 9
 IntegerLiteral = 0 | [1-9][0-9]*
 BooleanLiteral = "yes" | "no"
@@ -87,52 +78,6 @@ StringLiteral = [ ][^\n]*
 VarName = [ ] [:jletter:] [:jletterdigit:]*
 
 %state STRING
-
-/*
- * SYMBOLS
- *
- *	END_OF_LINE
- *	TAB
- *	SPACE
- *
- *	INT_TYPE
- *	BOOL_TYPE
- *	STR_TYPE
- *
- *	READ
- *	WRITE
- *	WRITE_VAR
- *	NEW_LINE
- *
- * 	IF
- * 	ELSE_IF
- *	ELSE
- *	DO
- *	WHILE
- *
- *	LPAREN
- *	RPAREN
- *	PLUS
- *	MINUS
- *	TIMES
- * 	DIVDE
- * 	NOT
- * 	AND
- *	OR
- *	LOWER_THAN
- *	GREATER_THAN
- *	LOWER_THAN_OR_EQUAL_TO
- *	GREATER_THAN_OR_EQUAL_TO
- *	EQUAL_TO
- *	NOT_EQUAL_TO
- *	
- *	INTCONST
- *	BOOLCONST
- *
- *	VAR_NAME
- *
- *
- */
 
 %%
 

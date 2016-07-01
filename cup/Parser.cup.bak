@@ -1,0 +1,219 @@
+package atlc;
+
+import java_cup.runtime.*;
+import atlc.ast.*;
+parser code {:
+    public static void main(String args[]) throws Exception {
+        ComplexSymbolFactory symbolFactory = new ComplexSymbolFactory();
+        if (args.length == 0) {
+            new Parser(new Scanner(System.in, symbolFactory), symbolFactory).parse();
+        } else {
+            new Parser(new Scanner(new java.io.FileInputStream(args[0]), symbolFactory), symbolFactory).parse();
+        }
+    }
+
+    public void syntax_error(Symbol sym){ 
+    // Mute legacy Error Printing
+    }
+:}
+// Main
+terminal MAIN;
+
+// Arithmetic
+terminal PLUS;
+terminal TIMES;
+terminal MINUS;
+terminal DIVIDE;
+
+// Looping
+terminal DO;
+terminal WHILE;
+
+// Conditional
+terminal IF;
+terminal ELSE;
+terminal ELSE_IF;
+
+// Boolean operations
+terminal EQ;
+terminal NEQ;
+terminal GT;
+terminal LT;
+terminal LE;
+terminal GE;
+terminal NOT;
+terminal OR;
+terminal AND;
+terminal ASSIGN;
+
+// Literals
+terminal Integer LIT_INT;
+terminal Boolean LIT_BOOL;
+terminal String  LIT_STR;
+
+// Types
+terminal TYPE_INT;
+terminal TYPE_STR;
+terminal TYPE_BOOL;
+terminal VAR_NAME;
+
+// IO
+terminal WRITE;
+terminal WRITE_VAR;
+terminal READ;
+terminal NEW_LINE;
+
+// Misc
+terminal LPAREN;
+terminal RPAREN;
+terminal String EOL;
+terminal String TAB;
+terminal String SPACE;
+
+non terminal S;
+non terminal BLOCK;
+non terminal LINE;
+non terminal INSTRUCTION;
+non terminal ASSIGNMENT;
+non terminal BLOCK_IF;
+non terminal BLOCK_WHILE;
+non terminal COMMAND;
+non terminal EXP_NUM;
+non terminal EXP_BOOL;
+non terminal COMPARATOR;
+non terminal BOOL_RESULT;
+non terminal NUM_RESULT;
+// non terminal COMMENT;
+// non terminal BLOCK_IF_ELSIF;
+// non terminal BLOCK_IF_ELSIF_ELSE;
+
+precedence left OR;
+precedence left AND;
+precedence left NOT;
+precedence left EQ, NEQ;
+precedence left GT, LT, GE, LE;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE;
+precedence left RPAREN, LPAREN;
+precedence left VAR_NAME;
+
+// ESTRUCTURA
+start with S;
+
+S
+	::= MAIN BLOCK;
+
+
+BLOCK
+	::= EOL LINE BLOCK | EOL LINE EOL
+;
+
+// LINE ::= TAB LINE | INSTRUCTION COMMENT | COMMENT; < Está mal comment
+LINE 
+	::= TAB LINE
+	| INSTRUCTION
+;
+
+INSTRUCTION
+	::= ASSIGNMENT
+	| BLOCK_IF
+	| BLOCK_WHILE
+	| COMMAND
+;
+
+// COMMENT ::= ~ comment;
+
+
+// ASIGNACIONES
+
+ASSIGNMENT
+	::= TYPE_INT VAR_NAME
+	| TYPE_INT VAR_NAME ASSIGN EXP_NUM
+	| TYPE_STR VAR_NAME
+	| TYPE_STR VAR_NAME ASSIGN LIT_STR
+	| TYPE_BOOL VAR_NAME
+	| TYPE_BOOL VAR_NAME ASSIGN EXP_BOOL
+;
+
+// ESTRUCTURAS DE DECISION
+
+BLOCK_IF
+	::= IF LPAREN EXP_BOOL RPAREN BLOCK
+	| IF LPAREN EXP_BOOL RPAREN BLOCK EOL ELSE BLOCK
+;
+// BLOCK_IF ::= IF LPAREN EXP_BOOL RPAREN BLOCK BLOCK_IF_ELSIF;
+// BLOCK_IF ::= IF LPAREN EXP_BOOL RPAREN BLOCK BLOCK_IF_ELSIF_ELSE;
+
+// BLOCK_IF_ELSIF ::= BLOCK_ELSE_IF EOL ELSE_IF LPAREN EXP_BOOL RPAREN BLOCK;
+// BLOCK_IF_ELSIF ::= EOL ELSE_IF LPAREN EXP_BOOL RPAREN BLOCK;
+// BLOCK_IF_ELSIF_ELSE ::= BLOCK_ELSE_IF EOL ELSE_IF LPAREN EXP_BOOL RPAREN BLOCK EOL ELSE BLOCK;
+
+// COMANDOS
+
+COMMAND
+	::= READ SPACE VAR_NAME
+	| WRITE_VAR SPACE VAR_NAME
+	| WRITE SPACE LIT_STR
+	| NEW_LINE
+	| NEW_LINE SPACE LIT_INT
+	// | EOL
+	// | EOL SPACE LIT_INT
+	// | EOL
+	// | EOL LIT_INT
+;
+
+
+// ESTRUCTURAS DE REPETICION
+
+BLOCK_WHILE
+	::= DO BLOCK WHILE LPAREN EXP_BOOL RPAREN
+	| WHILE LPAREN EXP_BOOL RPAREN BLOCK
+;
+
+// NUM_RESULT
+
+NUM_RESULT
+	::= LIT_INT
+	| VAR_NAME
+;
+
+// BOOL_RESULT
+
+BOOL_RESULT
+	::= COMPARATOR
+	| LIT_BOOL
+	| VAR_NAME
+;
+
+// -- GRAMATICAS AMBIGUAS --
+
+COMPARATOR
+	::= EXP_NUM LT EXP_NUM
+	| EXP_NUM GT EXP_NUM
+	| EXP_NUM LE EXP_NUM
+	| EXP_NUM GE EXP_NUM
+	| EXP_NUM EQ EXP_NUM
+	| EXP_NUM NEQ EXP_NUM
+;
+
+// EXPRESIONES NUMERICAS
+
+EXP_NUM
+	::= EXP_NUM PLUS EXP_NUM
+	| EXP_NUM MINUS EXP_NUM
+	| EXP_NUM TIMES EXP_NUM
+	| EXP_NUM DIVIDE EXP_NUM
+	| LPAREN EXP_NUM RPAREN
+	| MINUS EXP_NUM
+	| NUM_RESULT
+;
+
+// EXPRESIONES BOOLEANAS
+
+EXP_BOOL
+	::= EXP_BOOL OR EXP_BOOL
+	| EXP_BOOL AND EXP_BOOL
+	| NOT EXP_BOOL
+//	| LPAREN EXP_BOOL RPAREN
+	| BOOL_RESULT
+;

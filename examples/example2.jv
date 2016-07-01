@@ -1,5 +1,0 @@
-mn
-	int var: 3
-	if (var == 3)
-		wr Hola mundo
-	

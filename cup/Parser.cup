@@ -16,25 +16,52 @@ parser code {:
     // Mute legacy Error Printing
     }
 :}
-// Main
-terminal MAIN;
 
-// Arithmetic
-terminal PLUS;
-terminal TIMES;
-terminal MINUS;
-terminal DIVIDE;
+
+// Main and Return
+terminal MAIN;
+terminal RETURN;
+
+// Code Structure
+terminal String EOL;
+terminal String TAB;
+terminal String SPACE;
+
+// Types
+terminal TYPE_INT;
+terminal TYPE_BOOL;
+terminal TYPE_STR;
+
+// Var Names
+terminal VAR_NAME;
+
+// Literals
+terminal Integer LIT_INT;
+terminal Boolean LIT_BOOL;
+terminal String  LIT_STR;
+
+
+// IO
+terminal READ;
+terminal WRITE;
+
+// Conditionals
+terminal IF;
+terminal ELSE;
 
 // Looping
 terminal DO;
 terminal WHILE;
 
-// Conditional
-terminal IF;
-terminal ELSE;
-terminal ELSE_IF;
+// Miscs
+terminal LPAREN;
+terminal RPAREN;
 
-// Boolean operations
+// Operators
+terminal PLUS;
+terminal TIMES;
+terminal MINUS;
+terminal DIVIDE;
 terminal EQ;
 terminal NEQ;
 terminal GT;
@@ -46,47 +73,37 @@ terminal OR;
 terminal AND;
 terminal ASSIGN;
 
-// Literals
-terminal Integer LIT_INT;
-terminal Boolean LIT_BOOL;
-terminal String  LIT_STR;
 
-// Types
-terminal TYPE_INT;
-terminal TYPE_STR;
-terminal TYPE_BOOL;
-terminal VAR_NAME;
 
-// IO
-terminal WRITE;
-terminal WRITE_VAR;
-terminal READ;
-terminal NEW_LINE;
-
-// Misc
-terminal LPAREN;
-terminal RPAREN;
-terminal String EOL;
-terminal String TAB;
-terminal String SPACE;
+// NON TERMINALS
 
 non terminal S;
 non terminal BLOCK;
 non terminal LINE;
 non terminal INSTRUCTION;
-non terminal ASSIGNMENT;
-non terminal BLOCK_IF;
-non terminal BLOCK_WHILE;
+non terminal DECL;
+non terminal DECL_ASS;
+non terminal ASS;
 non terminal COMMAND;
-non terminal EXP_NUM;
-non terminal EXP_BOOL;
-non terminal COMPARATOR;
-non terminal BOOL_RESULT;
-non terminal NUM_RESULT;
+non terminal WHILE_B;
+non terminal IF_B;
+non terminal ELSE_B;
+
+non terminal VALUE;
+non terminal EXPR;
+non terminal BOOL_EXP;
+non terminal INT_EXP;
+non terminal INT_VALUE;
+non terminal BOOL_VALUE;
+non terminal COMP;
+
+non terminal LAMBDA;
+
 // non terminal COMMENT;
 // non terminal BLOCK_IF_ELSIF;
 // non terminal BLOCK_IF_ELSIF_ELSE;
 
+precedence nonassoc WHILE;	// Inserted by Eclipse plugin
 precedence left OR;
 precedence left AND;
 precedence left NOT;
@@ -115,105 +132,101 @@ LINE
 ;
 
 INSTRUCTION
-	::= ASSIGNMENT
-	| BLOCK_IF
-	| BLOCK_WHILE
+	::= DECL
+	| DECL_ASS
+	| ASS
 	| COMMAND
+    | WHILE_B
+    | IF_B
+    | RETURN
 ;
 
 // COMMENT ::= ~ comment;
 
 
-// ASIGNACIONES
-
-ASSIGNMENT
-	::= TYPE_INT VAR_NAME
-	| TYPE_INT VAR_NAME ASSIGN EXP_NUM
-	| TYPE_STR VAR_NAME
-	| TYPE_STR VAR_NAME ASSIGN LIT_STR
-	| TYPE_BOOL VAR_NAME
-	| TYPE_BOOL VAR_NAME ASSIGN EXP_BOOL
+DECL
+    ::= TYPE_INT VAR_NAME
+    | TYPE_BOOL VAR_NAME
+    | TYPE_STR VAR_NAME
 ;
 
-// ESTRUCTURAS DE DECISION
-
-BLOCK_IF
-	::= IF LPAREN EXP_BOOL RPAREN BLOCK
-	| IF LPAREN EXP_BOOL RPAREN BLOCK EOL ELSE BLOCK
+DECL_ASS
+    ::= DECL ASSIGN SPACE VALUE
 ;
-// BLOCK_IF ::= IF LPAREN EXP_BOOL RPAREN BLOCK BLOCK_IF_ELSIF;
-// BLOCK_IF ::= IF LPAREN EXP_BOOL RPAREN BLOCK BLOCK_IF_ELSIF_ELSE;
 
-// BLOCK_IF_ELSIF ::= BLOCK_ELSE_IF EOL ELSE_IF LPAREN EXP_BOOL RPAREN BLOCK;
-// BLOCK_IF_ELSIF ::= EOL ELSE_IF LPAREN EXP_BOOL RPAREN BLOCK;
-// BLOCK_IF_ELSIF_ELSE ::= BLOCK_ELSE_IF EOL ELSE_IF LPAREN EXP_BOOL RPAREN BLOCK EOL ELSE BLOCK;
+ASS
+    ::= VAR_NAME ASSIGN SPACE VALUE
+;
 
-// COMANDOS
+VALUE
+    ::= LIT_STR
+    | EXPR
+;
+
+EXPR
+    ::= BOOL_EXP
+    | INT_EXP 
+;
+
+
+BOOL_EXP
+    ::= BOOL_EXP OR BOOL_EXP
+    | BOOL_EXP AND BOOL_EXP
+    | NOT BOOL_EXP
+    | LPAREN BOOL_EXP RPAREN
+    | BOOL_VALUE
+;
+
+BOOL_VALUE
+    ::= LIT_BOOL | COMP //| VAR_NAME
+;
+
+INT_EXP
+    ::= INT_EXP PLUS INT_EXP
+    | INT_EXP MINUS INT_EXP
+    | INT_EXP TIMES INT_EXP
+    | INT_EXP DIVIDE INT_EXP
+    | LPAREN INT_EXP RPAREN
+    | MINUS INT_EXP
+    | INT_VALUE 
+;
+
+INT_VALUE
+    ::= LIT_INT //| VAR_NAME
+;
+
+COMP
+    ::= INT_EXP SPACE LT SPACE INT_EXP
+    | INT_EXP SPACE GT SPACE INT_EXP
+    | INT_EXP SPACE LE SPACE INT_EXP
+    | INT_EXP SPACE GE SPACE INT_EXP
+    | INT_EXP SPACE EQ SPACE INT_EXP
+    | INT_EXP SPACE NEQ SPACE INT_EXP
+;
 
 COMMAND
-	::= READ SPACE VAR_NAME
-	| WRITE_VAR SPACE VAR_NAME
-	| WRITE SPACE LIT_STR
-	| NEW_LINE
-	| NEW_LINE SPACE LIT_INT
-	// | EOL
-	// | EOL SPACE LIT_INT
-	// | EOL
-	// | EOL LIT_INT
+    ::= READ VAR_NAME
+    | WRITE SPACE VALUE
+;
+
+WHILE_B
+    ::= WHILE SPACE LPAREN BOOL_EXP RPAREN EOL BLOCK
+    | DO EOL BLOCK WHILE SPACE LPAREN BOOL_EXP RPAREN
+;
+
+IF_B
+    ::= IF SPACE LPAREN BOOL_EXP RPAREN EOL BLOCK ELSE_B
+;
+
+ELSE_B
+    ::= ELSE EOL BLOCK
+    | LAMBDA
+;
+
+LAMBDA
+    ::= // Empty Production
 ;
 
 
-// ESTRUCTURAS DE REPETICION
 
-BLOCK_WHILE
-	::= DO BLOCK WHILE LPAREN EXP_BOOL RPAREN
-	| WHILE LPAREN EXP_BOOL RPAREN BLOCK
-;
 
-// NUM_RESULT
-
-NUM_RESULT
-	::= LIT_INT
-	| VAR_NAME
-;
-
-// BOOL_RESULT
-
-BOOL_RESULT
-	::= COMPARATOR
-	| LIT_BOOL
-	| VAR_NAME
-;
-
-// -- GRAMATICAS AMBIGUAS --
-
-COMPARATOR
-	::= EXP_NUM LT EXP_NUM
-	| EXP_NUM GT EXP_NUM
-	| EXP_NUM LE EXP_NUM
-	| EXP_NUM GE EXP_NUM
-	| EXP_NUM EQ EXP_NUM
-	| EXP_NUM NEQ EXP_NUM
-;
-
-// EXPRESIONES NUMERICAS
-
-EXP_NUM
-	::= EXP_NUM PLUS EXP_NUM
-	| EXP_NUM MINUS EXP_NUM
-	| EXP_NUM TIMES EXP_NUM
-	| EXP_NUM DIVIDE EXP_NUM
-	| LPAREN EXP_NUM RPAREN
-	| MINUS EXP_NUM
-	| NUM_RESULT
-;
-
-// EXPRESIONES BOOLEANAS
-
-EXP_BOOL
-	::= EXP_BOOL OR EXP_BOOL
-	| EXP_BOOL AND EXP_BOOL
-	| NOT EXP_BOOL
-//	| LPAREN EXP_BOOL RPAREN
-	| BOOL_RESULT
-;

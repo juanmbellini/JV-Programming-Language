@@ -1,7 +1,6 @@
 package atlc;
 
 import java_cup.runtime.*;
-import atlc.Parser.Expr;
 
 parser code {:
     public static abstract class Expr {
@@ -50,11 +49,11 @@ parser code {:
     }
     }
     public static void main(String args[]) throws Exception {
-        ComplexSymbolFactory sf = new ComplexSymbolFactory();
-        if (args.length==0) {
-            new Parser(new Scanner(System.in,sf),sf).parse();
+        ComplexSymbolFactory symbolFactory = new ComplexSymbolFactory();
+        if (args.length == 0) {
+            new Parser(new Scanner(System.in, symbolFactory), symbolFactory).parse();
         } else {
-            new Parser(new Scanner(new java.io.FileInputStream(args[0]),sf),sf).parse();
+            new Parser(new Scanner(new java.io.FileInputStream(args[0]), symbolFactory), symbolFactory).parse();
         }
     }
 
@@ -101,7 +100,6 @@ terminal TYPE_INT;
 terminal TYPE_STR;
 terminal TYPE_BOOL;
 terminal VAR_NAME;
-terminal NEW_LINE;
 
 // IO
 terminal WRITE;
@@ -198,8 +196,8 @@ COMMAND
 	::= READ VAR_NAME
 	| WRITE_VAR VAR_NAME
 	| WRITE LIT_STR
-	| NEW_LINE
-	| NEW_LINE LIT_INT
+	| EOL
+	| EOL LIT_INT
 ;
 
 

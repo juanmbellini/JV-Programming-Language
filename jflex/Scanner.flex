@@ -154,7 +154,7 @@ VarName = [ ] [:jletter:] [:jletterdigit:]*
 	"rd"				{ return createSymbol("Read", sym.READ); }
 	"wr"				{ return createSymbol("Write", sym.WRITE); }
 	"wv"				{ return createSymbol("Write var", sym.WRITE_VAR); }
-	"nl"				{ return createSymbol("Write new line", sym.EOL); }
+	"nl"				{ return createSymbol("Write new line", sym.NEW_LINE); }
 
 	/* Decision and repetition structures */
 	"ff"				{ return createSymbol("If", sym.IF); }
@@ -188,11 +188,24 @@ VarName = [ ] [:jletter:] [:jletterdigit:]*
 	/* Literal */
 	{IntegerLiteral} 	{ return createSymbol("Integer", sym.LIT_INT, new Integer(yytext())); }
 	{BooleanLiteral} 	{ return createSymbol("Boolean", sym.LIT_BOOL, createBoolean(yytext())); }
-	{StringLiteral} 	{ return createSymbol("String", sym.LIT_STR, yytext()); }
+	// {StringLiteral} 	{ return createSymbol("String", sym.LIT_STR, yytext()); }
 
 	/* Comments */
 	{Comment}			{ /* Do Nothing */	}
 
-	.					{ throw new Error("Illegal character <" + yytext() + ">");}
-
 }
+
+<STRING> {
++	\"	/* " /**/		{ yybegin(YYINITIAL); return createSymbol("String Const", string.toString(), string.length()); }
++	[^\n\r\"\\]+ /*"/**/{ string.append(yytext()); }
++	\\t 				{ string.append('\t'); }
++	\\n 				{ string.append('\n'); }
++	\\r 				{ string.append('\r'); }
++	\"		/* " /**/	{ string.append('\"'); }
+Add a comment to this line
++	\\					{ string.append('\\'); }
++
++}
++	/* Those "comments" are there to make syntax highlight work. PLEASE, IGNORE THEM */
+
+.					{ throw new Error("Illegal character <" + yytext() + ">");}

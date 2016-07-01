@@ -73,7 +73,7 @@ EndOfLine = \n | \r\n | \r
 // Tab character
 Tab = \t
 // We only accept ' ' as a white space
-WhiteSpace = [ ]
+WhiteSpace = " "
 // A comment starts with the '~' character and continues with its content
 Comment = "~" {StringLiteral} \n
 
@@ -143,7 +143,7 @@ VarName = [ ] [:jletter:] [:jletterdigit:]*
 	/* Code Structure */
 	{EndOfLine}			{ return createSymbol("End of Line", sym.EOL); }
 	{Tab}				{ return createSymbol("Tab", sym.TAB); }
-	{WhiteSpace}		{ return createSymbol("Space", sym.SPACE); }
+	{WhiteSpace}					{ return createSymbol("Space", sym.SPACE); }
 
 	/* Data types */
 	"int"				{ return createSymbol("Integer", sym.TYPE_INT); }

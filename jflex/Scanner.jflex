@@ -142,8 +142,8 @@ VarName = [ ] [:jletter:] [:jletterdigit:]*
     "mn"                { return createSymbol("Main", sym.MAIN); }
 	/* Code Structure */
 	{EndOfLine}			{ return createSymbol("End of Line", sym.EOL); }
-	[\t]				{ return createSymbol("Tab", sym.TAB); }
-	" "					{ return createSymbol("Space", sym.SPACE); }
+	{Tab}				{ return createSymbol("Tab", sym.TAB); }
+	{WhiteSpace}		{ return createSymbol("Space", sym.SPACE); }
 
 	/* Data types */
 	"int"				{ return createSymbol("Integer", sym.TYPE_INT); }
@@ -179,6 +179,7 @@ VarName = [ ] [:jletter:] [:jletterdigit:]*
 	">=" 				{ return createSymbol("greater than or equal to", sym.GE); }
 	"==" 				{ return createSymbol("Equal to", sym.EQ); }
 	"!=" 				{ return createSymbol("Not equal to", sym.NEQ); }
+	":" 				{ return createSymbol("Assign", sym.ASSIGN); }
 
 	/* Identifiers */
     // TODO: Space is being added before var name

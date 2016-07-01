@@ -1,60 +1,14 @@
 package atlc;
 
 import java_cup.runtime.*;
-import atlc.Parser.Expr;
-
+import atlc.ast.*;
 parser code {:
-    public static abstract class Expr {
-    public abstract int eval();
-    public abstract Location right();
-    public abstract Location left();
-    static class BinExpr extends Expr {
-        Expr l, r;
-        int s;
-        BinExpr(Expr l, int sym, Expr r) {
-            this.l = l;
-            this.r = r;
-            this.s = sym;
-        }
-        public int eval() {
-            if (s==sym.PLUS) {
-                return l.eval() + r.eval();
-            } else {
-                return l.eval() * r.eval();
-            }
-        }
-        public Location left() {
-            return l.left();
-        }
-        public Location right() {
-            return r.right();
-        }
-    }
-    static class Const extends Expr {
-        Location l, r;
-        Integer value;
-        Const(Location l,Integer i,Location r) {
-            this.l = l;
-            this.r = r;
-            this.value = i;
-        }
-        public int eval() {
-            return value;
-        }
-        public Location left() {
-            return l;
-        }
-        public Location right() {
-            return r;
-        }
-    }
-    }
     public static void main(String args[]) throws Exception {
-        ComplexSymbolFactory sf = new ComplexSymbolFactory();
-        if (args.length==0) {
-            new Parser(new Scanner(System.in,sf),sf).parse();
+        ComplexSymbolFactory symbolFactory = new ComplexSymbolFactory();
+        if (args.length == 0) {
+            new Parser(new Scanner(System.in, symbolFactory), symbolFactory).parse();
         } else {
-            new Parser(new Scanner(new java.io.FileInputStream(args[0]),sf),sf).parse();
+            new Parser(new Scanner(new java.io.FileInputStream(args[0]), symbolFactory), symbolFactory).parse();
         }
     }
 
@@ -102,7 +56,6 @@ terminal TYPE_INT;
 terminal TYPE_STR;
 terminal TYPE_BOOL;
 terminal VAR_NAME;
-terminal NEW_LINE;
 
 // IO
 terminal WRITE;
@@ -201,6 +154,8 @@ COMMAND
 	| WRITE LIT_STR
 	| NEW_LINE
 	| NEW_LINE SPACE LIT_INT
+	| EOL
+	| EOL LIT_INT
 ;
 
 

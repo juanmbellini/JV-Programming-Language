@@ -154,7 +154,7 @@ VarName = [ ] [:jletter:] [:jletterdigit:]*
 	"rd"				{ return createSymbol("Read", sym.READ); }
 	"wr"				{ return createSymbol("Write", sym.WRITE); }
 	"wv"				{ return createSymbol("Write var", sym.WRITE_VAR); }
-	"nl"				{ return createSymbol("Write new line", sym.NEW_LINE); }
+	"nl"				{ return createSymbol("Write new line", sym.EOL); }
 
 	/* Decision and repetition structures */
 	"ff"				{ return createSymbol("If", sym.IF); }

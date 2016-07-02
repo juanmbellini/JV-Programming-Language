@@ -67,13 +67,11 @@ Tab = \t
 // We only accept ' ' as a white space
 WhiteSpace = " "
 // A comment starts with the '~' character and continues with its content
-Comment = "~" {StringLiteral} \n
+Comment = "~" [ ][^\n]* {EndOfLine}
 
 // Integer can be a 0 or an infinite amount of any digit preceded by any digit from 1 to 9
 IntegerLiteral = 0 | [1-9][0-9]*
 BooleanLiteral = "yes" | "no"
-// A string can have any character as long as it's not a line terminator
-StringLiteral = [ ][^\n]*
 
 VarName = [ ] [:jletter:] [:jletterdigit:]*
 

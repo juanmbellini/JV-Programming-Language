@@ -1,10 +1,10 @@
-mn
-	wr "Ingrese el numero al que le quiere calcular el factorial: "
-	int nro
-	rd nro
-	int res: nro
-	whl nro > 0
-		res: res * (nro - 1)
-		nro: nro - 1
-	wr "El factorial es: "
-	wv res
+w "Factorial de: "
+int:numero
+rd numero
+int:result = numero
+whl numero > 0
+	numero = - numero 1
+	result = * result numero
+
+w "El factorial es: "
+wl res

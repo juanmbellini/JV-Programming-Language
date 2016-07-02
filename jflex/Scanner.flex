@@ -87,12 +87,12 @@ VarName = [:jletter:] [:jletterdigit:]*
 
 <NORMAL> {
 
-    /* Main */
-    "mn"                { return createSymbol("Main", sym.MAIN); }
-    "ret"               { return createSymbol("Main", sym.RETURN); }
+    /* Functions */
+    "fn"                { return createSymbol("Function", sym.FUNC); }
+    "ret"               { return createSymbol("Return", sym.RET); }
 	/* Code Structure */
 	{EndOfLine}			{ currentLineIndent = 0; yybegin(YYINITIAL); return createSymbol("End of Line", sym.EOL); }
-	[ ]					{ return createSymbol("Space", sym.SPACE); }
+	[ ]					{ return createSymbol("Space", sym.SP); }
 
 	/* Data types */
 	"int"				{ return createSymbol("Integer", sym.TYPE_INT); }
@@ -100,18 +100,17 @@ VarName = [:jletter:] [:jletterdigit:]*
 	"str"				{ return createSymbol("String", sym.TYPE_STR); }
 
 	/* Commands */
-	"rd"				{ return createSymbol("Read", sym.READ); }
-	"wr"				{ return createSymbol("Write", sym.WRITE); }
+	"rl"				{ return createSymbol("Read", sym.READ_LINE); }
+	"wl"				{ return createSymbol("Write", sym.WRITE_LINE); }
+	"w"					{ return createSymbol("Write", sym.WRITE); }
 
 	/* Decision and repetition structures */
 	"if"				{ return createSymbol("If", sym.IF); }
 	"ls"				{ return createSymbol("Else", sym.ELSE); }
-	"dd"				{ return createSymbol("Do", sym.DO); }
+	"do"				{ return createSymbol("Do", sym.DO); }
 	"whl"				{ return createSymbol("While", sym.WHILE); }
 
 	/* Operators */
-	"(" 				{ return createSymbol("Left Bracket",sym.LPAREN); }
-	")" 				{ return createSymbol("Right Bracket",sym.RPAREN); }
 	"+" 				{ return createSymbol("Plus",sym.PLUS); }
 	"-" 				{ return createSymbol("Minus", sym.MINUS); }
 	"*" 				{ return createSymbol("Times",sym.TIMES); }
@@ -125,7 +124,8 @@ VarName = [:jletter:] [:jletterdigit:]*
 	">=" 				{ return createSymbol("greater than or equal to", sym.GE); }
 	"==" 				{ return createSymbol("Equal to", sym.EQ); }
 	"!=" 				{ return createSymbol("Not equal to", sym.NEQ); }
-	":" 				{ return createSymbol("Assign", sym.ASSIGN); }
+	"=" 				{ return createSymbol("Assign", sym.ASSIGN); }
+	":" 				{ return createSymbol("Assign", sym.ASSIGN_TYPE); }
 
 	/* Identifiers */
     // TODO: Space is being added before var name
@@ -184,4 +184,4 @@ VarName = [:jletter:] [:jletterdigit:]*
 	}
 }
 
-[^]                              { System.out.println("State: " + yystate()); throw new Error("Illegal character <" + yytext() + ">"); }
+[^]		{ System.out.println("State: " + yystate()); throw new Error("Illegal character <" + yytext() + ">"); }

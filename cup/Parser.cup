@@ -15,219 +15,115 @@ parser code {:
 :}
 
 
-// Main and Return
-terminal MAIN;
-terminal RETURN;
-
-// Code Structure
-terminal String EOL;
-terminal String TAB;
-terminal String SPACE;
-terminal INDENT;
-terminal DEDENT;
-
-// Types
-terminal TYPE_INT;
-terminal TYPE_BOOL;
-terminal TYPE_STR;
-
-// Var Names
+terminal FUNC, RET; // Functions
+terminal SP, INDENT, DEDENT, EOL; // Whitespace
+terminal TYPE_INT, TYPE_BOOL, TYPE_STR; // Types
 terminal VAR_NAME;
+terminal READ_LINE, WRITE_LINE, WRITE; // IO
 
 // Literals
 terminal Integer LIT_INT;
 terminal Boolean LIT_BOOL;
 terminal String  LIT_STR;
 
+terminal IF, ELSE;
+terminal DO, WHILE;
 
-// IO
-terminal READ;
-terminal WRITE;
+terminal PLUS, TIMES, MINUS, DIVIDE;
+terminal EQ, NEQ, GT, LT, LE, GE, NOT, OR, AND;
+terminal ASSIGN, ASSIGN_TYPE;
 
-// Conditionals
-terminal IF;
-terminal ELSE;
+non terminal program, stmt_list, stmt;
+non terminal type, stmt_def_maybe_assign, stmt_assign;
+non terminal stmt_if_maybe_else, stmt_if;
+non terminal stmt_while, stmt_io;
+non terminal expr, expr_bool, expr_int, expr_str;
+non terminal block;
 
-// Looping
-terminal DO;
-terminal WHILE;
+precedence left ELSE;
+precedence left SP; // TODO: CHECK IF OK
 
-// Miscs
-terminal LPAREN;
-terminal RPAREN;
-
-// Operators
-terminal PLUS;
-terminal TIMES;
-terminal MINUS;
-terminal DIVIDE;
-terminal EQ;
-terminal NEQ;
-terminal GT;
-terminal LT;
-terminal LE;
-terminal GE;
-terminal NOT;
-terminal OR;
-terminal AND;
-terminal ASSIGN;
-
-
-
-// NON TERMINALS
-
-non terminal S;
-non terminal BLOCK;
-non terminal LINE;
-non terminal INSTRUCTION;
-non terminal DECL;
-non terminal DECL_ASS;
-non terminal ASS;
-non terminal COMMAND;
-non terminal WHILE_B;
-non terminal IF_B;
-non terminal ELSE_B;
-
-non terminal VALUE;
-non terminal EXPR;
-non terminal BOOL_EXP;
-non terminal INT_EXP;
-non terminal INT_VALUE;
-non terminal BOOL_VALUE;
-non terminal COMP;
-
-non terminal LAMBDA;
-
-// non terminal COMMENT;
-// non terminal BLOCK_IF_ELSIF;
-// non terminal BLOCK_IF_ELSIF_ELSE;
-
-precedence right EOL;	// Inserted by Eclipse plugin
-precedence nonassoc ELSE;	// Inserted by Eclipse plugin
-precedence nonassoc WHILE;	// Inserted by Eclipse plugin
-precedence left OR;
-precedence left AND;
-precedence left NOT;
-precedence left EQ, NEQ;
-precedence left GT, LT, GE, LE;
-precedence left PLUS, MINUS;
-precedence left TIMES, DIVIDE;
-precedence left RPAREN, LPAREN;
-precedence left VAR_NAME;
 
 // ESTRUCTURA
-start with S;
+start with program;
 
-S
-	::= MAIN BLOCK EOL;
-
-
-BLOCK
-	::= EOL LINE BLOCK | EOL LINE
+program
+    ::= stmt_list
 ;
 
-// LINE ::= TAB LINE | INSTRUCTION COMMENT | COMMENT; < Está mal comment
-LINE 
-	::= TAB LINE
-	| INSTRUCTION
+stmt_list
+    ::= stmt stmt_list
+    | // empty
 ;
 
-INSTRUCTION
-	::= DECL
-	| DECL_ASS
-	| ASS
-	| COMMAND
-    | WHILE_B
-    | IF_B
-    | RETURN
+stmt
+    ::= stmt_if_maybe_else
+    | stmt_while
+    | stmt_def_maybe_assign
+    | stmt_assign
+    | stmt_io
 ;
 
-// COMMENT ::= ~ comment;
-
-
-DECL
-    ::= TYPE_INT VAR_NAME
-    | TYPE_BOOL VAR_NAME
-    | TYPE_STR VAR_NAME
+stmt_if_maybe_else
+    ::= stmt_if | stmt_if ELSE block
 ;
 
-DECL_ASS
-    ::= DECL ASSIGN SPACE VALUE
+stmt_if
+    ::= IF SP expr_bool block
 ;
 
-ASS
-    ::= VAR_NAME ASSIGN SPACE VALUE
+stmt_while
+    ::= WHILE expr_bool block
 ;
 
-VALUE
+stmt_def_maybe_assign
+    ::= type ASSIGN_TYPE VAR_NAME
+    | type ASSIGN_TYPE stmt_assign
+;
+
+type
+    ::= TYPE_BOOL
+    | TYPE_INT
+    | TYPE_STR
+;
+
+// TODO: FUNCTIONS
+// TODO: ARRAY
+
+stmt_assign
+    ::= VAR_NAME SP ASSIGN SP expr
+;
+
+// TODO: FEATURE WRITE MANY (read many?)
+stmt_io
+    ::= READ_LINE SP VAR_NAME
+    | WRITE_LINE SP expr
+    | WRITE SP expr
+;
+
+expr
+    ::= expr_bool
+    | expr_int
+    | expr_str
+;
+
+// TODO PREFIX BOOL CONDITIONS
+expr_bool
+    ::= LIT_BOOL
+    | VAR_NAME
+;
+
+// TODO PREFIX INT OPERATIONS
+expr_int
+    ::= LIT_INT
+    | VAR_NAME
+;
+
+expr_str
     ::= LIT_STR
-    | EXPR
+    | VAR_NAME
 ;
 
-EXPR
-    ::= BOOL_EXP
-    | INT_EXP 
+block
+    ::= EOL INDENT stmt_list DEDENT
 ;
-
-
-BOOL_EXP
-    ::= BOOL_EXP OR BOOL_EXP
-    | BOOL_EXP AND BOOL_EXP
-    | NOT BOOL_EXP
-    | LPAREN BOOL_EXP RPAREN
-    | BOOL_VALUE
-;
-
-BOOL_VALUE
-    ::= LIT_BOOL | COMP //| VAR_NAME
-;
-
-INT_EXP
-    ::= INT_EXP PLUS INT_EXP
-    | INT_EXP MINUS INT_EXP
-    | INT_EXP TIMES INT_EXP
-    | INT_EXP DIVIDE INT_EXP
-    | LPAREN INT_EXP RPAREN
-    | MINUS INT_EXP
-    | INT_VALUE 
-;
-
-INT_VALUE
-    ::= LIT_INT //| VAR_NAME
-;
-
-COMP
-    ::= INT_EXP SPACE LT SPACE INT_EXP
-    | INT_EXP SPACE GT SPACE INT_EXP
-    | INT_EXP SPACE LE SPACE INT_EXP
-    | INT_EXP SPACE GE SPACE INT_EXP
-    | INT_EXP SPACE EQ SPACE INT_EXP
-    | INT_EXP SPACE NEQ SPACE INT_EXP
-;
-
-COMMAND
-    ::= READ VAR_NAME
-    | WRITE SPACE VALUE
-;
-
-WHILE_B
-    ::= WHILE SPACE LPAREN BOOL_EXP RPAREN BLOCK
-    | DO BLOCK WHILE SPACE LPAREN BOOL_EXP RPAREN
-;
-
-IF_B
-    ::= IF SPACE LPAREN BOOL_EXP RPAREN BLOCK ELSE_B
-;
-
-ELSE_B
-    ::= ELSE BLOCK
-    | LAMBDA
-;
-
-LAMBDA
-    ::= // Empty Production
-;
-
-
-
-

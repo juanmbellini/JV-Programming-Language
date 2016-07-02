@@ -138,6 +138,7 @@ VarName = [ ] [:jletter:] [:jletterdigit:]*
 
 	/* Comments */
 	{Comment}			{ /* Do Nothing */	}
+	^[\t]*\n       		{/* Ignore blank lines. */}
 
 }
 

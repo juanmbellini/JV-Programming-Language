@@ -144,7 +144,7 @@ VarName = [ ] [:jletter:] [:jletterdigit:]*
 <STRING> {
   \"                             { yybegin(YYINITIAL); 
                                    return createSymbol("String", sym.LIT_STR, string.toString()); }
-  [^\n\r\"\\]+                   { string.append( yytext() ); }
+  [^\n\r\"\\]+                   { string.append(yytext()); }
   \\t                            { string.append('\t'); }
   \\n                            { string.append('\n'); }
   \\r                            { string.append('\r'); }

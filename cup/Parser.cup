@@ -23,6 +23,8 @@ terminal RETURN;
 terminal String EOL;
 terminal String TAB;
 terminal String SPACE;
+terminal INDENT;
+terminal DEDENT;
 
 // Types
 terminal TYPE_INT;

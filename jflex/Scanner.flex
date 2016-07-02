@@ -99,12 +99,9 @@ VarName = [ ] [:jletter:] [:jletterdigit:]*
 	/* Commands */
 	"rd"				{ return createSymbol("Read", sym.READ); }
 	"wr"				{ return createSymbol("Write", sym.WRITE); }
-//	"wv"				{ return createSymbol("Write var", sym.WRITE_VAR); }
-//	"nl"				{ return createSymbol("Write new line", sym.NEW_LINE); }
 
 	/* Decision and repetition structures */
 	"ff"				{ return createSymbol("If", sym.IF); }
-//	"lsff"				{ return createSymbol("Else-If", sym.ELSE_IF); }
 	"ls"				{ return createSymbol("Else", sym.ELSE); }
 	"dd"				{ return createSymbol("Do", sym.DO); }
 	"whl"				{ return createSymbol("While", sym.WHILE); }

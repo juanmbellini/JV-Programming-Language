@@ -2,6 +2,7 @@ package atlc;
 
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory.Location;
+import java.io.StringReader;
 
 %%
 
@@ -12,23 +13,25 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 %char
 
 %{
-    private ComplexSymbolFactory symbolFactory;
+    private ComplexSymbolFactory symbolFactory = new ComplexSymbolFactory();
     StringBuffer string = new StringBuffer();
+    int currentLineIndent = 0;
+    int indentLevel = 0;
 
-    public Scanner(java.io.InputStream inputStream, ComplexSymbolFactory symbolFactory) {
-        this(inputStream);
+    public Scanner(java.io.Reader reader, ComplexSymbolFactory symbolFactory) {
+		this(reader);
         this.symbolFactory = symbolFactory;
     }
 
     public Symbol createSymbol(String plaintext, int code) {
-        System.out.println("parsed: " + plaintext);
+		System.out.println("parsed: " + plaintext);
         return symbolFactory.newSymbol(plaintext, code,
             new Location("", yyline + 1, yycolumn + 1, yychar),
             new Location("", yyline + 1, yycolumn + yylength(), yychar));
     }
 
     public Symbol createSymbol(String plaintext, int code, Object object) {
-        System.out.println("parsed: " + plaintext +" :: " + object);
+		System.out.println("parsed: " + plaintext +" :: " + object);
         return symbolFactory.newSymbol(plaintext, code,
             new Location("", yyline + 1, yycolumn + 1, yychar),
             new Location("", yyline + 1, yycolumn + yylength(), yychar),
@@ -36,6 +39,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
     }
 
     public Symbol createSymbol(String plaintext, int code, Object object, int buffLength) {
+		System.out.println("parsed: " + plaintext +" :: " + object);
         return symbolFactory.newSymbol(plaintext, code,
             new Location(yyline + 1, yycolumn + yylength() - buffLength, yychar + yylength() - buffLength),
             new Location(yyline + 1, yycolumn + yylength(), yychar + yylength()),
@@ -55,7 +59,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 
 %}
 %eofval{
-    System.out.println("parsed: EOF");
+    //System.out.println("parsed: EOF");
     return symbolFactory.newSymbol("EOF",sym.EOF);
 %eofval}
 
@@ -73,21 +77,22 @@ Comment = "~" [ ][^\n]* {EndOfLine}
 IntegerLiteral = 0 | [1-9][0-9]*
 BooleanLiteral = "yes" | "no"
 
-VarName = [ ] [:jletter:] [:jletterdigit:]*
+VarName = [:jletter:] [:jletterdigit:]*
 
 %state STRING
+%state NORMAL
+%state FINAL
 
 %%
 
-<YYINITIAL> {
+<NORMAL> {
 
     /* Main */
     "mn"                { return createSymbol("Main", sym.MAIN); }
     "ret"               { return createSymbol("Main", sym.RETURN); }
 	/* Code Structure */
-	{EndOfLine}			{ return createSymbol("End of Line", sym.EOL); }
-	{Tab}				{ return createSymbol("Tab", sym.TAB); }
-	{WhiteSpace}		{ return createSymbol("Space", sym.SPACE); }
+	{EndOfLine}			{ currentLineIndent = 0; yybegin(YYINITIAL); return createSymbol("End of Line", sym.EOL); }
+	[ ]					{ return createSymbol("Space", sym.SPACE); }
 
 	/* Data types */
 	"int"				{ return createSymbol("Integer", sym.TYPE_INT); }
@@ -99,7 +104,7 @@ VarName = [ ] [:jletter:] [:jletterdigit:]*
 	"wr"				{ return createSymbol("Write", sym.WRITE); }
 
 	/* Decision and repetition structures */
-	"ff"				{ return createSymbol("If", sym.IF); }
+	"if"				{ return createSymbol("If", sym.IF); }
 	"ls"				{ return createSymbol("Else", sym.ELSE); }
 	"dd"				{ return createSymbol("Do", sym.DO); }
 	"whl"				{ return createSymbol("While", sym.WHILE); }
@@ -138,8 +143,8 @@ VarName = [ ] [:jletter:] [:jletterdigit:]*
 }
 
 <STRING> {
-  \"                             { yybegin(YYINITIAL); 
-                                   return createSymbol("String", sym.LIT_STR, string.toString()); }
+  \"                             { yybegin(NORMAL); 
+                                   return createSymbol("String", sym.LIT_STR, string.toString(), string.length()); }
   [^\n\r\"\\]+                   { string.append(yytext()); }
   \\t                            { string.append('\t'); }
   \\n                            { string.append('\n'); }
@@ -148,4 +153,35 @@ VarName = [ ] [:jletter:] [:jletterdigit:]*
   \\                             { string.append('\\'); }
 }
 
-[^]                              { throw new Error("Illegal character <" + yytext() + ">"); }
+<FINAL> \n { currentLineIndent = 0; yybegin(YYINITIAL); }
+
+<YYINITIAL> {
+\t { currentLineIndent++; System.out.println("currentLineIndent++: " + currentLineIndent); }
+<<EOF>> {
+			if (currentLineIndent < indentLevel) {
+				indentLevel--;
+				yyreset(new StringReader("\n"));
+				yybegin(FINAL);
+				return createSymbol("Dedent", sym.DEDENT);
+			} else {
+				return symbolFactory.newSymbol("EOF",sym.EOF);
+			}
+		}
+.  {
+		yypushback(1);
+		if (currentLineIndent > indentLevel) {
+			indentLevel++;
+			System.out.println("indentLevel++: " + indentLevel);
+			return createSymbol("Indent", sym.INDENT);
+		} else if (currentLineIndent < indentLevel) {
+			indentLevel--;
+			System.out.println("indentLevel--: " + indentLevel);
+			return createSymbol("Dedent", sym.DEDENT);
+		} else {
+			System.out.println("Going normal");
+			yybegin(NORMAL);
+		}
+	}
+}
+
+[^]                              { System.out.println("State: " + yystate()); throw new Error("Illegal character <" + yytext() + ">"); }

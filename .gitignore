@@ -3,7 +3,7 @@
 *.class
 *~
 
-src/atlc/*
+src/atlc/*.java
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/

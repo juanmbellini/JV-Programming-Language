@@ -16,7 +16,7 @@ parser code {:
 
 terminal FUNC, RET; // Functions
 terminal SP, INDENT, DEDENT, EOL; // Whitespace
-terminal TYPE_INT, TYPE_BOOL, TYPE_STR; // Types
+terminal TYPE;
 terminal VAR_NAME;
 terminal READ_LINE, WRITE_LINE, WRITE; // IO
 
@@ -28,12 +28,12 @@ terminal String  LIT_STR;
 terminal IF, ELSE;
 terminal DO, WHILE;
 
-terminal PLUS, TIMES, MINUS, DIVIDE;
-terminal EQ, NEQ, GT, LT, LE, GE, NOT, OR, AND;
+terminal ARITHMETIC_OPERATOR;
+terminal BOOLEAN_OPERATOR, UNARY_BOOLEAN_OPERATOR;
 terminal ASSIGN, ASSIGN_TYPE;
 
 non terminal program, stmt_list, stmt;
-non terminal type, stmt_def_maybe_assign, stmt_assign;
+non terminal stmt_def_maybe_assign, stmt_assign;
 non terminal stmt_if_maybe_else, stmt_if;
 non terminal stmt_while, stmt_io;
 non terminal expr, expr_bool, expr_int, expr_str;
@@ -47,20 +47,20 @@ precedence left SP; // TODO: CHECK IF OK
 start with program;
 
 program
-    ::= stmt_list
+    ::= stmt_list {: System.out.println("stmt_list -> FUCK YEAH!"); :}
 ;
 
 stmt_list
-    ::= stmt stmt_list
+    ::= stmt stmt_list {: System.out.println("stmt stmt_list -> stmt_list"); :}
     | // empty
 ;
 
 stmt
-    ::= stmt_if_maybe_else
-    | stmt_while
-    | stmt_def_maybe_assign
-    | stmt_assign
-    | stmt_io
+    ::= stmt_if_maybe_else {: System.out.println("stmt_if_maybe_else -> stmt"); :}
+    | stmt_while {: System.out.println("stmt_while -> stmt"); :}
+    | stmt_def_maybe_assign {: System.out.println("stmt_def_maybe_assign -> stmt"); :}
+    | stmt_assign {: System.out.println("assign -> stmt"); :}
+    | stmt_io {: System.out.println("stmt_io -> stmt"); :}
 ;
 
 stmt_if_maybe_else
@@ -72,55 +72,59 @@ stmt_if
 ;
 
 stmt_while
-    ::= WHILE expr_bool block
+    ::= WHILE SP expr_bool block {: System.out.println("WHILE expr_bool block -> stmt_while"); :}
 ;
 
 stmt_def_maybe_assign
-    ::= type ASSIGN_TYPE VAR_NAME EOL
-    | type ASSIGN_TYPE stmt_assign
-;
-
-type
-    ::= TYPE_BOOL
-    | TYPE_INT
-    | TYPE_STR
+    ::= TYPE ASSIGN_TYPE VAR_NAME EOL {: System.out.println("TYPE ASSIGN_TYPE VAR_NAME EOL -> stmt_def_maybe_assign"); :}
+    | TYPE ASSIGN_TYPE stmt_assign {: System.out.println("TYPE ASSIGN_TYPE stmt_assign -> stmt_def_maybe_assign"); :}
 ;
 
 // TODO: FUNCTIONS
 // TODO: ARRAY
 
 stmt_assign
-    ::= VAR_NAME SP ASSIGN SP expr EOL
+    ::= VAR_NAME SP ASSIGN SP expr EOL {: System.out.println("VAR_NAME SP ASSIGN SP expr EOL -> stmt_assign"); :}
 ;
 
 // TODO: FEATURE WRITE MANY (read many?)
 stmt_io
-    ::= READ_LINE SP VAR_NAME EOL
-    | WRITE_LINE SP expr EOL
-    | WRITE SP expr EOL
+    ::= READ_LINE SP VAR_NAME EOL {: System.out.println("READ_LINE SP VAR_NAME EOL -> stmt_io"); :} 
+    | WRITE_LINE SP expr EOL {: System.out.println("WRITE_LINE SP expr EOL -> stmt_io"); :}
+    | WRITE SP expr EOL {: System.out.println("WRITE SP expr EOL -> stmt_io"); :}
 ;
 
 expr
-    ::= expr_bool
-    | expr_int
-    | expr_str
-    | VAR_NAME
+    ::= expr_bool {: System.out.println("expr_bool -> expr"); :}
+    | expr_int {: System.out.println("expr_int -> expr"); :}
+    | expr_str {: System.out.println("expr_str -> expr"); :}
+    | VAR_NAME {: System.out.println("VAR_NAME -> expr"); :}
 ;
 
 // TODO PREFIX BOOL CONDITIONS
 expr_bool
-    ::= LIT_BOOL
+    ::= LIT_BOOL {: System.out.println("LIT_BOOL -> expr_bool"); :}
+    | BOOLEAN_OPERATOR SP expr_int SP expr_int {: System.out.println("BOOLEAN_OPERATOR SP expr_bool SP expr_int -> expr_bool"); :}
+    | BOOLEAN_OPERATOR SP VAR_NAME SP expr_int {: System.out.println("BOOLEAN_OPERATOR SP VAR_NAME SP expr_int -> expr_bool"); :}
+    | BOOLEAN_OPERATOR SP expr_int SP VAR_NAME {: System.out.println("BOOLEAN_OPERATOR SP expr_int SP VAR_NAME -> expr_bool"); :}
+    | BOOLEAN_OPERATOR SP VAR_NAME SP VAR_NAME {: System.out.println("BOOLEAN_OPERATOR SP VAR_NAME SP VAR_NAME -> expr_bool"); :}
+    | UNARY_BOOLEAN_OPERATOR expr_int
+    | UNARY_BOOLEAN_OPERATOR VAR_NAME
 ;
 
 // TODO PREFIX INT OPERATIONS
 expr_int
-    ::= LIT_INT
+    ::= LIT_INT {: System.out.println("LIT_INT -> expr_int"); :}
+    | ARITHMETIC_OPERATOR SP expr_int SP expr_int {: System.out.println("ARITHMETIC_OPERATOR SP expr_int SP expr_int -> expr_int"); :}
+    | ARITHMETIC_OPERATOR SP VAR_NAME SP expr_int
+    | ARITHMETIC_OPERATOR SP expr_int SP VAR_NAME
+    | ARITHMETIC_OPERATOR SP VAR_NAME SP VAR_NAME
 ;
 
 expr_str
-    ::= LIT_STR
+    ::= LIT_STR {: System.out.println("LIT_STR -> expr_str"); :}
 ;
 
 block
-    ::= EOL INDENT stmt_list DEDENT
+    ::= EOL INDENT stmt_list DEDENT {: System.out.println("EOL INDENT stmt_list DEDENT -> block"); :}
 ;

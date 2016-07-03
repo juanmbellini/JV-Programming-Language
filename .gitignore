@@ -3,7 +3,9 @@
 *.class
 *~
 
-src/atlc/*.java
+src/atlc/Parser.java
+src/atlc/Scanner.java
+src/atlc/sym.java
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/

@@ -3,6 +3,10 @@ package atlc;
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import java.io.StringReader;
+import atlc.constants.ArithOpEnum;
+import atlc.constants.BoolOpEnum;
+import atlc.constants.LogicOpEnum;
+import atlc.constants.VarTypeEnum;
 
 %%
 
@@ -67,7 +71,7 @@ Tab = \t
 // We only accept ' ' as a white space
 WhiteSpace = " "
 // A comment starts with the '~' character and continues with its content
-Comment = "~" [ ][^\n]* {EndOfLine}
+Comment = "~" [ ][^\n]*
 
 // Integer can be a 0 or an infinite amount of any digit preceded by any digit from 1 to 9
 IntegerLiteral = 0 | [1-9][0-9]*
@@ -82,18 +86,25 @@ VarName = [:jletter:] [:jletterdigit:]*
 %%
 
 <NORMAL> {
+	/* Comments */
+	^{Comment}{EndOfLine}			{ /* Ignore Comments */ }
+	[ ]*{Comment}					{ /* Ignore Comments */ }
+	^{EndOfLine}					{ /* Ignore empty line */ }
 
     /* Functions */
     "fn"                { return createSymbol("Function", sym.FUNC); }
     "ret"               { return createSymbol("Return", sym.RET); }
+    "exit"				{ return createSymbol("Exit", sym.EXIT); }
 	/* Code Structure */
-	{EndOfLine}			{ currentLineIndent = 0; yybegin(YYINITIAL); return createSymbol("End of Line", sym.EOL); }
+	{EndOfLine}		{ currentLineIndent = 0; yybegin(YYINITIAL); return createSymbol("End of Line", sym.EOL); }
 	[ ]					{ return createSymbol("Space", sym.SP); }
 
 	/* Data types */
-	"int"				{ return createSymbol("IntType", sym.TYPE_INT); }
-	"bln"				{ return createSymbol("BoolType", sym.TYPE_BOOL); }
-	"str"				{ return createSymbol("StrType", sym.TYPE_STR); }
+	"int"				{ return createSymbol("IntType", sym.TYPE, VarTypeEnum.INT); }
+	"bln"				{ return createSymbol("BoolType", sym.TYPE, VarTypeEnum.BOOL); }
+	"str"				{ return createSymbol("StrType", sym.TYPE, VarTypeEnum.STR); }
+	"=" 				{ return createSymbol("Assign", sym.ASSIGN); }
+	":" 				{ return createSymbol("TypeAssign", sym.ASSIGN_TYPE); }
 
 	/* Commands */
 	"rl"				{ return createSymbol("Read", sym.READ_LINE); }
@@ -106,22 +117,25 @@ VarName = [:jletter:] [:jletterdigit:]*
 	"do"				{ return createSymbol("Do", sym.DO); }
 	"whl"				{ return createSymbol("While", sym.WHILE); }
 
-	/* Operators */
-	"+" 				{ return createSymbol("Plus",sym.PLUS); }
-	"-" 				{ return createSymbol("Minus", sym.MINUS); }
-	"*" 				{ return createSymbol("Times",sym.TIMES); }
-	"/" 				{ return createSymbol("Divide", sym.DIVIDE); }
-	"!" 				{ return createSymbol("Not", sym.NOT); }
-	"&&" 				{ return createSymbol("And", sym.AND); }
-	"||" 				{ return createSymbol("Or", sym.OR); }
-	"<" 				{ return createSymbol("Lower Than", sym.LT); }
-	">" 				{ return createSymbol("Greater than", sym.GT); }
-	"<=" 				{ return createSymbol("Lower than or equal to", sym.LE); }
-	">=" 				{ return createSymbol("greater than or equal to", sym.GE); }
-	"==" 				{ return createSymbol("Equal to", sym.EQ); }
-	"!=" 				{ return createSymbol("Not equal to", sym.NEQ); }
-	"=" 				{ return createSymbol("Assign", sym.ASSIGN); }
-	":" 				{ return createSymbol("TypeAssign", sym.ASSIGN_TYPE); }
+	/* Arithmetic Operators */
+	"+" 				{ return createSymbol("Plus",sym.ARITHMETIC_OPERATOR, ArithOpEnum.PLUS); }
+	"-" 				{ return createSymbol("Minus", sym.ARITHMETIC_OPERATOR, ArithOpEnum.MINUS); }
+	"*" 				{ return createSymbol("Times",sym.ARITHMETIC_OPERATOR, ArithOpEnum.TIMES); }
+	"/" 				{ return createSymbol("Divide", sym.ARITHMETIC_OPERATOR, ArithOpEnum.DIVIDE); }
+	"%" 				{ return createSymbol("Divide", sym.ARITHMETIC_OPERATOR, ArithOpEnum.MOD); }
+
+	/* Logic Operators */
+	"!" 				{ return createSymbol("Not", sym.UNARY_LOGIC_OPERATOR, LogicOpEnum.NOT); }
+	"&&" 				{ return createSymbol("And", sym.LOGIC_OPERATOR, LogicOpEnum.AND); }
+	"||" 				{ return createSymbol("Or", sym.LOGIC_OPERATOR, LogicOpEnum.OR); }
+
+	/* Boolean operators */
+	"<" 				{ return createSymbol("Lower Than", sym.BOOLEAN_OPERATOR, BoolOpEnum.LT); }
+	">" 				{ return createSymbol("Greater than", sym.BOOLEAN_OPERATOR, BoolOpEnum.GT); }
+	"<=" 				{ return createSymbol("Lower than or equal to", sym.BOOLEAN_OPERATOR, BoolOpEnum.LE); }
+	">=" 				{ return createSymbol("greater than or equal to", sym.BOOLEAN_OPERATOR, BoolOpEnum.GE); }
+	"==" 				{ return createSymbol("Equal to", sym.BOOLEAN_OPERATOR, BoolOpEnum.EQ); }
+	"!=" 				{ return createSymbol("Not equal to", sym.BOOLEAN_OPERATOR, BoolOpEnum.NEQ); }
 
 	/* Identifiers */
     // TODO: Space is being added before var name
@@ -131,10 +145,6 @@ VarName = [:jletter:] [:jletterdigit:]*
 	{IntegerLiteral} 	{ return createSymbol("Integer", sym.LIT_INT, new Integer(yytext())); }
 	{BooleanLiteral} 	{ return createSymbol("Boolean", sym.LIT_BOOL, createBoolean(yytext())); }
 	\"                  { string.setLength(0); yybegin(STRING); }
-
-	/* Comments */
-	{Comment}			{ /* Do Nothing */	}
-
 }
 
 <STRING> {

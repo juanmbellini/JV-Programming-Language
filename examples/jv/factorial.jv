@@ -1,8 +1,8 @@
 w "Factorial de: "
 int:numero
-rd numero
+rl numero
 int:result = numero
-whl numero > 0
+whl > numero 0
 	numero = - numero 1
 	result = * result numero
 

@@ -1,0 +1,6 @@
+~ Write
+w "Hola mundo!"
+int:int_var
+int_var = 3
+int:int_var2 = 4
+

@@ -1,0 +1,13 @@
+w "Fibonacci ...\nIngrese el numero: "
+int:nro
+rl nro
+
+int:a = 0
+int:b = 1
+int:count = 0
+
+whl < 0 nro
+	a = b
+	b = + a b
+w "El resultado es "
+wl a

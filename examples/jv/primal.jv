@@ -1,0 +1,58 @@
+w "Ingrese el numero que quiere saber si es primo: "
+int:nro
+rl nro
+
+if == nro 2
+	wl "Es primo"
+	exit 0
+
+if || < nro 2 == % nro 2 0
+	wl "No es primo"
+	exit 1
+
+
+~ Calculates the square root of nro
+int:nro_sqrt
+if <= nro 0
+	nro_sqrt = 0
+ls
+	nro_sqrt = 1
+
+	whl <= * 4 * nro_sqrt nro_sqrt nro
+		nro_sqrt = * 2 nro_sqrt
+
+	int:left = nro_sqrt
+	int:right = * 2 nro_sqrt
+	int:middle = 0
+
+	bln:flag = no
+
+	whl < left right
+		middle = + left / - right left 2
+
+		if < * middle middle number
+			left = + middle 1
+		ls
+			if > * middle middle number
+				right = - middle 1
+			ls
+				nro_sqrt = middle
+				flag = yes
+
+	if !flag
+
+		int:nro_sqrt = + middle 1
+
+		whl > * nro_sqrt nro_sqrt number
+			nro_sqrt = - nro_sqrt 1
+
+
+int:i = 3
+whl < 1 nro_sqrt
+	if == % nro i 0
+		wl "No es primo"
+
+wl "Es primo"
+
+
+

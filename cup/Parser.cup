@@ -49,7 +49,7 @@ precedence left SP; // TODO: CHECK IF OK
 start with program;
 
 program
-    ::= stmt_list {: System.out.println("stmt_list -> FUCK YEAH!"); :}
+    ::= stmt_list {: System.out.println("stmt_list -> PARSE COMPLETE!"); :}
 ;
 
 stmt_list

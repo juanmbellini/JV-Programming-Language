@@ -1,4 +1,9 @@
 ~ Grammar check
+fn:int fibonacci int:n
+	if <= n 1
+		ret n
+	ret + fibonacci(- n 1) fibonacci(- n 2)
+
 fn help
 	w("This is a help command")
 
@@ -10,6 +15,8 @@ fn:int sum int:var1 int:var2
 
 ident(3)
 sum(3, 5)
+
+w(+ ident(3) sum(3, 5))
 
 ~ Write
 w("Hola mundo!")
@@ -60,4 +67,4 @@ ls
 			whl YES
 				int:var_aux = 0
 				if == aux 300000
-					exit 1
+					ret 1

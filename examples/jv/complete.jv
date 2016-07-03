@@ -1,6 +1,55 @@
 ~ Write
 w "Hola mundo!"
+
+wl "Now testing variables"
+
+~ Tests int vars:
 int:int_var
 int_var = 3
 int:int_var2 = 4
+
+~ Tests boolean vars:
+bln:bln_var
+bln_var = yes
+bln:bln_var2 = no
+
+~ Tests string vars
+str:str_var
+str_var = "Hola, mundo!"
+str:str_var2 = "Chau, mundo! :) ¬"
+
+rl int_var
+rl bln_var
+rl str_var
+
+w int_var
+wl int_var2
+w bln_var
+wl bln_var2
+w str_var
+wl str_var2
+
+
+int:i = 0
+
+wh < i 1000
+	if == % i 2 0
+		int_var2 = + int_var2 1
+	ls
+		int_var = - int_var 1
+
+
+if !< 4 2
+	wl "Tengo not menor!"
+ls
+	if !== 3 * 3 / 8 % 0 - 2 + 3 4 ~ Same as: if ( !( 3 == 3 * ( 8 / 0 % (2 - (3 + 4)))))
+		if (&& yes || no 5 < 3)
+			whl (yes)
+				int:var_aux = 0
+				if == aux 300000
+					exit 1
+
+
+
+
 

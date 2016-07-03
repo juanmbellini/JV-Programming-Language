@@ -12,7 +12,7 @@ parser code {:
     }
 
     public static void main(String args[]) throws Exception {
-		//Parser.l.setLevel(Level.WARNING);
+		// Parser.l.setLevel(Level.WARNING);
         ComplexSymbolFactory symbolFactory = new ComplexSymbolFactory();
         new Parser(
             new Scanner(new java.io.FileReader(args[0]), symbolFactory),
@@ -21,7 +21,7 @@ parser code {:
     }
 :}
 
-terminal FUNC, RET, EXIT; // Functions
+terminal FUNC, RET; // Functions
 terminal SP, INDENT, DEDENT, EOL; // Whitespace
 terminal TYPE;
 terminal VAR_NAME;
@@ -41,15 +41,14 @@ terminal BOOLEAN_OPERATOR, LOGIC_OPERATOR, UNARY_LOGIC_OPERATOR;
 terminal ASSIGN, ASSIGN_TYPE;
 
 non terminal program, method_list, method, param_list, stmt_list, stmt;
-nonterminal method_stmt_list, method_stmt, method_argument;
+non terminal method_argument;
 non terminal stmt_def_maybe_assign, stmt_assign;
 non terminal stmt_if_maybe_else, stmt_if;
 non terminal stmt_while, stmt_io, stmt_exit, stmt_method_call;
 non terminal expr, expr_bool, expr_int, expr_str;
 non terminal method_argument_list;
-non terminal block, method_block;
+non terminal block;
 
-precedence left EOL;
 precedence left ELSE;
 precedence left SP; // TODO: CHECK IF OK
 precedence left LPAREN;
@@ -72,12 +71,12 @@ method_list
 		:}
     | // empty
 		{:
-			Parser.l.log(Level.INFO, "lambda -> stmt_exit");
+			Parser.l.log(Level.INFO, "lambda -> method_list");
 		:}
 ;
 
 method
-    ::= FUNC ASSIGN_TYPE TYPE SP VAR_NAME param_list method_block
+    ::= FUNC ASSIGN_TYPE TYPE SP VAR_NAME param_list block
 		{:
 			Parser.l.log(Level.INFO, "FUNC ASSIGN_TYPE TYPE SP VAR_NAME param_list block -> method");
 		:}
@@ -94,33 +93,7 @@ param_list
 		:}
     | // empty
 		{:
-			Parser.l.log(Level.INFO, "lambda -> stmt_exit");
-		:}
-;
-
-method_stmt_list
-    ::= method_stmt method_stmt_list
-    	{:
-			Parser.l.log(Level.INFO, "method_stmt method_stmt_list -> method_stmt_list");
-		:}
-    | // empty
-		{:
-			Parser.l.log(Level.INFO, "lambda -> stmt_exit");
-		:}
-;
-
-method_stmt
-    ::= stmt
-    	{:
-			Parser.l.log(Level.INFO, "stmt -> method_stmt");
-		:}
-    | RET EOL
-    	{:
-			Parser.l.log(Level.INFO, "RET EOL -> method_stmt");
-		:}
-    | RET SP expr EOL
-    	{:
-			Parser.l.log(Level.INFO, "RET SP expr EOL -> method_stmt");
+			Parser.l.log(Level.INFO, "lambda -> param_list");
 		:}
 ;
 
@@ -131,7 +104,7 @@ stmt_list
 		:}
     | // empty
 		{:
-			Parser.l.log(Level.INFO, "lambda -> stmt_exit");
+			Parser.l.log(Level.INFO, "lambda -> stmt_list");
 		:}
 ;
 
@@ -160,9 +133,9 @@ stmt
 		{:
 			Parser.l.log(Level.INFO, "stmt_exit -> stmt");
 		:}
-    | stmt_method_call
+    | stmt_method_call EOL
 		{:
-			Parser.l.log(Level.INFO, "stmt_method_call -> stmt");
+			Parser.l.log(Level.INFO, "stmt_method_call EOL -> stmt");
 		:}
 ;
 
@@ -192,9 +165,13 @@ stmt_while
 ;
 
 stmt_exit
-    ::= EXIT SP expr_int EOL
-		{:
-			Parser.l.log(Level.INFO, "EXIT SP expr_int EOL -> stmt_exit");
+	::= RET EOL
+    	{:
+			Parser.l.log(Level.INFO, "RET EOL -> stmt_exit");
+		:}
+    | RET SP expr EOL
+    	{:
+			Parser.l.log(Level.INFO, "RET SP expr EOL -> stmt_exit");
 		:}
 ;
 
@@ -213,10 +190,6 @@ stmt_method_call
     ::= VAR_NAME LPAREN method_argument_list RPAREN
 		{:
 			Parser.l.log(Level.INFO, "VAR_NAME LPAREN method_argument_list RPAREN -> stmt_method_call");
-		:}
-	| VAR_NAME LPAREN method_argument_list RPAREN EOL
-		{:
-			Parser.l.log(Level.INFO, "VAR_NAME LPAREN method_argument_list RPAREN EOL -> stmt_method_call");
 		:}
 ;
 
@@ -412,12 +385,5 @@ block
     ::= EOL INDENT stmt_list DEDENT
 		{:
 			Parser.l.log(Level.INFO, "EOL INDENT stmt_list DEDENT -> block");
-		:}
-;
-
-method_block
-    ::= EOL INDENT method_stmt_list DEDENT
-		{:
-			Parser.l.log(Level.INFO, "EOL INDENT method_stmt_list DEDENT -> method_block");
 		:}
 ;

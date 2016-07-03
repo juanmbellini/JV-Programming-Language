@@ -92,6 +92,8 @@ VarName = [:jletter:] [:jletterdigit:]*
     "fn"                { return createSymbol("Function", sym.FUNC); }
     "ret"               { return createSymbol("Return", sym.RET); }
     "exit"				{ return createSymbol("Exit", sym.EXIT); }
+    "("					{ return createSymbol("LParen", sym.LPAREN); }
+    ")"					{ return createSymbol("RParen", sym.RPAREN); }
 	/* Code Structure */
 	{EndOfLine}		{ currentLineIndent = 0; yybegin(YYINITIAL); return createSymbol("End of Line", sym.EOL); }
 	[ ]					{ return createSymbol("Space", sym.SP); }

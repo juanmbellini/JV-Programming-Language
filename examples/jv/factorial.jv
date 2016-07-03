@@ -1,10 +1,10 @@
-w "Factorial de: "
+w("Factorial de: ")
 int:numero
-rl numero
+rl(numero)
 int:result = numero
 whl > numero 0
 	numero = - numero 1
 	result = * result numero
 
-w "El factorial es: "
-wl res
+w("El factorial es: ")
+wl(res)

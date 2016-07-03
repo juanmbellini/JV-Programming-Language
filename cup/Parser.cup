@@ -21,6 +21,7 @@ terminal SP, INDENT, DEDENT, EOL; // Whitespace
 terminal TYPE;
 terminal VAR_NAME;
 terminal READ_LINE, WRITE_LINE, WRITE; // IO
+terminal LPAREN, RPAREN;
 
 // Literals
 terminal Integer LIT_INT;
@@ -97,9 +98,9 @@ stmt_assign
 
 // TODO: FEATURE WRITE MANY (read many?)
 stmt_io
-    ::= READ_LINE SP VAR_NAME EOL {: System.out.println("READ_LINE SP VAR_NAME EOL -> stmt_io"); :} 
-    | WRITE_LINE SP expr EOL {: System.out.println("WRITE_LINE SP expr EOL -> stmt_io"); :}
-    | WRITE SP expr EOL {: System.out.println("WRITE SP expr EOL -> stmt_io"); :}
+    ::= READ_LINE LPAREN VAR_NAME RPAREN EOL {: System.out.println("READ_LINE SP VAR_NAME EOL -> stmt_io"); :}
+    | WRITE_LINE LPAREN expr RPAREN EOL {: System.out.println("WRITE_LINE SP expr EOL -> stmt_io"); :}
+    | WRITE LPAREN expr RPAREN EOL {: System.out.println("WRITE SP expr EOL -> stmt_io"); :}
 ;
 
 expr

@@ -10,7 +10,7 @@ parser code {:
 
     public static void main(String args[]) throws Exception {
         ComplexSymbolFactory symbolFactory = new ComplexSymbolFactory();
-		new Parser(new Scanner(new java.io.FileReader(args[0]), symbolFactory), symbolFactory).debug_parse();
+		new Parser(new Scanner(new java.io.FileReader(args[0]), symbolFactory), symbolFactory).parse();
     }
 :}
 

@@ -410,7 +410,7 @@ class CUP$Parser$actions {
 		Location slxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		InsnList sl = (InsnList)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-			RESULT = ProgramFactory.create(ml, sl);
+			RESULT = ProgramFactory.create("Hello_world", ml, sl);
 			Parser.l.log(Level.INFO, "stmt_list -> PARSE COMPLETE!");
 		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("program",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);

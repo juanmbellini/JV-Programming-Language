@@ -65,7 +65,7 @@ start with program;
 program
 	::= method_list:ml stmt_list:sl
 		{:
-			RESULT = ProgramFactory.create(ml, sl);
+			RESULT = ProgramFactory.create("Hello_world", ml, sl);
 			Parser.l.log(Level.INFO, "stmt_list -> PARSE COMPLETE!");
 		:}
 ;

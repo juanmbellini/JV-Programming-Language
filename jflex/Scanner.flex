@@ -95,9 +95,9 @@ VarName = [:jletter:] [:jletterdigit:]*
 	[ ]					{ return createSymbol("Space", sym.SP); }
 
 	/* Data types */
-	"int"				{ return createSymbol("Integer", sym.TYPE_INT); }
-	"bln"				{ return createSymbol("Boolean", sym.TYPE_BOOL); }
-	"str"				{ return createSymbol("String", sym.TYPE_STR); }
+	"int"				{ return createSymbol("IntType", sym.TYPE_INT); }
+	"bln"				{ return createSymbol("BoolType", sym.TYPE_BOOL); }
+	"str"				{ return createSymbol("StrType", sym.TYPE_STR); }
 
 	/* Commands */
 	"rl"				{ return createSymbol("Read", sym.READ_LINE); }
@@ -125,7 +125,7 @@ VarName = [:jletter:] [:jletterdigit:]*
 	"==" 				{ return createSymbol("Equal to", sym.EQ); }
 	"!=" 				{ return createSymbol("Not equal to", sym.NEQ); }
 	"=" 				{ return createSymbol("Assign", sym.ASSIGN); }
-	":" 				{ return createSymbol("Assign", sym.ASSIGN_TYPE); }
+	":" 				{ return createSymbol("TypeAssign", sym.ASSIGN_TYPE); }
 
 	/* Identifiers */
     // TODO: Space is being added before var name

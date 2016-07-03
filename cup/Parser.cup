@@ -5,20 +5,20 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 parser code {:
-    public static final Logger l = Logger.getLogger("PARSER");
+	public static final Logger l = Logger.getLogger("PARSER");
 
-    public void syntax_error(Symbol s) {
-        System.err.println("Syntax error at " + s);
-    }
+	public void syntax_error(Symbol s) {
+		System.err.println("Syntax error at " + s);
+	}
 
-    public static void main(String args[]) throws Exception {
+	public static void main(String args[]) throws Exception {
 		// Parser.l.setLevel(Level.WARNING);
-        ComplexSymbolFactory symbolFactory = new ComplexSymbolFactory();
-        new Parser(
-            new Scanner(new java.io.FileReader(args[0]), symbolFactory),
-            symbolFactory
-        ).parse();
-    }
+		ComplexSymbolFactory symbolFactory = new ComplexSymbolFactory();
+		new Parser(
+			new Scanner(new java.io.FileReader(args[0]), symbolFactory),
+			symbolFactory
+		).parse();
+	}
 :}
 
 terminal FUNC, RET; // Functions
@@ -58,107 +58,107 @@ precedence left LPAREN;
 start with program;
 
 program
-    ::= method_list stmt_list
+	::= method_list stmt_list
 		{:
 			Parser.l.log(Level.INFO, "stmt_list -> PARSE COMPLETE!");
 		:}
 ;
 
 method_list
-    ::= method method_list
+	::= method method_list
 		{:
 			Parser.l.log(Level.INFO, "method method_list -> method_list");
 		:}
-    | // empty
+	| // empty
 		{:
 			Parser.l.log(Level.INFO, "lambda -> method_list");
 		:}
 ;
 
 method
-    ::= FUNC ASSIGN_TYPE TYPE SP VAR_NAME param_list block
+	::= FUNC ASSIGN_TYPE TYPE SP VAR_NAME param_list block
 		{:
 			Parser.l.log(Level.INFO, "FUNC ASSIGN_TYPE TYPE SP VAR_NAME param_list block -> method");
 		:}
-    | FUNC SP VAR_NAME param_list block
+	| FUNC SP VAR_NAME param_list block
 		{:
 			Parser.l.log(Level.INFO, "FUNC SP VAR_NAME param_list block -> method");
 		:}
 ;
 
 param_list
-    ::= SP TYPE ASSIGN_TYPE VAR_NAME param_list
+	::= SP TYPE ASSIGN_TYPE VAR_NAME param_list
 		{:
 			Parser.l.log(Level.INFO, "SP TYPE ASSIGN_TYPE VAR_NAME param_list -> param_list");
 		:}
-    | // empty
+	| // empty
 		{:
 			Parser.l.log(Level.INFO, "lambda -> param_list");
 		:}
 ;
 
 stmt_list
-    ::= stmt stmt_list
+	::= stmt stmt_list
 		{:
 			Parser.l.log(Level.INFO, "stmt stmt_list -> stmt_list");
 		:}
-    | // empty
+	| // empty
 		{:
 			Parser.l.log(Level.INFO, "lambda -> stmt_list");
 		:}
 ;
 
 stmt
-    ::= stmt_if_maybe_else
+	::= stmt_if_maybe_else
 		{:
 			Parser.l.log(Level.INFO, "stmt_if_maybe_else -> stmt");
 		:}
-    | stmt_while
+	| stmt_while
 		{:
 			Parser.l.log(Level.INFO, "stmt_while -> stmt");
 		:}
-    | stmt_def_maybe_assign
+	| stmt_def_maybe_assign
 		{:
 			Parser.l.log(Level.INFO, "stmt_def_maybe_assign -> stmt");
 		:}
-    | stmt_assign
+	| stmt_assign
 		{:
 			Parser.l.log(Level.INFO, "assign -> stmt");
 		:}
-    | stmt_io
+	| stmt_io
 		{:
 			Parser.l.log(Level.INFO, "stmt_io -> stmt");
 		:}
-    | stmt_exit
+	| stmt_exit
 		{:
 			Parser.l.log(Level.INFO, "stmt_exit -> stmt");
 		:}
-    | stmt_method_call EOL
+	| stmt_method_call EOL
 		{:
 			Parser.l.log(Level.INFO, "stmt_method_call EOL -> stmt");
 		:}
 ;
 
 stmt_if_maybe_else
-    ::= stmt_if
+	::= stmt_if
 		{:
 			Parser.l.log(Level.INFO, "stmt_if -> stmt_if_maybe_else");
 		:}
-    | stmt_if ELSE block
+	| stmt_if ELSE block
 		{:
 			Parser.l.log(Level.INFO, "stmt_if ELSE block -> stmt_if_maybe_else");
 		:}
 ;
 
 stmt_if
-    ::= IF SP expr_bool block
+	::= IF SP expr_bool block
 		{:
 			Parser.l.log(Level.INFO, "IF SP expr_bool block -> stmt_if");
 		:}
 ;
 
 stmt_while
-    ::= WHILE SP expr_bool block
+	::= WHILE SP expr_bool block
 		{:
 			Parser.l.log(Level.INFO, "WHILE expr_bool block -> stmt_while");
 		:}
@@ -166,39 +166,39 @@ stmt_while
 
 stmt_exit
 	::= RET EOL
-    	{:
+		{:
 			Parser.l.log(Level.INFO, "RET EOL -> stmt_exit");
 		:}
-    | RET SP expr EOL
-    	{:
+	| RET SP expr EOL
+		{:
 			Parser.l.log(Level.INFO, "RET SP expr EOL -> stmt_exit");
 		:}
 ;
 
 stmt_def_maybe_assign
-    ::= TYPE ASSIGN_TYPE VAR_NAME EOL
+	::= TYPE ASSIGN_TYPE VAR_NAME EOL
 		{:
 			Parser.l.log(Level.INFO, "TYPE ASSIGN_TYPE VAR_NAME EOL -> stmt_def_maybe_assign");
 		:}
-    | TYPE ASSIGN_TYPE stmt_assign
+	| TYPE ASSIGN_TYPE stmt_assign
 		{:
 			Parser.l.log(Level.INFO, "TYPE ASSIGN_TYPE stmt_assign -> stmt_def_maybe_assign");
 		:}
 ;
 
 stmt_method_call
-    ::= VAR_NAME LPAREN method_argument_list RPAREN
+	::= VAR_NAME LPAREN method_argument_list RPAREN
 		{:
 			Parser.l.log(Level.INFO, "VAR_NAME LPAREN method_argument_list RPAREN -> stmt_method_call");
 		:}
 ;
 
 method_argument_list
-    ::= method_argument_list method_argument
+	::= method_argument_list method_argument
 		{:
 			Parser.l.log(Level.INFO, "method_argument_list method_argument -> method_argument_list");
 		:}
-    | // empty
+	| // empty
 		{:
 			Parser.l.log(Level.INFO, "lambda -> method_argument_list");
 		:}
@@ -218,41 +218,41 @@ method_argument
 // TODO: ARRAY
 
 stmt_assign
-    ::= VAR_NAME SP ASSIGN SP expr EOL
+	::= VAR_NAME SP ASSIGN SP expr EOL
 		{:
 			Parser.l.log(Level.INFO, "VAR_NAME SP ASSIGN SP expr EOL -> stmt_assign");
 		:}
 ;
 
 stmt_io
-    ::= READ_LINE LPAREN VAR_NAME RPAREN EOL
+	::= READ_LINE LPAREN VAR_NAME RPAREN EOL
 		{:
 			Parser.l.log(Level.INFO, "READ_LINE SP VAR_NAME EOL -> stmt_io");
 		:}
-    | WRITE_LINE LPAREN expr RPAREN EOL
+	| WRITE_LINE LPAREN expr RPAREN EOL
 		{:
 			Parser.l.log(Level.INFO, "WRITE_LINE SP expr EOL -> stmt_io");
 		:}
-    | WRITE LPAREN expr RPAREN EOL
+	| WRITE LPAREN expr RPAREN EOL
 		{:
 			Parser.l.log(Level.INFO, "WRITE SP expr EOL -> stmt_io");
 		:}
 ;
 
 expr
-    ::= expr_bool
+	::= expr_bool
 		{:
 			Parser.l.log(Level.INFO, "expr_bool -> expr");
 		:}
-    | expr_int
+	| expr_int
 		{:
 			Parser.l.log(Level.INFO, "expr_int -> expr");
 		:}
-    | expr_str
+	| expr_str
 		{:
 			Parser.l.log(Level.INFO, "expr_str -> expr");
 		:}
-    | VAR_NAME
+	| VAR_NAME
 		{:
 			Parser.l.log(Level.INFO, "VAR_NAME -> expr");
 		:}
@@ -264,125 +264,124 @@ expr
 
 // TODO PREFIX BOOL CONDITIONS
 expr_bool
-    ::= LIT_BOOL
+	::= LIT_BOOL
 		{:
 			Parser.l.log(Level.INFO, "LIT_BOOL -> expr_bool");
 		:}
-    | BOOLEAN_OPERATOR SP expr_int SP expr_int
+	| BOOLEAN_OPERATOR SP expr_int SP expr_int
 		{:
 			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP expr_bool SP expr_int -> expr_bool");
 		:}
-    | BOOLEAN_OPERATOR SP stmt_method_call SP stmt_method_call
+	| BOOLEAN_OPERATOR SP stmt_method_call SP stmt_method_call
 		{:
 			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP stmt_method_call SP stmt_method_call -> expr_bool");
 		:}
-    | BOOLEAN_OPERATOR SP VAR_NAME SP expr_int
+	| BOOLEAN_OPERATOR SP VAR_NAME SP expr_int
 		{:
 			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP VAR_NAME SP expr_int -> expr_bool");
 		:}
-    | BOOLEAN_OPERATOR SP VAR_NAME SP stmt_method_call
+	| BOOLEAN_OPERATOR SP VAR_NAME SP stmt_method_call
 		{:
 			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP VAR_NAME SP stmt_method_call -> expr_bool");
 		:}
-    | BOOLEAN_OPERATOR SP expr_int SP VAR_NAME
+	| BOOLEAN_OPERATOR SP expr_int SP VAR_NAME
 		{:
 			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP expr_int SP VAR_NAME -> expr_bool");
 		:}
-    | BOOLEAN_OPERATOR SP stmt_method_call SP VAR_NAME
+	| BOOLEAN_OPERATOR SP stmt_method_call SP VAR_NAME
 		{:
 			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP stmt_method_call SP VAR_NAME -> expr_bool");
 		:}
-    | BOOLEAN_OPERATOR SP VAR_NAME SP VAR_NAME
+	| BOOLEAN_OPERATOR SP VAR_NAME SP VAR_NAME
 		{:
 			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP VAR_NAME SP VAR_NAME -> expr_bool");
 		:}
-    | LOGIC_OPERATOR SP expr_bool SP expr_bool
+	| LOGIC_OPERATOR SP expr_bool SP expr_bool
 		{:
 			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP expr_bool SP expr_bool -> expr_bool");
 		:}
-    | LOGIC_OPERATOR SP stmt_method_call SP stmt_method_call
+	| LOGIC_OPERATOR SP stmt_method_call SP stmt_method_call
 		{:
 			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP stmt_method_call SP stmt_method_call -> expr_bool");
 		:}
-    | LOGIC_OPERATOR SP VAR_NAME SP expr_bool
+	| LOGIC_OPERATOR SP VAR_NAME SP expr_bool
 		{:
 			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP VAR_NAME SP expr_bool -> expr_bool");
 		:}
-    | LOGIC_OPERATOR SP VAR_NAME SP stmt_method_call
+	| LOGIC_OPERATOR SP VAR_NAME SP stmt_method_call
 		{:
 			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP VAR_NAME SP stmt_method_call -> expr_bool");
 		:}
-    | LOGIC_OPERATOR SP expr_bool SP VAR_NAME
+	| LOGIC_OPERATOR SP expr_bool SP VAR_NAME
 		{:
 			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP VAR_NAME SP VAR_NAME -> expr_bool");
 		:}
-    | LOGIC_OPERATOR SP stmt_method_call SP VAR_NAME
+	| LOGIC_OPERATOR SP stmt_method_call SP VAR_NAME
 		{:
 			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP stmt_method_call SP VAR_NAME -> expr_bool");
 		:}
-    | LOGIC_OPERATOR SP VAR_NAME SP VAR_NAME
+	| LOGIC_OPERATOR SP VAR_NAME SP VAR_NAME
 		{:
 			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP VAR_NAME SP VAR_NAME -> expr_bool");
 		:}
-    | UNARY_LOGIC_OPERATOR expr_bool
+	| UNARY_LOGIC_OPERATOR expr_bool
 		{:
 			Parser.l.log(Level.INFO, "UNARY_LOGIC_OPERATOR expr_int -> expr_bool");
 		:}
-	    | UNARY_LOGIC_OPERATOR stmt_method_call
+	| UNARY_LOGIC_OPERATOR stmt_method_call
 		{:
 			Parser.l.log(Level.INFO, "UNARY_LOGIC_OPERATOR stmt_method_call -> expr_bool");
 		:}
-    | UNARY_LOGIC_OPERATOR VAR_NAME
+	| UNARY_LOGIC_OPERATOR VAR_NAME
 		{:
 			Parser.l.log(Level.INFO, "UNARY_LOGIC_OPERATOR VAR_NAME -> expr_bool");
 		:}
 ;
 
-// TODO PREFIX INT OPERATIONS
 expr_int
-    ::= LIT_INT
+	::= LIT_INT
 		{:
 			Parser.l.log(Level.INFO, "LIT_INT -> expr_int");
 		:}
-    | ARITHMETIC_OPERATOR SP expr_int SP expr_int
+	| ARITHMETIC_OPERATOR SP expr_int SP expr_int
 		{:
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP expr_int SP expr_int -> expr_int");
 		:}
-    | ARITHMETIC_OPERATOR SP stmt_method_call SP stmt_method_call
+	| ARITHMETIC_OPERATOR SP stmt_method_call SP stmt_method_call
 		{:
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP stmt_method_call SP stmt_method_call -> expr_int");
 		:}
-    | ARITHMETIC_OPERATOR SP VAR_NAME SP expr_int
+	| ARITHMETIC_OPERATOR SP VAR_NAME SP expr_int
 		{:
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP VAR_NAME SP expr_int -> expr_int");
 		:}
-    | ARITHMETIC_OPERATOR SP VAR_NAME SP stmt_method_call
+	| ARITHMETIC_OPERATOR SP VAR_NAME SP stmt_method_call
 		{:
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP VAR_NAME SP stmt_method_call -> expr_int");
 		:}
-    | ARITHMETIC_OPERATOR SP expr_int SP VAR_NAME
+	| ARITHMETIC_OPERATOR SP expr_int SP VAR_NAME
 		{:
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP expr_int SP VAR_NAME -> expr_int");
 		:}
-    | ARITHMETIC_OPERATOR SP stmt_method_call SP VAR_NAME
+	| ARITHMETIC_OPERATOR SP stmt_method_call SP VAR_NAME
 		{:
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP stmt_method_call SP VAR_NAME -> expr_int");
 		:}
-    | ARITHMETIC_OPERATOR SP VAR_NAME SP VAR_NAME
+	| ARITHMETIC_OPERATOR SP VAR_NAME SP VAR_NAME
 		{:
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP VAR_NAME SP VAR_NAME -> expr_int");
 		:}
 ;
 
 expr_str
-    ::= LIT_STR
+	::= LIT_STR
 		{:
 			Parser.l.log(Level.INFO, "LIT_STR -> expr_str");
 		:}
 ;
 
 block
-    ::= EOL INDENT stmt_list DEDENT
+	::= EOL INDENT stmt_list DEDENT
 		{:
 			Parser.l.log(Level.INFO, "EOL INDENT stmt_list DEDENT -> block");
 		:}

@@ -10,7 +10,6 @@ import atlc.constants.VarTypeEnum;
 
 %%
 
-%debug
 %class Scanner
 %cup
 %line

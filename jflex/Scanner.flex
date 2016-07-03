@@ -10,6 +10,7 @@ import atlc.constants.VarTypeEnum;
 
 %%
 
+%debug
 %class Scanner
 %cup
 %line
@@ -125,9 +126,9 @@ VarName = [:jletter:] [:jletterdigit:]*
 	"%" 				{ return createSymbol("Divide", sym.ARITHMETIC_OPERATOR, ArithOpEnum.MOD); }
 
 	/* Logic Operators */
-	"!" 				{ return createSymbol("Not", sym.UNARY_BOOLEAN_OPERATOR, LogicOpEnum.NOT); }
-	"&&" 				{ return createSymbol("And", sym.BOOLEAN_OPERATOR, LogicOpEnum.AND); }
-	"||" 				{ return createSymbol("Or", sym.BOOLEAN_OPERATOR, LogicOpEnum.OR); }
+	"!" 				{ return createSymbol("Not", sym.UNARY_LOGIC_OPERATOR, LogicOpEnum.NOT); }
+	"&&" 				{ return createSymbol("And", sym.LOGIC_OPERATOR, LogicOpEnum.AND); }
+	"||" 				{ return createSymbol("Or", sym.LOGIC_OPERATOR, LogicOpEnum.OR); }
 
 	/* Boolean operators */
 	"<" 				{ return createSymbol("Lower Than", sym.BOOLEAN_OPERATOR, BoolOpEnum.LT); }

@@ -1,4 +1,0 @@
-int:var = 3
-rd var
-if >= 4 3
-	wl "Hola, mundo!"

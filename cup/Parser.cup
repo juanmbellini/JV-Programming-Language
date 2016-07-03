@@ -78,7 +78,7 @@ stmt_while
 ;
 
 stmt_def_maybe_assign
-    ::= type ASSIGN_TYPE VAR_NAME
+    ::= type ASSIGN_TYPE VAR_NAME EOL
     | type ASSIGN_TYPE stmt_assign
 ;
 
@@ -92,14 +92,14 @@ type
 // TODO: ARRAY
 
 stmt_assign
-    ::= VAR_NAME SP ASSIGN SP expr
+    ::= VAR_NAME SP ASSIGN SP expr EOL
 ;
 
 // TODO: FEATURE WRITE MANY (read many?)
 stmt_io
-    ::= READ_LINE SP VAR_NAME
-    | WRITE_LINE SP expr
-    | WRITE SP expr
+    ::= READ_LINE SP VAR_NAME EOL
+    | WRITE_LINE SP expr EOL
+    | WRITE SP expr EOL
 ;
 
 expr

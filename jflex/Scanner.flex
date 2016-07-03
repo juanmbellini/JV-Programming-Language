@@ -138,7 +138,6 @@ VarName = [:jletter:] [:jletterdigit:]*
 
 	/* Comments */
 	{Comment}			{ /* Do Nothing */	}
-	^[\t]*\n       		{/* Ignore blank lines. */}
 
 }
 
@@ -157,6 +156,7 @@ VarName = [:jletter:] [:jletterdigit:]*
 
 <YYINITIAL> {
 \t { currentLineIndent++; System.out.println("currentLineIndent++: " + currentLineIndent); }
+^[\t]*{EndOfLine}	{/* Ignore blank lines. */}
 <<EOF>> {
 			if (currentLineIndent < indentLevel) {
 				indentLevel--;

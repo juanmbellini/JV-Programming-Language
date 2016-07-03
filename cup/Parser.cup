@@ -3,14 +3,16 @@ package atlc;
 import java_cup.runtime.*;
 
 parser code {:
-
-	public void syntax_error(Symbol s) {
-		System.err.println("Syntax error at " + s);
+    public void syntax_error(Symbol s) {
+        System.err.println("Syntax error at " + s);
     }
 
     public static void main(String args[]) throws Exception {
         ComplexSymbolFactory symbolFactory = new ComplexSymbolFactory();
-		new Parser(new Scanner(new java.io.FileReader(args[0]), symbolFactory), symbolFactory).parse();
+        new Parser(
+            new Scanner(new java.io.FileReader(args[0]), symbolFactory),
+            symbolFactory
+        ).parse();
     }
 :}
 

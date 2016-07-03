@@ -1,13 +1,13 @@
-w "Ingrese el numero que quiere saber si es primo: "
+w("Ingrese el numero que quiere saber si es primo: ")
 int:nro
-rl nro
+rl(nro)
 
 if == nro 2
-	wl "Es primo"
+	wl("Es primo")
 	exit 0
 
 if || < nro 2 == % nro 2 0
-	wl "No es primo"
+	wl("No es primo")
 	exit 1
 
 
@@ -50,9 +50,9 @@ ls
 int:i = 3
 whl < 1 nro_sqrt
 	if == % nro i 0
-		wl "No es primo"
+		wl("No es primo")
 
-wl "Es primo"
+wl("Es primo")
 
 
 

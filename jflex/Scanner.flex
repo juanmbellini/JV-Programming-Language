@@ -3,10 +3,7 @@ package atlc;
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import java.io.StringReader;
-import atlc.constants.ArithOpEnum;
-import atlc.constants.BoolOpEnum;
-import atlc.constants.LogicOpEnum;
-import atlc.constants.VarTypeEnum;
+import atlc.constants.*;
 
 %%
 
@@ -48,7 +45,7 @@ import atlc.constants.VarTypeEnum;
     }
 
     public Boolean createBoolean(String str) {
-        if (!str.equals("yes") && !str.equals("no")) {
+        if (!str.equals("YES") && !str.equals("NO")) {
             throw new IllegalArgumentException();
         }
         return str.equals("yes");
@@ -75,9 +72,9 @@ Comment = "~" [ ][^\n]*
 
 // Integer can be a 0 or an infinite amount of any digit preceded by any digit from 1 to 9
 IntegerLiteral = 0 | [1-9][0-9]*
-BooleanLiteral = "yes" | "no"
+BooleanLiteral = "YES" | "NO"
 
-VarName = [:jletter:] [:jletterdigit:]*
+VarName = [_a-z] [_a-z0-9]*
 
 %state STRING
 %state NORMAL
@@ -95,6 +92,8 @@ VarName = [:jletter:] [:jletterdigit:]*
     "fn"                { return createSymbol("Function", sym.FUNC); }
     "ret"               { return createSymbol("Return", sym.RET); }
     "exit"				{ return createSymbol("Exit", sym.EXIT); }
+    "("					{ return createSymbol("LParen", sym.LPAREN); }
+    ")"					{ return createSymbol("RParen", sym.RPAREN); }
 	/* Code Structure */
 	{EndOfLine}		{ currentLineIndent = 0; yybegin(YYINITIAL); return createSymbol("End of Line", sym.EOL); }
 	[ ]					{ return createSymbol("Space", sym.SP); }
@@ -135,7 +134,6 @@ VarName = [:jletter:] [:jletterdigit:]*
 	"<=" 				{ return createSymbol("Lower than or equal to", sym.BOOLEAN_OPERATOR, BoolOpEnum.LE); }
 	">=" 				{ return createSymbol("greater than or equal to", sym.BOOLEAN_OPERATOR, BoolOpEnum.GE); }
 	"==" 				{ return createSymbol("Equal to", sym.BOOLEAN_OPERATOR, BoolOpEnum.EQ); }
-	"!=" 				{ return createSymbol("Not equal to", sym.BOOLEAN_OPERATOR, BoolOpEnum.NEQ); }
 
 	/* Identifiers */
     // TODO: Space is being added before var name

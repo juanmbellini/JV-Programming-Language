@@ -24,14 +24,12 @@ import java.io.StringReader;
     }
 
     public Symbol createSymbol(String plaintext, int code) {
-		System.out.println("parsed: " + plaintext);
         return symbolFactory.newSymbol(plaintext, code,
             new Location("", yyline + 1, yycolumn + 1, yychar),
             new Location("", yyline + 1, yycolumn + yylength(), yychar));
     }
 
     public Symbol createSymbol(String plaintext, int code, Object object) {
-		System.out.println("parsed: " + plaintext +" :: " + object);
         return symbolFactory.newSymbol(plaintext, code,
             new Location("", yyline + 1, yycolumn + 1, yychar),
             new Location("", yyline + 1, yycolumn + yylength(), yychar),
@@ -39,7 +37,6 @@ import java.io.StringReader;
     }
 
     public Symbol createSymbol(String plaintext, int code, Object object, int buffLength) {
-		System.out.println("parsed: " + plaintext +" :: " + object);
         return symbolFactory.newSymbol(plaintext, code,
             new Location(yyline + 1, yycolumn + yylength() - buffLength, yychar + yylength() - buffLength),
             new Location(yyline + 1, yycolumn + yylength(), yychar + yylength()),
@@ -59,7 +56,6 @@ import java.io.StringReader;
 
 %}
 %eofval{
-    //System.out.println("parsed: EOF");
     return symbolFactory.newSymbol("EOF",sym.EOF);
 %eofval}
 
@@ -155,7 +151,7 @@ VarName = [:jletter:] [:jletterdigit:]*
 <FINAL> \n { currentLineIndent = 0; yybegin(YYINITIAL); }
 
 <YYINITIAL> {
-\t { currentLineIndent++; System.out.println("currentLineIndent++: " + currentLineIndent); }
+\t { currentLineIndent++; }
 ^[\t]*{EndOfLine}	{/* Ignore blank lines. */}
 <<EOF>> {
 			if (currentLineIndent < indentLevel) {
@@ -171,17 +167,14 @@ VarName = [:jletter:] [:jletterdigit:]*
 		yypushback(1);
 		if (currentLineIndent > indentLevel) {
 			indentLevel++;
-			System.out.println("indentLevel++: " + indentLevel);
 			return createSymbol("Indent", sym.INDENT);
 		} else if (currentLineIndent < indentLevel) {
 			indentLevel--;
-			System.out.println("indentLevel--: " + indentLevel);
 			return createSymbol("Dedent", sym.DEDENT);
 		} else {
-			System.out.println("Going normal");
 			yybegin(NORMAL);
 		}
 	}
 }
 
-[^]		{ System.out.println("State: " + yystate()); throw new Error("Illegal character <" + yytext() + ">"); }
+[^]		{ throw new Error("Illegal character <" + yytext() + ">"); }

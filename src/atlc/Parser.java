@@ -7,6 +7,11 @@ package atlc;
 
 import java_cup.runtime.*;
 import atlc.nodes.*;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.commons.GeneratorAdapter;
+import org.objectweb.asm.commons.GeneratorAdapter;
+import org.objectweb.asm.commons.Method;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -355,9 +360,12 @@ public class Parser extends java_cup.runtime.lr_parser {
 
 
 	public static final Logger l = Logger.getLogger("PARSER");
+	protected ClassWriter cw = null;
+	protected GeneratorAdapter ga = null;
 
-	public Parser(Scanner scanner, SymbolFactory factory, String className) {
+	public Parser(Scanner scanner, SymbolFactory factory, ClassWriter classWriter) {
 		this(scanner, factory);
+		this.cw = classWriter;
 	}
 
 	public void syntax_error(Symbol s) {
@@ -414,7 +422,10 @@ class CUP$Parser$actions {
 		Location slxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		InsnList sl = (InsnList)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-			RESULT = ProgramFactory.create("Hello_world", ml, sl);
+			ga.returnValue();
+			ga.endMethod();
+			cw.visitEnd();
+			RESULT = cw;
 			Parser.l.log(Level.INFO, "stmt_list -> PARSE COMPLETE!");
 		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("program",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -445,6 +456,7 @@ class CUP$Parser$actions {
             {
               List<MethodNode> RESULT =null;
 		
+			ga = new GeneratorAdapter(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, Method.getMethod("void main (String[])"), null, null, cw);
 			RESULT = new ArrayList<MethodNode>();
 			Parser.l.log(Level.INFO, "lambda -> method_list");
 		
@@ -508,7 +520,7 @@ class CUP$Parser$actions {
 		InsnList sl = (InsnList)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 			Parser.l.log(Level.INFO, "stmt stmt_list -> stmt_list ");
-			sl.add(s);
+			if (s != null) sl.add(s);
 			RESULT = sl;
 		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("stmt_list",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -779,9 +791,9 @@ class CUP$Parser$actions {
               InsnList RESULT =null;
 		Location exleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
-		InsnList e = (InsnList)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
 		
-			RESULT = FunctionFactory.writeLine(e);
+			FunctionFactory.writeLine(e, ga);
 			Parser.l.log(Level.INFO, "WRITE_LINE SP expr EOL -> stmt_io");
 		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("stmt_io",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -802,7 +814,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 34: // expr ::= expr_bool 
             {
-              InsnList RESULT =null;
+              Object RESULT =null;
 		Location exleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		InsnList e = (InsnList)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
@@ -817,7 +829,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 35: // expr ::= expr_int 
             {
-              InsnList RESULT =null;
+              Object RESULT =null;
 		Location exleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		InsnList e = (InsnList)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
@@ -832,10 +844,10 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 36: // expr ::= expr_str 
             {
-              InsnList RESULT =null;
+              Object RESULT =null;
 		Location exleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
-		InsnList e = (InsnList)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		String e = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 			RESULT = e;
 			Parser.l.log(Level.INFO, "expr_str -> expr");
@@ -847,7 +859,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 37: // expr ::= VAR_NAME 
             {
-              InsnList RESULT =null;
+              Object RESULT =null;
 		
 			// TODO;
 			Parser.l.log(Level.INFO, "VAR_NAME -> expr");
@@ -859,7 +871,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 38: // expr ::= stmt_method_call 
             {
-              InsnList RESULT =null;
+              Object RESULT =null;
 		
 			// TODO;
 			Parser.l.log(Level.INFO, "stmt_method_call -> expr");
@@ -1182,12 +1194,12 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 66: // expr_str ::= LIT_STR 
             {
-              InsnList RESULT =null;
+              String RESULT =null;
 		Location lsxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
 		Location lsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		String ls = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-			RESULT = ExprFactory.create(ls);
+			RESULT = ls;
 			Parser.l.log(Level.INFO, "LIT_STR -> expr_str");
 		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr_str",18, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);

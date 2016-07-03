@@ -356,6 +356,10 @@ public class Parser extends java_cup.runtime.lr_parser {
 
 	public static final Logger l = Logger.getLogger("PARSER");
 
+	public Parser(Scanner scanner, SymbolFactory factory, String className) {
+		this(scanner, factory);
+	}
+
 	public void syntax_error(Symbol s) {
 		System.err.println("Syntax error at " + s);
 	}

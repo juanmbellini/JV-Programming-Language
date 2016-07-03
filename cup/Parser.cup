@@ -11,6 +11,10 @@ import java.util.ArrayList;
 parser code {:
 	public static final Logger l = Logger.getLogger("PARSER");
 
+	public Parser(Scanner scanner, SymbolFactory factory, String className) {
+		this(scanner, factory);
+	}
+
 	public void syntax_error(Symbol s) {
 		System.err.println("Syntax error at " + s);
 	}

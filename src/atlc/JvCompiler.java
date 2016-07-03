@@ -26,7 +26,8 @@ public class JvCompiler implements Opcodes {
 
         ClassWriter cw = (ClassWriter) new Parser(
                 new Scanner(new FileReader(sourceFile), symbolFactory),
-                symbolFactory
+                symbolFactory,
+                className
         ).parse().value;
 
         Path file = Paths.get("examples/java/gen/" + className + ".class");

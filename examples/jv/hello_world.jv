@@ -2,4 +2,4 @@
 ~ This is the typical hello world program
 
 wl("Hello world!") ~ Hola!
-ret 0
+~ ret 0

@@ -39,19 +39,8 @@ public class HelloWorldDump implements Opcodes {
             mv.visitLabel(l0);
             mv.visitLineNumber(3, l0);
             mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-            mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
-            mv.visitInsn(DUP);
-            mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
-            mv.visitLdcInsn("Hello ");
-            mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
-            mv.visitVarInsn(ALOAD, 0);
-            mv.visitInsn(ICONST_0);
-            mv.visitInsn(AALOAD);
-            mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
-            mv.visitLdcInsn("!");
-            mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
-            mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
-            mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "print", "(Ljava/lang/String;)V", false);
+            mv.visitLdcInsn("Hello world!");
+            mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
             Label l1 = new Label();
             mv.visitLabel(l1);
             mv.visitLineNumber(4, l1);
@@ -59,7 +48,7 @@ public class HelloWorldDump implements Opcodes {
             Label l2 = new Label();
             mv.visitLabel(l2);
             mv.visitLocalVariable("args", "[Ljava/lang/String;", null, l0, l2, 0);
-            mv.visitMaxs(4, 1);
+            mv.visitMaxs(2, 1);
             mv.visitEnd();
         }
         cw.visitEnd();

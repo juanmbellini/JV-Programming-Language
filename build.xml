@@ -23,7 +23,7 @@
 
   <path id="libraries">
     <files includes="${lib}/java-cup-11b-runtime.jar" />
-    <files includes="${lib}/asm-5.1.jar" />
+    <files includes="${lib}/asm-all-5.1.jar" />
   </path>
   <target name="compile" depends="generate">
     <javac includeantruntime="false" srcdir="${src}" destdir="${classes}">
@@ -34,8 +34,8 @@
   <target name="jar" depends="compile">
     <jar jarfile="${dist}/Compiler.jar" basedir="${classes}">
      <manifest>
-       <attribute name="Main-Class" value="atlc.Parser" />
-       <attribute name="Class-Path" value="java-cup-11b-runtime.jar asm-5.1.jar" />
+       <attribute name="Main-Class" value="atlc.JvCompiler" />
+       <attribute name="Class-Path" value="java-cup-11b-runtime.jar asm-all-5.1.jar" />
      </manifest>
     </jar>
     <copy todir="${dist}">

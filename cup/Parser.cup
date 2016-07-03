@@ -1,23 +1,18 @@
 package atlc;
 
 import java_cup.runtime.*;
+import atlc.nodes.*;
+import org.objectweb.asm.tree.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.List;
+import java.util.ArrayList;
 
 parser code {:
 	public static final Logger l = Logger.getLogger("PARSER");
 
 	public void syntax_error(Symbol s) {
 		System.err.println("Syntax error at " + s);
-	}
-
-	public static void main(String args[]) throws Exception {
-		// Parser.l.setLevel(Level.WARNING);
-		ComplexSymbolFactory symbolFactory = new ComplexSymbolFactory();
-		new Parser(
-			new Scanner(new java.io.FileReader(args[0]), symbolFactory),
-			symbolFactory
-		).parse();
 	}
 :}
 
@@ -40,12 +35,22 @@ terminal ARITHMETIC_OPERATOR;
 terminal BOOLEAN_OPERATOR, LOGIC_OPERATOR, UNARY_LOGIC_OPERATOR;
 terminal ASSIGN, ASSIGN_TYPE;
 
-non terminal program, method_list, method, param_list, stmt_list, stmt;
+non terminal  program;
+non terminal List<MethodNode> method_list;
+non terminal MethodNode method;
+non terminal param_list;
+non terminal InsnList stmt_list;
+non terminal InsnList stmt;
 non terminal method_argument;
 non terminal stmt_def_maybe_assign, stmt_assign;
 non terminal stmt_if_maybe_else, stmt_if;
-non terminal stmt_while, stmt_io, stmt_exit, stmt_method_call;
-non terminal expr, expr_bool, expr_int, expr_str;
+non terminal stmt_while;
+non terminal InsnList stmt_io;
+non terminal stmt_exit, stmt_method_call;
+non terminal InsnList expr;
+non terminal InsnList expr_bool;
+non terminal InsnList expr_int;
+non terminal InsnList expr_str;
 non terminal method_argument_list;
 non terminal block;
 
@@ -58,19 +63,23 @@ precedence left LPAREN;
 start with program;
 
 program
-	::= method_list stmt_list
+	::= method_list:ml stmt_list:sl
 		{:
+			RESULT = ProgramFactory.create(ml, sl);
 			Parser.l.log(Level.INFO, "stmt_list -> PARSE COMPLETE!");
 		:}
 ;
 
 method_list
-	::= method method_list
+	::= method:m method_list:ml
 		{:
+			ml.add(m);
+			RESULT = ml;
 			Parser.l.log(Level.INFO, "method method_list -> method_list");
 		:}
 	| // empty
 		{:
+			RESULT = new ArrayList<MethodNode>();
 			Parser.l.log(Level.INFO, "lambda -> method_list");
 		:}
 ;
@@ -98,13 +107,16 @@ param_list
 ;
 
 stmt_list
-	::= stmt stmt_list
+	::= stmt:s stmt_list:sl
 		{:
-			Parser.l.log(Level.INFO, "stmt stmt_list -> stmt_list");
+			Parser.l.log(Level.INFO, "stmt stmt_list -> stmt_list ");
+			sl.add(s);
+			RESULT = sl;
 		:}
 	| // empty
 		{:
 			Parser.l.log(Level.INFO, "lambda -> stmt_list");
+			RESULT = new InsnList();
 		:}
 ;
 
@@ -125,8 +137,9 @@ stmt
 		{:
 			Parser.l.log(Level.INFO, "assign -> stmt");
 		:}
-	| stmt_io
+	| stmt_io:s
 		{:
+			RESULT = s;
 			Parser.l.log(Level.INFO, "stmt_io -> stmt");
 		:}
 	| stmt_exit
@@ -229,8 +242,9 @@ stmt_io
 		{:
 			Parser.l.log(Level.INFO, "READ_LINE SP VAR_NAME EOL -> stmt_io");
 		:}
-	| WRITE_LINE LPAREN expr RPAREN EOL
+	| WRITE_LINE LPAREN expr:e RPAREN EOL
 		{:
+			RESULT = FunctionFactory.writeLine(e);
 			Parser.l.log(Level.INFO, "WRITE_LINE SP expr EOL -> stmt_io");
 		:}
 	| WRITE LPAREN expr RPAREN EOL
@@ -240,32 +254,38 @@ stmt_io
 ;
 
 expr
-	::= expr_bool
+	::= expr_bool:e
 		{:
+			RESULT = e;
 			Parser.l.log(Level.INFO, "expr_bool -> expr");
 		:}
-	| expr_int
+	| expr_int:e
 		{:
+			RESULT = e;
 			Parser.l.log(Level.INFO, "expr_int -> expr");
 		:}
-	| expr_str
+	| expr_str:e
 		{:
+			RESULT = e;
 			Parser.l.log(Level.INFO, "expr_str -> expr");
 		:}
 	| VAR_NAME
 		{:
+			// TODO;
 			Parser.l.log(Level.INFO, "VAR_NAME -> expr");
 		:}
 	| stmt_method_call
 		{:
+			// TODO;
 			Parser.l.log(Level.INFO, "stmt_method_call -> expr");
 		:}
 ;
 
 // TODO PREFIX BOOL CONDITIONS
 expr_bool
-	::= LIT_BOOL
+	::= LIT_BOOL:lb
 		{:
+			RESULT = ExprFactory.create(lb);
 			Parser.l.log(Level.INFO, "LIT_BOOL -> expr_bool");
 		:}
 	| BOOLEAN_OPERATOR SP expr_int SP expr_int
@@ -339,8 +359,9 @@ expr_bool
 ;
 
 expr_int
-	::= LIT_INT
+	::= LIT_INT:li
 		{:
+			RESULT = ExprFactory.create(li);
 			Parser.l.log(Level.INFO, "LIT_INT -> expr_int");
 		:}
 	| ARITHMETIC_OPERATOR SP expr_int SP expr_int
@@ -371,11 +392,16 @@ expr_int
 		{:
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP VAR_NAME SP VAR_NAME -> expr_int");
 		:}
+    | ARITHMETIC_OPERATOR SP LIT_INT:li1 SP LIT_INT:li2
+        {:
+            Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP LIT_INT SP LIT_INT -> expr_int");
+        :}
 ;
 
 expr_str
-	::= LIT_STR
+	::= LIT_STR:ls
 		{:
+			RESULT = ExprFactory.create(ls);
 			Parser.l.log(Level.INFO, "LIT_STR -> expr_str");
 		:}
 ;

@@ -105,23 +105,21 @@ expr
     ::= expr_bool
     | expr_int
     | expr_str
+    | VAR_NAME
 ;
 
 // TODO PREFIX BOOL CONDITIONS
 expr_bool
     ::= LIT_BOOL
-    | VAR_NAME
 ;
 
 // TODO PREFIX INT OPERATIONS
 expr_int
     ::= LIT_INT
-    | VAR_NAME
 ;
 
 expr_str
     ::= LIT_STR
-    | VAR_NAME
 ;
 
 block

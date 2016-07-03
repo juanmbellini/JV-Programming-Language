@@ -7,7 +7,6 @@ import atlc.constants.*;
 
 %%
 
-%debug
 %class Scanner
 %cup
 %line

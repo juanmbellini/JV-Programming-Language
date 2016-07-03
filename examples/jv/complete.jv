@@ -11,6 +11,8 @@ fn:int sum int:var1 int:var2
 ident(3)
 sum(3, 5)
 
+w(+ ident(3) sum(3, 5))
+
 ~ Write
 w("Hola mundo!")
 

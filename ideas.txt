@@ -10,9 +10,3 @@ dd-whl 		---> do-while
 mn			---> main
 
 rd-wr-nl-wv	---> read-write-newline-writevar
-
-
-
-
-
-

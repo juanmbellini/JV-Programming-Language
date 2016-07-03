@@ -1,2 +1,2 @@
-mn
-	wr "Hello world!"
+wl "Hello world!"
+exit 1

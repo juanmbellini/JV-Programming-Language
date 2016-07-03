@@ -123,9 +123,9 @@ expr_bool
 expr_int
     ::= LIT_INT {: System.out.println("LIT_INT -> expr_int"); :}
     | ARITHMETIC_OPERATOR SP expr_int SP expr_int {: System.out.println("ARITHMETIC_OPERATOR SP expr_int SP expr_int -> expr_int"); :}
-    | ARITHMETIC_OPERATOR SP VAR_NAME SP expr_int
-    | ARITHMETIC_OPERATOR SP expr_int SP VAR_NAME
-    | ARITHMETIC_OPERATOR SP VAR_NAME SP VAR_NAME
+    | ARITHMETIC_OPERATOR SP VAR_NAME SP expr_int {: System.out.println("ARITHMETIC_OPERATOR SP VAR_NAME SP expr_int -> expr_int"); :}
+    | ARITHMETIC_OPERATOR SP expr_int SP VAR_NAME {: System.out.println("ARITHMETIC_OPERATOR SP expr_int SP VAR_NAME -> expr_int"); :}
+    | ARITHMETIC_OPERATOR SP VAR_NAME SP VAR_NAME {: System.out.println("ARITHMETIC_OPERATOR SP VAR_NAME SP VAR_NAME -> expr_int"); :}
 ;
 
 expr_str

@@ -10,6 +10,7 @@ import atlc.constants.VarTypeEnum;
 
 %%
 
+%debug
 %class Scanner
 %cup
 %line
@@ -86,13 +87,17 @@ VarName = [:jletter:] [:jletterdigit:]*
 %%
 
 <NORMAL> {
+	/* Comments */
+	^{Comment}{EndOfLine}			{ /* Ignore Comments */ }
+	[ ]*{Comment}					{ /* Ignore Comments */ }
+	^{EndOfLine}					{ /* Ignore empty line */ }
 
     /* Functions */
     "fn"                { return createSymbol("Function", sym.FUNC); }
     "ret"               { return createSymbol("Return", sym.RET); }
     "exit"				{ return createSymbol("Exit", sym.EXIT); }
 	/* Code Structure */
-	{EndOfLine}			{ currentLineIndent = 0; yybegin(YYINITIAL); return createSymbol("End of Line", sym.EOL); }
+	{EndOfLine}		{ currentLineIndent = 0; yybegin(YYINITIAL); return createSymbol("End of Line", sym.EOL); }
 	[ ]					{ return createSymbol("Space", sym.SP); }
 
 	/* Data types */
@@ -141,10 +146,6 @@ VarName = [:jletter:] [:jletterdigit:]*
 	{IntegerLiteral} 	{ return createSymbol("Integer", sym.LIT_INT, new Integer(yytext())); }
 	{BooleanLiteral} 	{ return createSymbol("Boolean", sym.LIT_BOOL, createBoolean(yytext())); }
 	\"                  { string.setLength(0); yybegin(STRING); }
-
-	/* Comments */
-	{Comment}			{ System.out.println("Comment"); }
-
 }
 
 <STRING> {

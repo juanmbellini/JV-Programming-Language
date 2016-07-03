@@ -1,2 +1,5 @@
-wl "Hello world!"
-exit 1
+~ Welcome to JV
+~ This is the typical hello world program
+
+wl "Hello world!" ~ Hola!
+exit 0

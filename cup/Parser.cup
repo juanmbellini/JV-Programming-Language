@@ -67,11 +67,12 @@ stmt
 ;
 
 stmt_if_maybe_else
-    ::= stmt_if | stmt_if ELSE block
+    ::= stmt_if {: System.out.println("stmt_if -> stmt_if_maybe_else"); :}
+	| stmt_if ELSE block {: System.out.println("stmt_if ELSE block -> stmt_if_maybe_else"); :}
 ;
 
 stmt_if
-    ::= IF SP expr_bool block
+    ::= IF SP expr_bool block {: System.out.println("IF SP expr_bool block -> stmt_if"); :}
 ;
 
 stmt_while
@@ -115,8 +116,8 @@ expr_bool
     | BOOLEAN_OPERATOR SP VAR_NAME SP expr_int {: System.out.println("BOOLEAN_OPERATOR SP VAR_NAME SP expr_int -> expr_bool"); :}
     | BOOLEAN_OPERATOR SP expr_int SP VAR_NAME {: System.out.println("BOOLEAN_OPERATOR SP expr_int SP VAR_NAME -> expr_bool"); :}
     | BOOLEAN_OPERATOR SP VAR_NAME SP VAR_NAME {: System.out.println("BOOLEAN_OPERATOR SP VAR_NAME SP VAR_NAME -> expr_bool"); :}
-    | UNARY_BOOLEAN_OPERATOR expr_int
-    | UNARY_BOOLEAN_OPERATOR VAR_NAME
+    | UNARY_BOOLEAN_OPERATOR expr_int {: System.out.println("UNARY_BOOLEAN_OPERATOR expr_int -> expr_bool"); :}
+    | UNARY_BOOLEAN_OPERATOR VAR_NAME {: System.out.println("UNARY_BOOLEAN_OPERATOR VAR_NAME -> expr_bool"); :}
 ;
 
 // TODO PREFIX INT OPERATIONS

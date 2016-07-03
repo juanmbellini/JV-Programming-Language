@@ -94,6 +94,7 @@ VarName = [_a-z] [_a-z0-9]*
     "exit"				{ return createSymbol("Exit", sym.EXIT); }
     "("					{ return createSymbol("LParen", sym.LPAREN); }
     ")"					{ return createSymbol("RParen", sym.RPAREN); }
+    ","					{ return createSymbol("RParen", sym.COMMA); }
 	/* Code Structure */
 	{EndOfLine}		{ currentLineIndent = 0; yybegin(YYINITIAL); return createSymbol("End of Line", sym.EOL); }
 	[ ]					{ return createSymbol("Space", sym.SP); }

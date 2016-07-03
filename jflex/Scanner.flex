@@ -5,8 +5,8 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 import java.io.StringReader;
 import atlc.constants.ArithOpEnum;
 import atlc.constants.BoolOpEnum;
+import atlc.constants.LogicOpEnum;
 import atlc.constants.VarTypeEnum;
-import atlc.constants.LogicTypeEnum;
 
 %%
 

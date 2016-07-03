@@ -14,7 +14,6 @@ parser code {:
     }
 :}
 
-
 terminal FUNC, RET; // Functions
 terminal SP, INDENT, DEDENT, EOL; // Whitespace
 terminal TYPE_INT, TYPE_BOOL, TYPE_STR; // Types

@@ -1,7 +1,7 @@
 package atlc;
 
 import java_cup.runtime.*;
-import atlc.ast.*;
+
 parser code {:
 
 	public void syntax_error(Symbol s) {

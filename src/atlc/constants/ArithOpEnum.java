@@ -1,5 +1,5 @@
 package atlc.constants;
 
 public enum ArithOpEnum {
-    PLUS, TIMES, MINUS, DIVIDE
+    PLUS, TIMES, MINUS, DIVIDE, MOD
 };

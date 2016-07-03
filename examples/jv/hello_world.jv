@@ -1,1 +1,2 @@
 wl "Hello world!"
+exit 1

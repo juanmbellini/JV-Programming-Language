@@ -90,6 +90,7 @@ VarName = [:jletter:] [:jletterdigit:]*
     /* Functions */
     "fn"                { return createSymbol("Function", sym.FUNC); }
     "ret"               { return createSymbol("Return", sym.RET); }
+    "exit"				{ return createSymbol("Exit", sym.EXIT); }
 	/* Code Structure */
 	{EndOfLine}			{ currentLineIndent = 0; yybegin(YYINITIAL); return createSymbol("End of Line", sym.EOL); }
 	[ ]					{ return createSymbol("Space", sym.SP); }
@@ -117,6 +118,7 @@ VarName = [:jletter:] [:jletterdigit:]*
 	"-" 				{ return createSymbol("Minus", sym.ARITHMETIC_OPERATOR, ArithOpEnum.MINUS); }
 	"*" 				{ return createSymbol("Times",sym.ARITHMETIC_OPERATOR, ArithOpEnum.TIMES); }
 	"/" 				{ return createSymbol("Divide", sym.ARITHMETIC_OPERATOR, ArithOpEnum.DIVIDE); }
+	"%" 				{ return createSymbol("Divide", sym.ARITHMETIC_OPERATOR, ArithOpEnum.MOD); }
 
 	/* Logic Operators */
 	"!" 				{ return createSymbol("Not", sym.UNARY_BOOLEAN_OPERATOR, LogicOpEnum.NOT); }

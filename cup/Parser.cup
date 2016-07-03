@@ -16,7 +16,7 @@ parser code {:
     }
 :}
 
-terminal FUNC, RET; // Functions
+terminal FUNC, RET, EXIT; // Functions
 terminal SP, INDENT, DEDENT, EOL; // Whitespace
 terminal TYPE;
 terminal VAR_NAME;
@@ -37,7 +37,7 @@ terminal ASSIGN, ASSIGN_TYPE;
 non terminal program, stmt_list, stmt;
 non terminal stmt_def_maybe_assign, stmt_assign;
 non terminal stmt_if_maybe_else, stmt_if;
-non terminal stmt_while, stmt_io;
+non terminal stmt_while, stmt_io, stmt_exit;
 non terminal expr, expr_bool, expr_int, expr_str;
 non terminal block;
 
@@ -63,6 +63,7 @@ stmt
     | stmt_def_maybe_assign {: System.out.println("stmt_def_maybe_assign -> stmt"); :}
     | stmt_assign {: System.out.println("assign -> stmt"); :}
     | stmt_io {: System.out.println("stmt_io -> stmt"); :}
+    | stmt_exit {: System.out.println("stmt_exit -> stmt"); :}
 ;
 
 stmt_if_maybe_else
@@ -77,8 +78,12 @@ stmt_while
     ::= WHILE SP expr_bool block {: System.out.println("WHILE expr_bool block -> stmt_while"); :}
 ;
 
+stmt_exit
+	::= EXIT SP expr_int EOL {: System.out.println("EXIT SP expr_int EOL -> stmt_exit"); :}
+;
+
 stmt_def_maybe_assign
-    ::= TYPE ASSIGN_TYPE VAR_NAME EOL {: System.out.println("TYPE ASSIGN_TYPE VAR_NAME EOL -> stmt_def_maybe_assign"); :}
+	::= TYPE ASSIGN_TYPE VAR_NAME EOL {: System.out.println("TYPE ASSIGN_TYPE VAR_NAME EOL -> stmt_def_maybe_assign"); :}
     | TYPE ASSIGN_TYPE stmt_assign {: System.out.println("TYPE ASSIGN_TYPE stmt_assign -> stmt_def_maybe_assign"); :}
 ;
 

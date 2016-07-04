@@ -33,6 +33,7 @@ public class Context implements Opcodes {
     public void addLocal(String name, Type type) {
         // TODO: Default values
         int localId = ga.newLocal(type);
+        System.out.println("Created " + name + " with id " + localId + " and type " + type);
         getLocalVariables().put(name, localId);
     }
     
@@ -43,8 +44,9 @@ public class Context implements Opcodes {
 
     public void assignLocal(String name, Function<Context, Type> value) {
     	int localId = getLocalVariables().get(name);
-    	value.apply(this);
-    	ga.storeLocal(localId);
+    	Type type = value.apply(this);
+        System.out.println("Storing..." + localId);
+    	ga.storeLocal(localId, type);
     }
     
     public void endMethod() {
@@ -58,7 +60,10 @@ public class Context implements Opcodes {
     }
 
     public Type getVariableType(int variableId) {
-        return ga.getLocalType(variableId);
+        // TODO: Is this correct?
+        Type out = ga.getLocalType(variableId);
+        System.out.println("Type for " + variableId + " is " + out);
+        return out;
     }
 
     public GeneratorAdapter getGa() {

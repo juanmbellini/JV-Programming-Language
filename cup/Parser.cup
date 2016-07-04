@@ -169,7 +169,7 @@ stmt
 	| stmt_assign:s
 		{:
 		    RESULT = s;
-			Parser.l.log(Level.INFO, "assign -> stmt");
+			Parser.l.log(Level.INFO, "stmt_assign -> stmt");
 		:}
 	| stmt_io:s
 		{:

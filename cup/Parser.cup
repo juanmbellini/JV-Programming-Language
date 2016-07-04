@@ -8,6 +8,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import org.objectweb.asm.Type;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -28,7 +29,7 @@ parser code {:
 terminal FUNC, RET; // Functions
 terminal SP, INDENT, DEDENT, EOL; // Whitespace
 terminal TYPE;
-terminal VAR_NAME;
+terminal String VAR_NAME;
 terminal READ_LINE, WRITE_LINE, WRITE; // IO
 terminal LPAREN, RPAREN, COMMA;
 
@@ -42,7 +43,8 @@ terminal DO, WHILE;
 
 terminal ARITHMETIC_OPERATOR;
 terminal BOOLEAN_OPERATOR, LOGIC_OPERATOR, UNARY_LOGIC_OPERATOR;
-terminal ASSIGN, ASSIGN_TYPE;
+terminal ASSIGN;
+terminal Type ASSIGN_TYPE;
 
 non terminal  program;
 non terminal List<MethodNode> method_list;
@@ -199,12 +201,14 @@ stmt_exit
 ;
 
 stmt_def_maybe_assign
-	::= TYPE ASSIGN_TYPE VAR_NAME EOL
+	::= TYPE ASSIGN_TYPE:type VAR_NAME:name EOL
 		{:
+			context.addLocal(name, type);
 			Parser.l.log(Level.INFO, "TYPE ASSIGN_TYPE VAR_NAME EOL -> stmt_def_maybe_assign");
 		:}
-	| TYPE ASSIGN_TYPE stmt_assign
+	| TYPE ASSIGN_TYPE:type VAR_NAME:name SP ASSIGN SP expr:value EOL
 		{:
+			context.addLocal(name, type, value);
 			Parser.l.log(Level.INFO, "TYPE ASSIGN_TYPE stmt_assign -> stmt_def_maybe_assign");
 		:}
 ;
@@ -241,7 +245,7 @@ method_argument
 // TODO: ARRAY
 
 stmt_assign
-	::= VAR_NAME SP ASSIGN SP expr EOL
+	::= VAR_NAME:name SP ASSIGN SP expr:value EOL
 		{:
 			Parser.l.log(Level.INFO, "VAR_NAME SP ASSIGN SP expr EOL -> stmt_assign");
 		:}

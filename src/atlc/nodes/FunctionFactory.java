@@ -20,10 +20,8 @@ public final class FunctionFactory {
 	}
 	
     public static void writeLine(String expr, GeneratorAdapter ga) {
-        InsnList il = new InsnList();
         ga.getStatic(Type.getType(System.class), "out", Type.getType(PrintStream.class));
         ga.push(expr);
-        ga.invokeVirtual(Type.getType(PrintStream.class),
-                Method.getMethod("void println (String)"));
+        ga.invokeVirtual(Type.getType(PrintStream.class), Method.getMethod("void println (String)"));
     }
 }

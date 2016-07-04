@@ -59,6 +59,13 @@
     <java classpath="${jvgen}" classname="Expressions"/>
   </target>
 
+  <target name="func" depends="jar">
+    <java jar="${dist}/Compiler.jar" fork="true">
+      <arg value="examples/jv/functions.jv" />
+    </java>
+    <java classpath="${jvgen}" classname="Functions"/>
+  </target>
+
   <target name="clean">
     <delete file="${src}/atlc/Scanner.java" />
     <delete file="${src}/atlc/Parser.java" />

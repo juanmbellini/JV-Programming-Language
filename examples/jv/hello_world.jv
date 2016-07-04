@@ -2,4 +2,10 @@
 ~ This is the typical hello world program
 
 wl("Hello world!") ~ Hola!
-~ ret 0
+wl(5)
+~ int:mynum
+~ mynum = 4
+~ wl(mynum)
+
+~ TODO: "w"
+~ TODO: ret 4

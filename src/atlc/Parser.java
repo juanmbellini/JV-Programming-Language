@@ -8,8 +8,6 @@ package atlc;
 import java_cup.runtime.*;
 import atlc.nodes.*;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.commons.GeneratorAdapter;
-import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
@@ -360,12 +358,11 @@ public class Parser extends java_cup.runtime.lr_parser {
 
 
 	public static final Logger l = Logger.getLogger("PARSER");
-	protected ClassWriter cw = null;
-	protected GeneratorAdapter ga = null;
+	protected Context context;
 
 	public Parser(Scanner scanner, SymbolFactory factory, ClassWriter classWriter) {
 		this(scanner, factory);
-		this.cw = classWriter;
+		this.context = new Context(classWriter);
 	}
 
 	public void syntax_error(Symbol s) {
@@ -422,10 +419,8 @@ class CUP$Parser$actions {
 		Location slxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		InsnList sl = (InsnList)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-			ga.returnValue();
-			ga.endMethod();
-			cw.visitEnd();
-			RESULT = cw;
+            context.endMethod();
+			context.getCw().visitEnd();
 			Parser.l.log(Level.INFO, "stmt_list -> PARSE COMPLETE!");
 		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("program",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -456,8 +451,7 @@ class CUP$Parser$actions {
             {
               List<MethodNode> RESULT =null;
 		
-			ga = new GeneratorAdapter(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, Method.getMethod("void main (String[])"), null, null, cw);
-			RESULT = new ArrayList<MethodNode>();
+			context.start(Method.getMethod("void main (String[])"));
 			Parser.l.log(Level.INFO, "lambda -> method_list");
 		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("method_list",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -793,7 +787,7 @@ class CUP$Parser$actions {
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
 		
-			FunctionFactory.writeLine(e, ga);
+			FunctionFactory.writeLine(e, context);
 			Parser.l.log(Level.INFO, "WRITE_LINE SP expr EOL -> stmt_io");
 		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("stmt_io",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -832,7 +826,7 @@ class CUP$Parser$actions {
               Object RESULT =null;
 		Location exleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
-		InsnList e = (InsnList)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		Integer e = (Integer)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 			RESULT = e;
 			Parser.l.log(Level.INFO, "expr_int -> expr");
@@ -1085,12 +1079,12 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 57: // expr_int ::= LIT_INT 
             {
-              InsnList RESULT =null;
+              Integer RESULT =null;
 		Location lixleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
 		Location lixright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Integer li = (Integer)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-			RESULT = ExprFactory.create(li);
+			RESULT = li;
 			Parser.l.log(Level.INFO, "LIT_INT -> expr_int");
 		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr_int",17, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1100,7 +1094,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 58: // expr_int ::= ARITHMETIC_OPERATOR SP expr_int SP expr_int 
             {
-              InsnList RESULT =null;
+              Integer RESULT =null;
 		
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP expr_int SP expr_int -> expr_int");
 		
@@ -1111,7 +1105,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 59: // expr_int ::= ARITHMETIC_OPERATOR SP stmt_method_call SP stmt_method_call 
             {
-              InsnList RESULT =null;
+              Integer RESULT =null;
 		
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP stmt_method_call SP stmt_method_call -> expr_int");
 		
@@ -1122,7 +1116,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 60: // expr_int ::= ARITHMETIC_OPERATOR SP VAR_NAME SP expr_int 
             {
-              InsnList RESULT =null;
+              Integer RESULT =null;
 		
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP VAR_NAME SP expr_int -> expr_int");
 		
@@ -1133,7 +1127,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 61: // expr_int ::= ARITHMETIC_OPERATOR SP VAR_NAME SP stmt_method_call 
             {
-              InsnList RESULT =null;
+              Integer RESULT =null;
 		
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP VAR_NAME SP stmt_method_call -> expr_int");
 		
@@ -1144,7 +1138,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 62: // expr_int ::= ARITHMETIC_OPERATOR SP expr_int SP VAR_NAME 
             {
-              InsnList RESULT =null;
+              Integer RESULT =null;
 		
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP expr_int SP VAR_NAME -> expr_int");
 		
@@ -1155,7 +1149,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 63: // expr_int ::= ARITHMETIC_OPERATOR SP stmt_method_call SP VAR_NAME 
             {
-              InsnList RESULT =null;
+              Integer RESULT =null;
 		
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP stmt_method_call SP VAR_NAME -> expr_int");
 		
@@ -1166,7 +1160,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 64: // expr_int ::= ARITHMETIC_OPERATOR SP VAR_NAME SP VAR_NAME 
             {
-              InsnList RESULT =null;
+              Integer RESULT =null;
 		
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP VAR_NAME SP VAR_NAME -> expr_int");
 		
@@ -1177,7 +1171,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 65: // expr_int ::= ARITHMETIC_OPERATOR SP LIT_INT SP LIT_INT 
             {
-              InsnList RESULT =null;
+              Integer RESULT =null;
 		Location li1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
 		Location li1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
 		Integer li1 = (Integer)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;

@@ -2,6 +2,11 @@ package atlc;
 
 import java_cup.runtime.*;
 import atlc.nodes.*;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.commons.GeneratorAdapter;
+import org.objectweb.asm.commons.GeneratorAdapter;
+import org.objectweb.asm.commons.Method;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -10,6 +15,13 @@ import java.util.ArrayList;
 
 parser code {:
 	public static final Logger l = Logger.getLogger("PARSER");
+	protected ClassWriter cw = null;
+	protected GeneratorAdapter ga = null;
+
+	public Parser(Scanner scanner, SymbolFactory factory, ClassWriter classWriter) {
+		this(scanner, factory);
+		this.cw = classWriter;
+	}
 
 	public void syntax_error(Symbol s) {
 		System.err.println("Syntax error at " + s);
@@ -47,10 +59,10 @@ non terminal stmt_if_maybe_else, stmt_if;
 non terminal stmt_while;
 non terminal InsnList stmt_io;
 non terminal stmt_exit, stmt_method_call;
-non terminal InsnList expr;
+non terminal expr;
 non terminal InsnList expr_bool;
 non terminal InsnList expr_int;
-non terminal InsnList expr_str;
+non terminal String expr_str;
 non terminal method_argument_list;
 non terminal block;
 
@@ -65,7 +77,10 @@ start with program;
 program
 	::= method_list:ml stmt_list:sl
 		{:
-			RESULT = ProgramFactory.create("Hello_world", ml, sl);
+			ga.returnValue();
+			ga.endMethod();
+			cw.visitEnd();
+			RESULT = cw;
 			Parser.l.log(Level.INFO, "stmt_list -> PARSE COMPLETE!");
 		:}
 ;
@@ -79,6 +94,7 @@ method_list
 		:}
 	| // empty
 		{:
+			ga = new GeneratorAdapter(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, Method.getMethod("void main (String[])"), null, null, cw);
 			RESULT = new ArrayList<MethodNode>();
 			Parser.l.log(Level.INFO, "lambda -> method_list");
 		:}
@@ -110,7 +126,7 @@ stmt_list
 	::= stmt:s stmt_list:sl
 		{:
 			Parser.l.log(Level.INFO, "stmt stmt_list -> stmt_list ");
-			sl.add(s);
+			if (s != null) sl.add(s);
 			RESULT = sl;
 		:}
 	| // empty
@@ -244,7 +260,7 @@ stmt_io
 		:}
 	| WRITE_LINE LPAREN expr:e RPAREN EOL
 		{:
-			RESULT = FunctionFactory.writeLine(e);
+			FunctionFactory.writeLine(e, ga);
 			Parser.l.log(Level.INFO, "WRITE_LINE SP expr EOL -> stmt_io");
 		:}
 	| WRITE LPAREN expr RPAREN EOL
@@ -401,7 +417,7 @@ expr_int
 expr_str
 	::= LIT_STR:ls
 		{:
-			RESULT = ExprFactory.create(ls);
+			RESULT = ls;
 			Parser.l.log(Level.INFO, "LIT_STR -> expr_str");
 		:}
 ;

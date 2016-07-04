@@ -3,28 +3,27 @@ package atlc.nodes;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.commons.GeneratorAdapter;
+import org.objectweb.asm.commons.Method;
+import org.objectweb.asm.Type;
+import java.io.PrintStream;
 
 import static org.objectweb.asm.Opcodes.GETSTATIC;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 
 public final class FunctionFactory {
 
-    public static InsnList writeLine(InsnList expr) {
+	public static void writeLine(Object expr, GeneratorAdapter ga) {
+		if (expr instanceof String) {
+			writeLine((String) expr, ga);
+		}
+	}
+	
+    public static void writeLine(String expr, GeneratorAdapter ga) {
         InsnList il = new InsnList();
-        il.add(new FieldInsnNode(
-                GETSTATIC,
-                "java/lang/System",
-                "out",
-                "Ljava/io/PrintStream;"
-        ));
-        il.add(expr);
-        il.add(new MethodInsnNode(
-                INVOKEVIRTUAL,
-                "java/io/PrintStream",
-                "println",
-                "(Ljava/lang/String;)V",
-                false
-        ));
-        return il;
+        ga.getStatic(Type.getType(System.class), "out", Type.getType(PrintStream.class));
+        ga.push(expr);
+        ga.invokeVirtual(Type.getType(PrintStream.class),
+                Method.getMethod("void println (String)"));
     }
 }

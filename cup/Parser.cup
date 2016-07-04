@@ -51,7 +51,7 @@ terminal DO, WHILE;
 terminal int MATH_BINOP;
 terminal int BOOL_BINOP;
 terminal int LOGIC_BINOP;
-terminal int LOGIC_UNOP;
+terminal LOGIC_UNOP_NOT;
 terminal ASSIGN;
 terminal Type ASSIGN_TYPE;
 
@@ -389,17 +389,18 @@ expr_bool
 		{:
 			Parser.l.log(Level.INFO, "LOGIC_BINOP SP VAR_NAME SP VAR_NAME -> expr_bool");
 		:}
-	| LOGIC_UNOP expr_bool
+	| LOGIC_UNOP_NOT:op expr_bool:e
 		{:
-			Parser.l.log(Level.INFO, "LOGIC_UNOP expr_int -> expr_bool");
+		    RESULT = logicalFactory.createNot(e);
+			Parser.l.log(Level.INFO, "LOGILOGIC_UNOP_NOT_UNOP expr_int -> expr_bool");
 		:}
-	| LOGIC_UNOP stmt_method_call
+	| LOGIC_UNOP_NOT stmt_method_call
 		{:
-			Parser.l.log(Level.INFO, "LOGIC_UNOP stmt_method_call -> expr_bool");
+			Parser.l.log(Level.INFO, "LOGILOGIC_UNOP_NOT_UNOP stmt_method_call -> expr_bool");
 		:}
-	| LOGIC_UNOP VAR_NAME
+	| LOGIC_UNOP_NOT VAR_NAME
 		{:
-			Parser.l.log(Level.INFO, "LOGIC_UNOP VAR_NAME -> expr_bool");
+			Parser.l.log(Level.INFO, "LOGICLOGIC_UNOP_NOTUNOP VAR_NAME -> expr_bool");
 		:}
 ;
 

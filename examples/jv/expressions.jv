@@ -1,0 +1,10 @@
+~ Arithmetic
+~ Boolean
+wl(YES)
+wl(NO)
+w("expect 'true'")
+wl(|| NO YES)
+w("expect 'false'")
+wl(&& NO YES)
+~ String
+wl("Hello")

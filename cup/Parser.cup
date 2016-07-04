@@ -12,10 +12,14 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Function;
 import org.objectweb.asm.Type;
+import atlc.expr.*;
 
 parser code {:
 	public static final Logger l = Logger.getLogger("PARSER");
 	protected Context context;
+	protected ArithmeticFactory arithmeticFactory = new ArithmeticFactory();
+	protected LogicalFactory logicalFactory = new LogicalFactory();
+	protected StrExprFactory strExprFactory = new StrExprFactory();
 
 	public Parser(Scanner scanner, SymbolFactory factory, ClassWriter classWriter) {
 		this(scanner, factory);
@@ -299,12 +303,12 @@ expr
 expr_bool
 	::= LIT_BOOL:lb
 		{:
-			RESULT = LogicalFactory.createLiteral(lb);
+			RESULT = logicalFactory.createLiteral(lb);
 			Parser.l.log(Level.INFO, "LIT_BOOL -> expr_bool");
 		:}
 	| BOOLEAN_OPERATOR:op SP expr_int:e1 SP expr_int:e2
 		{:
-		    RESULT = LogicalFactory.createBinary(op, e1, e2);
+		    RESULT = logicalFactory.createBinary(op, e1, e2);
 			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP expr_bool SP expr_int -> expr_bool");
 		:}
 	| BOOLEAN_OPERATOR SP stmt_method_call SP stmt_method_call
@@ -333,7 +337,7 @@ expr_bool
 		:}
 	| LOGIC_OPERATOR:op SP expr_bool:e1 SP expr_bool:e2
 		{:
-		    RESULT = LogicalFactory.createBinary(op, e1, e2);
+		    RESULT = logicalFactory.createBinary(op, e1, e2);
 			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP expr_bool SP expr_bool -> expr_bool");
 		:}
 	| LOGIC_OPERATOR SP stmt_method_call SP stmt_method_call
@@ -377,12 +381,12 @@ expr_bool
 expr_int
 	::= LIT_INT:li
 		{:
-			RESULT = ArithmeticFactory.createLiteral(li);
+			RESULT = arithmeticFactory.createLiteral(li);
 			Parser.l.log(Level.INFO, "LIT_INT -> expr_int");
 		:}
 	| ARITHMETIC_OPERATOR:op SP expr_int:e1 SP expr_int:e2
 		{:
-		    RESULT = ArithmeticFactory.createBinary(op, e1, e2);
+		    RESULT = arithmeticFactory.createBinary(op, e1, e2);
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP expr_int SP expr_int -> expr_int");
 		:}
 	| ARITHMETIC_OPERATOR:op SP stmt_method_call SP stmt_method_call
@@ -420,7 +424,7 @@ expr_int
 expr_str
 	::= LIT_STR:ls
 		{:
-			RESULT = StrExprFactory.createLiteral(ls);
+			RESULT = strExprFactory.createLiteral(ls);
 			Parser.l.log(Level.INFO, "LIT_STR -> expr_str");
 		:}
 ;

@@ -6,6 +6,7 @@
   <property name="dist"    location="dist"    />
   <property name="lib"     location="lib"     />
   <property name="tools"   location="tools"     />
+  <property name="jvgen"   location="examples/jv/gen" />
 
   <target name="init">
     <mkdir dir="${classes}"/>
@@ -44,10 +45,18 @@
   </target>
 
   <!-- Test the parser in a single run -->
-  <target name="run" depends="jar">
+  <target name="hello" depends="jar">
     <java jar="${dist}/Compiler.jar" fork="true">
       <arg value="examples/jv/hello_world.jv" />
     </java>
+    <java classpath="${jvgen}" classname="Hello_world"/>
+  </target>
+
+  <target name="expr" depends="jar">
+    <java jar="${dist}/Compiler.jar" fork="true">
+      <arg value="examples/jv/expressions.jv" />
+    </java>
+    <java classpath="${jvgen}" classname="Expressions"/>
   </target>
 
   <target name="clean">
@@ -56,6 +65,7 @@
     <delete file="${src}/atlc/sym.java" />
     <delete dir="${classes}" />
     <delete dir="${dist}" />
-    <delete dir="examples/java/gen/Hello_world.class" />
+    <delete file="examples/java/gen/*" />
+    <delete file="examples/jv/gen/*" />
   </target>
 </project>

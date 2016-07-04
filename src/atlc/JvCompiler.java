@@ -33,7 +33,7 @@ public class JvCompiler implements Opcodes {
                 cw
         ).parse();
 
-        Path file = Paths.get("examples/java/gen/" + className + ".class");
+        Path file = Paths.get("examples/jv/gen/" + className + ".class");
         Files.write(file, cw.toByteArray());
     }
 }

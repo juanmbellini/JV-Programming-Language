@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Function;
 import org.objectweb.asm.Type;
+import atlc.expr.*;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import java_cup.runtime.XMLElement;
 
@@ -356,6 +357,9 @@ public class Parser extends java_cup.runtime.lr_parser {
 
 	public static final Logger l = Logger.getLogger("PARSER");
 	protected Context context;
+	protected ArithmeticFactory arithmeticFactory = new ArithmeticFactory();
+	protected LogicalFactory logicalFactory = new LogicalFactory();
+	protected StrExprFactory strExprFactory = new StrExprFactory();
 
 	public Parser(Scanner scanner, SymbolFactory factory, ClassWriter classWriter) {
 		this(scanner, factory);
@@ -879,7 +883,7 @@ class CUP$Parser$actions {
 		Location lbxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Boolean lb = (Boolean)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-			RESULT = LogicalFactory.createLiteral(lb);
+			RESULT = logicalFactory.createLiteral(lb);
 			Parser.l.log(Level.INFO, "LIT_BOOL -> expr_bool");
 		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr_bool",16, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -900,7 +904,7 @@ class CUP$Parser$actions {
 		Location e2xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Function<Context,Type> e2 = (Function<Context,Type>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-		    RESULT = LogicalFactory.createBinary(op, e1, e2);
+		    RESULT = logicalFactory.createBinary(op, e1, e2);
 			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP expr_bool SP expr_int -> expr_bool");
 		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr_bool",16, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -987,7 +991,7 @@ class CUP$Parser$actions {
 		Location e2xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Function<Context,Type> e2 = (Function<Context,Type>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-		    RESULT = LogicalFactory.createBinary(op, e1, e2);
+		    RESULT = logicalFactory.createBinary(op, e1, e2);
 			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP expr_bool SP expr_bool -> expr_bool");
 		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr_bool",16, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1101,7 +1105,7 @@ class CUP$Parser$actions {
 		Location lixright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Integer li = (Integer)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-			RESULT = ArithmeticFactory.createLiteral(li);
+			RESULT = arithmeticFactory.createLiteral(li);
 			Parser.l.log(Level.INFO, "LIT_INT -> expr_int");
 		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr_int",17, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1122,7 +1126,7 @@ class CUP$Parser$actions {
 		Location e2xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Function<Context,Type> e2 = (Function<Context,Type>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-		    RESULT = ArithmeticFactory.createBinary(op, e1, e2);
+		    RESULT = arithmeticFactory.createBinary(op, e1, e2);
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP expr_int SP expr_int -> expr_int");
 		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr_int",17, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1227,7 +1231,7 @@ class CUP$Parser$actions {
 		Location lsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		String ls = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-			RESULT = StrExprFactory.createLiteral(ls);
+			RESULT = strExprFactory.createLiteral(ls);
 			Parser.l.log(Level.INFO, "LIT_STR -> expr_str");
 		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expr_str",18, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);

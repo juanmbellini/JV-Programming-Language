@@ -56,8 +56,10 @@ terminal ASSIGN;
 terminal Type ASSIGN_TYPE;
 
 non terminal program;
-non terminal List<MethodNode> method_list;
-non terminal MethodNode method;
+//non terminal List<MethodNode> method_list;
+//non terminal MethodNode method;
+non terminal method_list;
+non terminal method;
 non terminal param_list;
 non terminal Consumer<Context> stmt_list;
 non terminal Consumer<Context> stmt;
@@ -99,8 +101,8 @@ method_list
 	::= method:m method_list:ml
 		{:
 			Parser.l.log(Level.INFO, "method method_list -> method_list");
-			ml.add(m);
-			RESULT = ml;
+//			ml.add(m);
+//			RESULT = ml;
 		:}
 	| // empty
 		{:

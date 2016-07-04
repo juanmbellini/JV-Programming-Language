@@ -137,6 +137,10 @@ stmt_list
 			Parser.l.log(Level.INFO, "stmt stmt_list -> stmt_list ");
 			if (s != null) {
 			    RESULT = s.andThen(sl);
+			} else {
+			    // TODO: REMOVE s!=null and THIS.
+			    s = context -> {};
+			    RESULT = s.andThen(sl);
 			}
 		:}
 	| // empty

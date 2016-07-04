@@ -2,7 +2,7 @@
 ~ This is the typical hello world program
 
 wl("Hello world!") ~ Hola!
-wl(5)
+wl(+ 10 30)
 ~ int:mynum
 ~ mynum = 4
 ~ wl(mynum)

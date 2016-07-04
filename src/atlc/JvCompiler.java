@@ -9,6 +9,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.objectweb.asm.ClassWriter.COMPUTE_FRAMES;
@@ -19,7 +20,7 @@ public class JvCompiler implements Opcodes {
     public static final Logger l = Logger.getLogger("JvCompiler");
 
     public static void main(String args[]) throws Exception {
-        // Parser.l.setLevel(Level.WARNING);
+        Parser.l.setLevel(Level.WARNING);
         ComplexSymbolFactory symbolFactory = new ComplexSymbolFactory();
         String sourceFile = args[0];
         String javaClass = FileSystems.getDefault().getPath(sourceFile).getFileName().toString();

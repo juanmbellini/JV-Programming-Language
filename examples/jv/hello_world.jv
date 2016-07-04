@@ -1,8 +1,11 @@
 ~ Welcome to JV
 ~ This is the typical hello world program
 
-wl("Hello world!") ~ Hola!
-wl(+ 10 30)
+~ wl("Hello world!") ~ Hola!
+~ wl(/ 40 10)
+wl(YES)
+wl(NO)
+wl(&& YES || YES NO)
 ~ int:mynum
 ~ mynum = 4
 ~ wl(mynum)

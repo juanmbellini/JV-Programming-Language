@@ -4,9 +4,9 @@ package atlc;
 
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory.Location;
+import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.Type;
 import java.io.StringReader;
-import atlc.constants.*;
 
 
 /**
@@ -331,7 +331,7 @@ class Scanner implements java_cup.runtime.Scanner {
         if (!str.equals("YES") && !str.equals("NO")) {
             throw new IllegalArgumentException();
         }
-        return str.equals("yes");
+        return str.equals("YES");
     }
 
     public void printError(String symbol) {
@@ -852,35 +852,35 @@ class Scanner implements java_cup.runtime.Scanner {
             }
           case 67: break;
           case 18: 
-            { return createSymbol("Plus",sym.ARITHMETIC_OPERATOR, ArithOpEnum.PLUS);
+            { return createSymbol("Plus",sym.ARITHMETIC_OPERATOR, GeneratorAdapter.ADD);
             }
           case 68: break;
           case 19: 
-            { return createSymbol("Minus", sym.ARITHMETIC_OPERATOR, ArithOpEnum.MINUS);
+            { return createSymbol("Minus", sym.ARITHMETIC_OPERATOR, GeneratorAdapter.SUB);
             }
           case 69: break;
           case 20: 
-            { return createSymbol("Times",sym.ARITHMETIC_OPERATOR, ArithOpEnum.TIMES);
+            { return createSymbol("Times",sym.ARITHMETIC_OPERATOR, GeneratorAdapter.MUL);
             }
           case 70: break;
           case 21: 
-            { return createSymbol("Divide", sym.ARITHMETIC_OPERATOR, ArithOpEnum.DIVIDE);
+            { return createSymbol("Divide", sym.ARITHMETIC_OPERATOR, GeneratorAdapter.DIV);
             }
           case 71: break;
           case 22: 
-            { return createSymbol("Divide", sym.ARITHMETIC_OPERATOR, ArithOpEnum.MOD);
+            { return createSymbol("Divide", sym.ARITHMETIC_OPERATOR, GeneratorAdapter.REM);
             }
           case 72: break;
           case 23: 
-            { return createSymbol("Not", sym.UNARY_LOGIC_OPERATOR, LogicOpEnum.NOT);
+            { return createSymbol("Not", sym.UNARY_LOGIC_OPERATOR, GeneratorAdapter.NEG);
             }
           case 73: break;
           case 24: 
-            { return createSymbol("Lower Than", sym.BOOLEAN_OPERATOR, BoolOpEnum.LT);
+            { return createSymbol("Lower Than", sym.BOOLEAN_OPERATOR, GeneratorAdapter.LT);
             }
           case 74: break;
           case 25: 
-            { return createSymbol("Greater than", sym.BOOLEAN_OPERATOR, BoolOpEnum.GT);
+            { return createSymbol("Greater than", sym.BOOLEAN_OPERATOR, GeneratorAdapter.GT);
             }
           case 75: break;
           case 26: 
@@ -936,7 +936,7 @@ class Scanner implements java_cup.runtime.Scanner {
             }
           case 88: break;
           case 39: 
-            { return createSymbol("Equal to", sym.BOOLEAN_OPERATOR, BoolOpEnum.EQ);
+            { return createSymbol("Equal to", sym.BOOLEAN_OPERATOR, GeneratorAdapter.EQ);
             }
           case 89: break;
           case 40: 
@@ -948,19 +948,19 @@ class Scanner implements java_cup.runtime.Scanner {
             }
           case 91: break;
           case 42: 
-            { return createSymbol("And", sym.LOGIC_OPERATOR, LogicOpEnum.AND);
+            { return createSymbol("And", sym.LOGIC_OPERATOR, GeneratorAdapter.AND);
             }
           case 92: break;
           case 43: 
-            { return createSymbol("Or", sym.LOGIC_OPERATOR, LogicOpEnum.OR);
+            { return createSymbol("Or", sym.LOGIC_OPERATOR, GeneratorAdapter.OR);
             }
           case 93: break;
           case 44: 
-            { return createSymbol("Lower than or equal to", sym.BOOLEAN_OPERATOR, BoolOpEnum.LE);
+            { return createSymbol("Lower than or equal to", sym.BOOLEAN_OPERATOR, GeneratorAdapter.LE);
             }
           case 94: break;
           case 45: 
-            { return createSymbol("greater than or equal to", sym.BOOLEAN_OPERATOR, BoolOpEnum.GE);
+            { return createSymbol("greater than or equal to", sym.BOOLEAN_OPERATOR, GeneratorAdapter.GE);
             }
           case 95: break;
           case 46: 

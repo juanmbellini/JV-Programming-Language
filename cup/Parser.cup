@@ -331,8 +331,9 @@ expr_bool
 		{:
 			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP VAR_NAME SP VAR_NAME -> expr_bool");
 		:}
-	| LOGIC_OPERATOR SP expr_bool SP expr_bool
+	| LOGIC_OPERATOR:op SP expr_bool:e1 SP expr_bool:e2
 		{:
+		    RESULT = LogicalFactory.createBinary(op, e1, e2);
 			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP expr_bool SP expr_bool -> expr_bool");
 		:}
 	| LOGIC_OPERATOR SP stmt_method_call SP stmt_method_call

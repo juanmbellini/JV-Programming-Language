@@ -1,0 +1,142 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{moreverb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fancybox}
+\usepackage{float}
+\usepackage{fancyvrb}
+\usepackage{color}
+\selectlanguage{spanish}
+
+
+% UTF-8, font and 'pdf copy & paste fix'
+\usepackage{tgtermes}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\input{glyphtounicode}
+
+\renewcommand{\shorthandsspanish}{}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\begin{document}
+\begin{titlepage}
+\begin{center}
+
+\includegraphics[scale=0.40]{./logo_itba.png}\\[1cm]
+
+\textsc{\LARGE Autómatas, Teoría de Lenguajes y Compiladores}\\[1.5cm]
+\textsc{\Large Trabajo Práctico Especial}\\[0.5cm]
+\textsc{\Large Primer Cuatrimestre 2016}\\[0.5cm]
+
+
+\HRule \\[0.4cm]
+{ \huge \bfseries JV}\\[0.4cm]
+\HRule \\[1.5cm]
+
+
+\Large Autores: \\ [0.25cm]
+\begin{tabular}{l @{\ \ -\ \ }l}
+\emph{\Large Juan Pablo Orsay} & \Large 49373\\[0.2cm]
+\emph{\Large Horacio Miguel Gomez} & \Large 50825\\[0.2cm]
+\emph{\Large Daniel Alejandro Lobo} & \Large 51171\\[0.2cm]
+\emph{\Large Juan Marcos Bellini} & \Large 52056\\[0.2cm]
+\end{tabular}
+
+\begin{abstract}
+\begin{center}
+\par\textit{A modern weapon for a more civilised era} \\
+\end{center}
+
+\end{abstract}
+
+\vfill
+% La fecha queda abajo.
+{\large 3 de Julio de 2016}
+
+\end{center}
+
+\end{titlepage}
+
+
+% Seteo marcos para lo que esta en el entorno verbatim
+\fvset{frame=single}
+
+\clearpage
+\tableofcontents
+
+\clearpage
+
+\section{Introduccion}
+\par El objetivo del proyecto es crear un lenguaje procedural simple, sintético, y que fuerce el buen estilo de programación, junto con un compilador para dicho lenguaje.\\
+\par El lenguaje creado se llama JV. Procura, en todo momento, simplificar la experiencia del programador, para permitir que se concentre en las ideas abstractas. Por otro lado, para aquellas personas que se quieran inicial en el mundo de la programación, ofrece la posibilidad de aprender, con menor friccion, los principales conceptos de la programación, e implementar, con mayor sencillez, sus ideas.\\
+\par El compilador de JV genera  programas objeto que corren como una aplicación Java, dentro de una Java Virtual Machine. Estos programas pueden ser usados en conjunto con cualquier programa en dicho lenguaje.\\
+\clearpage
+
+
+\section{Gramática del Lenguaje}
+
+\subsection{Definición del Lenguaje}
+\par Para correr la version exacta de nuestro programa, es necesario ejecutar por consola los siguientes comandos, una vez ubicados en la raiz del proyecto:
+\subsection{Constantes y delimitadores}
+\par Se decidió utilizar como delimitadores las comillas simples para delimitar el inicio y el final de una cadena de caracteres o \textit{string}.
+\par Las constantes encontradas en este proyecto son números enteros, cadenas de caracteres y el valor análogo a \textit{True} y \textit{False} que serían \textit{yes} y \textit{no} respectivamente.
+\par Todas estas características del lenguaje pueden ser encontradas en el archivo \textit{Scanner.flex} de la carpeta \textit{jflex}. 
+
+\subsection{Operadores}
+\subsubsection{Aritméticos}
+\par Para los operadores relacionales se tomó la decisión de implementar los siguientes: suma, resta, multiplicación y división Todos ellos son los equivalentes a los operadores built-in de Java. Se pueden encontrar listados en el archivo \textit{Scanner.flex} de la carpeta \textit{jflex}. 
+\subsubsection{Relacionales}
+\par Para los operadores relacionales se tomó la decisión de implementar los siguientes: menor, mayor, menor igual, mayor igual, igual y diferente. Todos ellos son los equivalentes a los operadores de Java. Se pueden encontrar listados en el archivo \textit{Scanner.flex} de la carpeta \textit{jflex}. 
+\subsubsection{Lógicos}
+\par Para las operadores lógicos se tomó la decisión de implemtnar los siguientes: not, and y or. Todos ellos son los equivales a los operadores de Java. Se pueden encontrar listados en el archivo \textit{Scanner.flex} de la carpeta \textit{jflex}.
+\subsubsection{De asignación}
+\par Par los operadores de asignación se tomó la decisión de implementar la asignación con el símbolo \textit{=} para la asignación de valor a una variable y el símbolo \textit{:} para la asignación de tipo a una variable. Se pueden encontrar listados en el archivo \textit{Scanner.flex} de la carpeta \textit{jflex}.
+\subsection{Bloque Condicional}
+\par Para la creación de bloques condicionales se tomó la decisión de implementar el \textit{if} y el \textit{else} de Java con los comandos \textit{if} y \textit{ls}. Buscando siempre ahorrarle tiempo y claridad al programador al momento de usar estas estructuras. Se pueden encontrar listados en el archivo \textit{Scanner.flex} de la carpeta \textit{jflex}.
+\subsection{Bloque Do-While}
+\par Para la creación de bloques do-while se tomó la decisión de implementar el \textit{do} y el \textit{while} de Java con los comandos \textit{do} y \textit{whl}. Se pueden encontrar listados en el archivo \textit{Scanner.flex} de la carpeta \textit{jflex}.
+\subsection{Un bloque principal de ejecución}
+\par Si bien inicialmente se había tomado la decisión de crear un bloque principal o \textit{main} para la creación del programa, se decidió ahorrarnos este bloque. La razón detrás de esta decisión fue, nuevamente, más claridad para el programador y simplificar la cantidad de tabs en el código. Por lo tanto, no contamos con un bloque principal de ejecución.
+\subsection{Mecanismos de entrada y salida}
+\par Se cuenta con comandos para leer hasta el final de una línea y para escribir una línea incluyendo el \textit{carriage return} al final de la misma. Adicionalmente, se cuenta con un comando para poder escribir sin incluir el \textit{carriage return} luego de los caracteres ingresados. Se pueden encontrar listados en el archivo \textit{Scanner.flex} de la carpeta \textit{jflex}.
+\subsection{Tipos de datos}
+\par Se tomó la decisión de contar simplemente con tres tipos de datos que, a su vez, consideramos esenciales para un lenguaje de programación. Los tipos son los análogos a  \textit{Integer}, \textit{Boolean} y \textit{String} de Java. Se pueden encontrar listados en el archivo \textit{Scanner.flex} de la carpeta \textit{jflex}.
+\clearpage
+
+\section{Compilador}
+\subsection{Analizador Léxico}
+\par La primera herramienta utilizada es JFlex. JFlex es un generador de analizadores léxicos – o también conocido como generador de \textit{scanners} – para Java. Cuando recibe una entrada, JFlex se encarga de transformar dicho \textit{stream} de caracteres, en una cadena de \textit{tokens} predefinidos. La ventaja de utilizar JFlex es su integración con CUP, un generador de \textit{parsers} también para Java. Otra ventaja de JFlex es el hecho de poder extender su funcionalidad fácilmente, ya sea mediante codigo Java \textit{inline}, o importando clases externas.
+\\
+\par Una de las caracterísitcas más notorias de esta herramienta es la capacidad de definir estados de \textit{lexing}. En este caso se definieron 4: YYINITIAL, NORMAL, STRING y FINAL.
+\par Cada vez que comienza una línea, el \textit{lexer} entra en el estado YYINITIAL. Dicho estado tiene la tarea de contar cuántas veces aparece el caracter '\t', y en base a eso, decidir si tiene que generar el \textit{token} \textbf{<indent>} ó \textbf{<dedent>}.
+\par En este estado, cuando aparece cualquier otro caracter – que no sea un final de línea – el \textit{lexer} cambia su estado a modo NORMAL, en el cual convierte el texto en los correspondientes \textit{tokens}. Al llegar al final de la línea, se vuelve al estado inicial.
+\par Otro estado importante es STRING. Para ingresar en este estado, el \textit{lexer} debe haber leído el caracter '"'. Dentro del mismo, se consume el texto, hasta llegar nuevamente al caracter '"'. A partir de eso, crea el \textit{token} \textbf{<string>}, que tiene un atributo cuyo valor es el texto entre las comillas.
+\par Finalmente, el estado FINAL es un estado que sirve para completar las \textit{desindentaciones} que pudieron haber quedado al final del código.
+
+\subsection{Analizador Sintáctico}
+\par Como analizador semántico, se decidió utilizar CUP  (\textit{Construction of Useful Parsers}), el cual es un generador de \textit{parsers} para Java. 
+\par En CUP se define la gramática del lenguaje. Se declaran símbolos terminales y no terminales, y se crean las producciones de la misma. Con ella, crea el \textit{parser} que va a aceptar cadenas que pertenezcan al lenguaje. Obviamente, los símbolos terminales son los mismos que generó previamente JFLEX.
+\par Además, otra \textit{feature} de CUP es la capacidad de definir reglas semánticas para el lenguaje. De esta manera, al \textit{parsear} la cadena, se pueden tomar distintos tipos de decisiones, que ayudan a la hora de generar el programa objeto.
+\clearpage
+
+\section{El futuro de JV}
+\begin{center}
+\par\textit{"Any sufficiently advanced technology is indistinguishable from magic."}\\Arthur C. Clarke\\
+\end{center}
+\par Creemos que con el apoyo de los primeros usuarios interesados en este lenguaje, se puede expander las capacidades del mismo. 
+\par Se pueden implementar más tipos de variables y aún más variaciones de diferentes controles de flujo. 
+\par Otra idea que se nos ocurre es permitir tener argumentos variables para una función.
+
+
+
+\section{Conclusiones}
+\par Consideramos que el trabajo, mayoritariamente, nos ayudo a reforzar nuestro manejo y seguimiento de llamadas recursivas. Junto a esto, creemos que fue muy valiosa la toma de decisiones continuas, no solo sobre la estrategia general para encarar estos problemas sino tambien para las decisiones puntuales en las distintas instancias de la creacion del algoritmo.\\
+
+\end{document}
+

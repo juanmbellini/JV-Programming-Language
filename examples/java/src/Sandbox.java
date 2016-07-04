@@ -19,4 +19,9 @@ public class Sandbox {
         int n = 20;
         return 4 > n;
     }
+
+    private static boolean fun3() {
+        int n = 2;
+        return !(n<3);
+    }
 }

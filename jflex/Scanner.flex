@@ -125,7 +125,7 @@ VarName = [_a-z] [_a-z0-9]*
 	"%" 				{ return createSymbol("Divide", sym.MATH_BINOP, GeneratorAdapter.REM); }
 
 	/* Logic Operators */
-	"!" 				{ return createSymbol("Not", sym.LOGIC_UNOP, GeneratorAdapter.NEG); }
+	"!" 				{ return createSymbol("Not", sym.LOGIC_UNOP_NOT); }
 	"&&" 				{ return createSymbol("And", sym.LOGIC_BINOP, GeneratorAdapter.AND); }
 	"||" 				{ return createSymbol("Or", sym.LOGIC_BINOP, GeneratorAdapter.OR); }
 

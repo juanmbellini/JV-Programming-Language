@@ -2,9 +2,15 @@
 ~ Boolean
 wl(YES)
 wl(NO)
-w("expect 'true'")
+w("'|| NO YES' expect 'true' ")
 wl(|| NO YES)
-w("expect 'false'")
+w("'&& NO YES' expect 'false' ")
 wl(&& NO YES)
+w("'!YES' expect 'false' ")
+wl(!YES)
+w("'YES' expect 'true' ")
+wl(YES)
+w("'!NO' expect 'true' ")
+wl(!NO)
 ~ String
 wl("Hello")

@@ -20,4 +20,11 @@ public class LogicalFactory extends ExprFactory<Boolean> {
         };
     }
 
+    public Function<Context, Type> createNot(Function<Context, Type> e) {
+        return context -> {
+            e.apply(context);
+            context.getGa().not();
+            return this.getType();
+        };
+    }
 }

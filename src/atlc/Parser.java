@@ -826,7 +826,7 @@ class CUP$Parser$actions {
               Object RESULT =null;
 		Location exleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
-		Integer e = (Integer)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 			RESULT = e;
 			Parser.l.log(Level.INFO, "expr_int -> expr");
@@ -1079,7 +1079,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 57: // expr_int ::= LIT_INT 
             {
-              Integer RESULT =null;
+              Object RESULT =null;
 		Location lixleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
 		Location lixright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Integer li = (Integer)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
@@ -1094,7 +1094,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 58: // expr_int ::= ARITHMETIC_OPERATOR SP expr_int SP expr_int 
             {
-              Integer RESULT =null;
+              Object RESULT =null;
 		
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP expr_int SP expr_int -> expr_int");
 		
@@ -1105,7 +1105,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 59: // expr_int ::= ARITHMETIC_OPERATOR SP stmt_method_call SP stmt_method_call 
             {
-              Integer RESULT =null;
+              Object RESULT =null;
 		
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP stmt_method_call SP stmt_method_call -> expr_int");
 		
@@ -1116,7 +1116,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 60: // expr_int ::= ARITHMETIC_OPERATOR SP VAR_NAME SP expr_int 
             {
-              Integer RESULT =null;
+              Object RESULT =null;
 		
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP VAR_NAME SP expr_int -> expr_int");
 		
@@ -1127,7 +1127,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 61: // expr_int ::= ARITHMETIC_OPERATOR SP VAR_NAME SP stmt_method_call 
             {
-              Integer RESULT =null;
+              Object RESULT =null;
 		
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP VAR_NAME SP stmt_method_call -> expr_int");
 		
@@ -1138,7 +1138,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 62: // expr_int ::= ARITHMETIC_OPERATOR SP expr_int SP VAR_NAME 
             {
-              Integer RESULT =null;
+              Object RESULT =null;
 		
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP expr_int SP VAR_NAME -> expr_int");
 		
@@ -1149,7 +1149,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 63: // expr_int ::= ARITHMETIC_OPERATOR SP stmt_method_call SP VAR_NAME 
             {
-              Integer RESULT =null;
+              Object RESULT =null;
 		
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP stmt_method_call SP VAR_NAME -> expr_int");
 		
@@ -1160,7 +1160,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 64: // expr_int ::= ARITHMETIC_OPERATOR SP VAR_NAME SP VAR_NAME 
             {
-              Integer RESULT =null;
+              Object RESULT =null;
 		
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP VAR_NAME SP VAR_NAME -> expr_int");
 		
@@ -1171,7 +1171,7 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 65: // expr_int ::= ARITHMETIC_OPERATOR SP LIT_INT SP LIT_INT 
             {
-              Integer RESULT =null;
+              Object RESULT =null;
 		Location li1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
 		Location li1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
 		Integer li1 = (Integer)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;

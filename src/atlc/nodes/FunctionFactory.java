@@ -25,6 +25,6 @@ public final class FunctionFactory {
     public static void writeLine(Integer expr, Context context) {
         context.getGa().getStatic(Type.getType(System.class), "out", Type.getType(PrintStream.class));
         context.getGa().push(expr);
-        context.getGa().invokeVirtual(Type.getType(PrintStream.class), Method.getMethod("void println (Integer)"));
+        context.getGa().invokeVirtual(Type.getType(PrintStream.class), Method.getMethod("void println (int)"));
     }
 }

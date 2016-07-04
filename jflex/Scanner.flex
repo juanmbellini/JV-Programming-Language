@@ -49,7 +49,7 @@ import java.io.StringReader;
         if (!str.equals("YES") && !str.equals("NO")) {
             throw new IllegalArgumentException();
         }
-        return str.equals("yes");
+        return str.equals("YES");
     }
 
     public void printError(String symbol) {

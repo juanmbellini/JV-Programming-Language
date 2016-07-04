@@ -56,5 +56,6 @@
     <delete file="${src}/atlc/sym.java" />
     <delete dir="${classes}" />
     <delete dir="${dist}" />
+    <delete dir="examples/java/gen/Hello_world.class" />
   </target>
 </project>

@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.function.Function;
+import org.objectweb.asm.Type;
 
 parser code {:
 	public static final Logger l = Logger.getLogger("PARSER");
@@ -40,11 +42,13 @@ terminal String  LIT_STR;
 terminal IF, ELSE;
 terminal DO, WHILE;
 
-terminal ARITHMETIC_OPERATOR;
-terminal BOOLEAN_OPERATOR, LOGIC_OPERATOR, UNARY_LOGIC_OPERATOR;
+terminal int ARITHMETIC_OPERATOR;
+terminal int BOOLEAN_OPERATOR;
+terminal int LOGIC_OPERATOR;
+terminal int UNARY_LOGIC_OPERATOR;
 terminal ASSIGN, ASSIGN_TYPE;
 
-non terminal  program;
+non terminal program;
 non terminal List<MethodNode> method_list;
 non terminal MethodNode method;
 non terminal param_list;
@@ -56,10 +60,10 @@ non terminal stmt_if_maybe_else, stmt_if;
 non terminal stmt_while;
 non terminal InsnList stmt_io;
 non terminal stmt_exit, stmt_method_call;
-non terminal expr;
-non terminal InsnList expr_bool;
-non terminal expr_int;
-non terminal String expr_str;
+non terminal Function<Context, Type> expr;
+non terminal Function<Context, Type> expr_bool;
+non terminal Function<Context, Type> expr_int;
+non terminal Function<Context, Type> expr_str;
 non terminal method_argument_list;
 non terminal block;
 
@@ -266,17 +270,17 @@ stmt_io
 expr
 	::= expr_bool:e
 		{:
-			RESULT = e;
+		    RESULT = e;
 			Parser.l.log(Level.INFO, "expr_bool -> expr");
 		:}
 	| expr_int:e
 		{:
-			RESULT = e;
+		    RESULT = e;
 			Parser.l.log(Level.INFO, "expr_int -> expr");
 		:}
 	| expr_str:e
 		{:
-			RESULT = e;
+		    RESULT = e;
 			Parser.l.log(Level.INFO, "expr_str -> expr");
 		:}
 	| VAR_NAME
@@ -295,11 +299,12 @@ expr
 expr_bool
 	::= LIT_BOOL:lb
 		{:
-			RESULT = ExprFactory.create(lb);
+			RESULT = LogicalFactory.createLiteral(lb);
 			Parser.l.log(Level.INFO, "LIT_BOOL -> expr_bool");
 		:}
-	| BOOLEAN_OPERATOR SP expr_int SP expr_int
+	| BOOLEAN_OPERATOR:op SP expr_int:e1 SP expr_int:e2
 		{:
+		    RESULT = LogicalFactory.createBinary(op, e1, e2);
 			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP expr_bool SP expr_int -> expr_bool");
 		:}
 	| BOOLEAN_OPERATOR SP stmt_method_call SP stmt_method_call
@@ -326,8 +331,9 @@ expr_bool
 		{:
 			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP VAR_NAME SP VAR_NAME -> expr_bool");
 		:}
-	| LOGIC_OPERATOR SP expr_bool SP expr_bool
+	| LOGIC_OPERATOR:op SP expr_bool:e1 SP expr_bool:e2
 		{:
+		    RESULT = LogicalFactory.createBinary(op, e1, e2);
 			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP expr_bool SP expr_bool -> expr_bool");
 		:}
 	| LOGIC_OPERATOR SP stmt_method_call SP stmt_method_call
@@ -371,47 +377,50 @@ expr_bool
 expr_int
 	::= LIT_INT:li
 		{:
-			RESULT = li;
+			RESULT = ArithmeticFactory.createLiteral(li);
 			Parser.l.log(Level.INFO, "LIT_INT -> expr_int");
 		:}
-	| ARITHMETIC_OPERATOR SP expr_int SP expr_int
+	| ARITHMETIC_OPERATOR:op SP expr_int:e1 SP expr_int:e2
 		{:
+		    RESULT = ArithmeticFactory.createBinary(op, e1, e2);
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP expr_int SP expr_int -> expr_int");
 		:}
-	| ARITHMETIC_OPERATOR SP stmt_method_call SP stmt_method_call
+	| ARITHMETIC_OPERATOR:op SP stmt_method_call SP stmt_method_call
 		{:
+		    // TODO
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP stmt_method_call SP stmt_method_call -> expr_int");
 		:}
-	| ARITHMETIC_OPERATOR SP VAR_NAME SP expr_int
+	| ARITHMETIC_OPERATOR:op SP VAR_NAME SP expr_int
 		{:
+		    // TODO
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP VAR_NAME SP expr_int -> expr_int");
 		:}
-	| ARITHMETIC_OPERATOR SP VAR_NAME SP stmt_method_call
+	| ARITHMETIC_OPERATOR:op SP VAR_NAME SP stmt_method_call
 		{:
+		    // TODO
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP VAR_NAME SP stmt_method_call -> expr_int");
 		:}
-	| ARITHMETIC_OPERATOR SP expr_int SP VAR_NAME
+	| ARITHMETIC_OPERATOR:op SP expr_int SP VAR_NAME
 		{:
+		    // TODO
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP expr_int SP VAR_NAME -> expr_int");
 		:}
-	| ARITHMETIC_OPERATOR SP stmt_method_call SP VAR_NAME
+	| ARITHMETIC_OPERATOR:op SP stmt_method_call SP VAR_NAME
 		{:
+		    // TODO
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP stmt_method_call SP VAR_NAME -> expr_int");
 		:}
-	| ARITHMETIC_OPERATOR SP VAR_NAME SP VAR_NAME
+	| ARITHMETIC_OPERATOR:op SP VAR_NAME SP VAR_NAME
 		{:
+		    // TODO
 			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP VAR_NAME SP VAR_NAME -> expr_int");
 		:}
-    | ARITHMETIC_OPERATOR SP LIT_INT:li1 SP LIT_INT:li2
-        {:
-            Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP LIT_INT SP LIT_INT -> expr_int");
-        :}
 ;
 
 expr_str
 	::= LIT_STR:ls
 		{:
-			RESULT = ls;
+			RESULT = StrExprFactory.createLiteral(ls);
 			Parser.l.log(Level.INFO, "LIT_STR -> expr_str");
 		:}
 ;

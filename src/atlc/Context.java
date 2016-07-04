@@ -7,6 +7,7 @@ import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class Context implements Opcodes {
     private final ClassWriter cw;
@@ -39,4 +40,5 @@ public class Context implements Opcodes {
     public ClassWriter getCw() {
         return cw;
     }
+
 }

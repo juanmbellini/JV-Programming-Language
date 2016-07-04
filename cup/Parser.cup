@@ -63,11 +63,13 @@ non terminal Consumer<Context> stmt_list;
 non terminal Consumer<Context> stmt;
 non terminal method_argument;
 non terminal Consumer<Context> stmt_def_maybe_assign;
-non terminal stmt_assign;
-non terminal stmt_if_maybe_else, stmt_if;
-non terminal stmt_while;
+non terminal Consumer<Context> stmt_assign;
+non terminal Consumer<Context> stmt_if_maybe_else;
+non terminal Consumer<Context> stmt_if;
+non terminal Consumer<Context> stmt_while;
 non terminal Consumer<Context> stmt_io;
-non terminal stmt_exit, stmt_method_call;
+non terminal Consumer<Context> stmt_exit;
+non terminal Consumer<Context> stmt_method_call;
 non terminal Function<Context, Type> expr;
 non terminal Function<Context, Type> expr_bool;
 non terminal Function<Context, Type> expr_int;
@@ -145,12 +147,12 @@ stmt_list
 ;
 
 stmt
-	::= stmt_if_maybe_else
+	::= stmt_if_maybe_else:s
 		{:
 		    RESULT = s;
 			Parser.l.log(Level.INFO, "stmt_if_maybe_else -> stmt");
 		:}
-	| stmt_while
+	| stmt_while:s
 		{:
 		    RESULT = s;
 			Parser.l.log(Level.INFO, "stmt_while -> stmt");
@@ -160,7 +162,7 @@ stmt
 		    RESULT = s;
 			Parser.l.log(Level.INFO, "stmt_def_maybe_assign -> stmt");
 		:}
-	| stmt_assign
+	| stmt_assign:s
 		{:
 		    RESULT = s;
 			Parser.l.log(Level.INFO, "assign -> stmt");
@@ -170,12 +172,12 @@ stmt
 			RESULT = s;
 			Parser.l.log(Level.INFO, "stmt_io -> stmt");
 		:}
-	| stmt_exit
+	| stmt_exit:s
 		{:
 		    RESULT = s;
 			Parser.l.log(Level.INFO, "stmt_exit -> stmt");
 		:}
-	| stmt_method_call EOL
+	| stmt_method_call:s EOL
 		{:
 		    RESULT = s;
 			Parser.l.log(Level.INFO, "stmt_method_call EOL -> stmt");

@@ -48,10 +48,10 @@ terminal String  LIT_STR;
 terminal IF, ELSE;
 terminal DO, WHILE;
 
-terminal int ARITHMETIC_OPERATOR;
-terminal int BOOLEAN_OPERATOR;
-terminal int LOGIC_OPERATOR;
-terminal int UNARY_LOGIC_OPERATOR;
+terminal int MATH_BINOP;
+terminal int BOOL_BINOP;
+terminal int LOGIC_BINOP;
+terminal int LOGIC_UNOP;
 terminal ASSIGN;
 terminal Type ASSIGN_TYPE;
 
@@ -147,19 +147,22 @@ stmt_list
 stmt
 	::= stmt_if_maybe_else
 		{:
+		    RESULT = s;
 			Parser.l.log(Level.INFO, "stmt_if_maybe_else -> stmt");
 		:}
 	| stmt_while
 		{:
+		    RESULT = s;
 			Parser.l.log(Level.INFO, "stmt_while -> stmt");
 		:}
-	| stmt_def_maybe_assign:e
+	| stmt_def_maybe_assign:s
 		{:
-		    RESULT = e;
+		    RESULT = s;
 			Parser.l.log(Level.INFO, "stmt_def_maybe_assign -> stmt");
 		:}
 	| stmt_assign
 		{:
+		    RESULT = s;
 			Parser.l.log(Level.INFO, "assign -> stmt");
 		:}
 	| stmt_io:s
@@ -169,10 +172,12 @@ stmt
 		:}
 	| stmt_exit
 		{:
+		    RESULT = s;
 			Parser.l.log(Level.INFO, "stmt_exit -> stmt");
 		:}
 	| stmt_method_call EOL
 		{:
+		    RESULT = s;
 			Parser.l.log(Level.INFO, "stmt_method_call EOL -> stmt");
 		:}
 ;
@@ -319,75 +324,75 @@ expr_bool
 			RESULT = logicalFactory.createLiteral(lb);
 			Parser.l.log(Level.INFO, "LIT_BOOL -> expr_bool");
 		:}
-	| BOOLEAN_OPERATOR:op SP expr_int:e1 SP expr_int:e2
+	| BOOL_BINOP:op SP expr_int:e1 SP expr_int:e2
 		{:
 		    RESULT = logicalFactory.createBinary(op, e1, e2);
-			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP expr_bool SP expr_int -> expr_bool");
+			Parser.l.log(Level.INFO, "BOOL_BINOP SP expr_bool SP expr_int -> expr_bool");
 		:}
-	| BOOLEAN_OPERATOR SP stmt_method_call SP stmt_method_call
+	| BOOL_BINOP SP stmt_method_call SP stmt_method_call
 		{:
-			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP stmt_method_call SP stmt_method_call -> expr_bool");
+			Parser.l.log(Level.INFO, "BOOL_BINOP SP stmt_method_call SP stmt_method_call -> expr_bool");
 		:}
-	| BOOLEAN_OPERATOR SP VAR_NAME SP expr_int
+	| BOOL_BINOP SP VAR_NAME SP expr_int
 		{:
-			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP VAR_NAME SP expr_int -> expr_bool");
+			Parser.l.log(Level.INFO, "BOOL_BINOP SP VAR_NAME SP expr_int -> expr_bool");
 		:}
-	| BOOLEAN_OPERATOR SP VAR_NAME SP stmt_method_call
+	| BOOL_BINOP SP VAR_NAME SP stmt_method_call
 		{:
-			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP VAR_NAME SP stmt_method_call -> expr_bool");
+			Parser.l.log(Level.INFO, "BOOL_BINOP SP VAR_NAME SP stmt_method_call -> expr_bool");
 		:}
-	| BOOLEAN_OPERATOR SP expr_int SP VAR_NAME
+	| BOOL_BINOP SP expr_int SP VAR_NAME
 		{:
-			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP expr_int SP VAR_NAME -> expr_bool");
+			Parser.l.log(Level.INFO, "BOOL_BINOP SP expr_int SP VAR_NAME -> expr_bool");
 		:}
-	| BOOLEAN_OPERATOR SP stmt_method_call SP VAR_NAME
+	| BOOL_BINOP SP stmt_method_call SP VAR_NAME
 		{:
-			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP stmt_method_call SP VAR_NAME -> expr_bool");
+			Parser.l.log(Level.INFO, "BOOL_BINOP SP stmt_method_call SP VAR_NAME -> expr_bool");
 		:}
-	| BOOLEAN_OPERATOR SP VAR_NAME SP VAR_NAME
+	| BOOL_BINOP SP VAR_NAME SP VAR_NAME
 		{:
-			Parser.l.log(Level.INFO, "BOOLEAN_OPERATOR SP VAR_NAME SP VAR_NAME -> expr_bool");
+			Parser.l.log(Level.INFO, "BOOL_BINOP SP VAR_NAME SP VAR_NAME -> expr_bool");
 		:}
-	| LOGIC_OPERATOR:op SP expr_bool:e1 SP expr_bool:e2
+	| LOGIC_BINOP:op SP expr_bool:e1 SP expr_bool:e2
 		{:
 		    RESULT = logicalFactory.createBinary(op, e1, e2);
-			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP expr_bool SP expr_bool -> expr_bool");
+			Parser.l.log(Level.INFO, "LOGIC_BINOP SP expr_bool SP expr_bool -> expr_bool");
 		:}
-	| LOGIC_OPERATOR SP stmt_method_call SP stmt_method_call
+	| LOGIC_BINOP SP stmt_method_call SP stmt_method_call
 		{:
-			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP stmt_method_call SP stmt_method_call -> expr_bool");
+			Parser.l.log(Level.INFO, "LOGIC_BINOP SP stmt_method_call SP stmt_method_call -> expr_bool");
 		:}
-	| LOGIC_OPERATOR SP VAR_NAME SP expr_bool
+	| LOGIC_BINOP SP VAR_NAME SP expr_bool
 		{:
-			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP VAR_NAME SP expr_bool -> expr_bool");
+			Parser.l.log(Level.INFO, "LOGIC_BINOP SP VAR_NAME SP expr_bool -> expr_bool");
 		:}
-	| LOGIC_OPERATOR SP VAR_NAME SP stmt_method_call
+	| LOGIC_BINOP SP VAR_NAME SP stmt_method_call
 		{:
-			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP VAR_NAME SP stmt_method_call -> expr_bool");
+			Parser.l.log(Level.INFO, "LOGIC_BINOP SP VAR_NAME SP stmt_method_call -> expr_bool");
 		:}
-	| LOGIC_OPERATOR SP expr_bool SP VAR_NAME
+	| LOGIC_BINOP SP expr_bool SP VAR_NAME
 		{:
-			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP VAR_NAME SP VAR_NAME -> expr_bool");
+			Parser.l.log(Level.INFO, "LOGIC_BINOP SP VAR_NAME SP VAR_NAME -> expr_bool");
 		:}
-	| LOGIC_OPERATOR SP stmt_method_call SP VAR_NAME
+	| LOGIC_BINOP SP stmt_method_call SP VAR_NAME
 		{:
-			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP stmt_method_call SP VAR_NAME -> expr_bool");
+			Parser.l.log(Level.INFO, "LOGIC_BINOP SP stmt_method_call SP VAR_NAME -> expr_bool");
 		:}
-	| LOGIC_OPERATOR SP VAR_NAME SP VAR_NAME
+	| LOGIC_BINOP SP VAR_NAME SP VAR_NAME
 		{:
-			Parser.l.log(Level.INFO, "LOGIC_OPERATOR SP VAR_NAME SP VAR_NAME -> expr_bool");
+			Parser.l.log(Level.INFO, "LOGIC_BINOP SP VAR_NAME SP VAR_NAME -> expr_bool");
 		:}
-	| UNARY_LOGIC_OPERATOR expr_bool
+	| LOGIC_UNOP expr_bool
 		{:
-			Parser.l.log(Level.INFO, "UNARY_LOGIC_OPERATOR expr_int -> expr_bool");
+			Parser.l.log(Level.INFO, "LOGIC_UNOP expr_int -> expr_bool");
 		:}
-	| UNARY_LOGIC_OPERATOR stmt_method_call
+	| LOGIC_UNOP stmt_method_call
 		{:
-			Parser.l.log(Level.INFO, "UNARY_LOGIC_OPERATOR stmt_method_call -> expr_bool");
+			Parser.l.log(Level.INFO, "LOGIC_UNOP stmt_method_call -> expr_bool");
 		:}
-	| UNARY_LOGIC_OPERATOR VAR_NAME
+	| LOGIC_UNOP VAR_NAME
 		{:
-			Parser.l.log(Level.INFO, "UNARY_LOGIC_OPERATOR VAR_NAME -> expr_bool");
+			Parser.l.log(Level.INFO, "LOGIC_UNOP VAR_NAME -> expr_bool");
 		:}
 ;
 
@@ -397,40 +402,40 @@ expr_int
 			RESULT = arithmeticFactory.createLiteral(li);
 			Parser.l.log(Level.INFO, "LIT_INT -> expr_int");
 		:}
-	| ARITHMETIC_OPERATOR:op SP expr_int:e1 SP expr_int:e2
+	| MATH_BINOP:op SP expr_int:e1 SP expr_int:e2
 		{:
 		    RESULT = arithmeticFactory.createBinary(op, e1, e2);
-			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP expr_int SP expr_int -> expr_int");
+			Parser.l.log(Level.INFO, "MATH_BINOP SP expr_int SP expr_int -> expr_int");
 		:}
-	| ARITHMETIC_OPERATOR:op SP stmt_method_call SP stmt_method_call
+	| MATH_BINOP:op SP stmt_method_call SP stmt_method_call
 		{:
 		    // TODO
-			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP stmt_method_call SP stmt_method_call -> expr_int");
+			Parser.l.log(Level.INFO, "MATH_BINOP SP stmt_method_call SP stmt_method_call -> expr_int");
 		:}
-	| ARITHMETIC_OPERATOR:op SP VAR_NAME SP expr_int
+	| MATH_BINOP:op SP VAR_NAME SP expr_int
 		{:
 		    // TODO
-			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP VAR_NAME SP expr_int -> expr_int");
+			Parser.l.log(Level.INFO, "MATH_BINOP SP VAR_NAME SP expr_int -> expr_int");
 		:}
-	| ARITHMETIC_OPERATOR:op SP VAR_NAME SP stmt_method_call
+	| MATH_BINOP:op SP VAR_NAME SP stmt_method_call
 		{:
 		    // TODO
-			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP VAR_NAME SP stmt_method_call -> expr_int");
+			Parser.l.log(Level.INFO, "MATH_BINOP SP VAR_NAME SP stmt_method_call -> expr_int");
 		:}
-	| ARITHMETIC_OPERATOR:op SP expr_int SP VAR_NAME
+	| MATH_BINOP:op SP expr_int SP VAR_NAME
 		{:
 		    // TODO
-			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP expr_int SP VAR_NAME -> expr_int");
+			Parser.l.log(Level.INFO, "MATH_BINOP SP expr_int SP VAR_NAME -> expr_int");
 		:}
-	| ARITHMETIC_OPERATOR:op SP stmt_method_call SP VAR_NAME
+	| MATH_BINOP:op SP stmt_method_call SP VAR_NAME
 		{:
 		    // TODO
-			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP stmt_method_call SP VAR_NAME -> expr_int");
+			Parser.l.log(Level.INFO, "MATH_BINOP SP stmt_method_call SP VAR_NAME -> expr_int");
 		:}
-	| ARITHMETIC_OPERATOR:op SP VAR_NAME SP VAR_NAME
+	| MATH_BINOP:op SP VAR_NAME SP VAR_NAME
 		{:
 		    // TODO
-			Parser.l.log(Level.INFO, "ARITHMETIC_OPERATOR SP VAR_NAME SP VAR_NAME -> expr_int");
+			Parser.l.log(Level.INFO, "MATH_BINOP SP VAR_NAME SP VAR_NAME -> expr_int");
 		:}
 ;
 

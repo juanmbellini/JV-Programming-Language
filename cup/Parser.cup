@@ -285,8 +285,9 @@ stmt_io
 			RESULT = context -> FunctionFactory.writeLine(e, context);
 			Parser.l.log(Level.INFO, "WRITE_LINE SP expr EOL -> stmt_io");
 		:}
-	| WRITE LPAREN expr RPAREN EOL
+	| WRITE LPAREN expr:e RPAREN EOL
 		{:
+		    RESULT = context -> FunctionFactory.write(e, context);
 			Parser.l.log(Level.INFO, "WRITE SP expr EOL -> stmt_io");
 		:}
 ;

@@ -2,9 +2,9 @@ package atlc;
 
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory.Location;
+import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.Type;
 import java.io.StringReader;
-import atlc.constants.*;
 
 %%
 
@@ -118,23 +118,23 @@ VarName = [_a-z] [_a-z0-9]*
 	"whl"				{ return createSymbol("While", sym.WHILE); }
 
 	/* Arithmetic Operators */
-	"+" 				{ return createSymbol("Plus",sym.ARITHMETIC_OPERATOR, ArithOpEnum.PLUS); }
-	"-" 				{ return createSymbol("Minus", sym.ARITHMETIC_OPERATOR, ArithOpEnum.MINUS); }
-	"*" 				{ return createSymbol("Times",sym.ARITHMETIC_OPERATOR, ArithOpEnum.TIMES); }
-	"/" 				{ return createSymbol("Divide", sym.ARITHMETIC_OPERATOR, ArithOpEnum.DIVIDE); }
-	"%" 				{ return createSymbol("Divide", sym.ARITHMETIC_OPERATOR, ArithOpEnum.MOD); }
+	"+" 				{ return createSymbol("Plus",sym.ARITHMETIC_OPERATOR, GeneratorAdapter.ADD); }
+	"-" 				{ return createSymbol("Minus", sym.ARITHMETIC_OPERATOR, GeneratorAdapter.SUB); }
+	"*" 				{ return createSymbol("Times",sym.ARITHMETIC_OPERATOR, GeneratorAdapter.MUL); }
+	"/" 				{ return createSymbol("Divide", sym.ARITHMETIC_OPERATOR, GeneratorAdapter.DIV); }
+	"%" 				{ return createSymbol("Divide", sym.ARITHMETIC_OPERATOR, GeneratorAdapter.REM); }
 
 	/* Logic Operators */
-	"!" 				{ return createSymbol("Not", sym.UNARY_LOGIC_OPERATOR, LogicOpEnum.NOT); }
-	"&&" 				{ return createSymbol("And", sym.LOGIC_OPERATOR, LogicOpEnum.AND); }
-	"||" 				{ return createSymbol("Or", sym.LOGIC_OPERATOR, LogicOpEnum.OR); }
+	"!" 				{ return createSymbol("Not", sym.UNARY_LOGIC_OPERATOR, GeneratorAdapter.NEG); }
+	"&&" 				{ return createSymbol("And", sym.LOGIC_OPERATOR, GeneratorAdapter.AND); }
+	"||" 				{ return createSymbol("Or", sym.LOGIC_OPERATOR, GeneratorAdapter.OR); }
 
 	/* Boolean operators */
-	"<" 				{ return createSymbol("Lower Than", sym.BOOLEAN_OPERATOR, BoolOpEnum.LT); }
-	">" 				{ return createSymbol("Greater than", sym.BOOLEAN_OPERATOR, BoolOpEnum.GT); }
-	"<=" 				{ return createSymbol("Lower than or equal to", sym.BOOLEAN_OPERATOR, BoolOpEnum.LE); }
-	">=" 				{ return createSymbol("greater than or equal to", sym.BOOLEAN_OPERATOR, BoolOpEnum.GE); }
-	"==" 				{ return createSymbol("Equal to", sym.BOOLEAN_OPERATOR, BoolOpEnum.EQ); }
+	"<" 				{ return createSymbol("Lower Than", sym.BOOLEAN_OPERATOR, GeneratorAdapter.LT); }
+	">" 				{ return createSymbol("Greater than", sym.BOOLEAN_OPERATOR, GeneratorAdapter.GT); }
+	"<=" 				{ return createSymbol("Lower than or equal to", sym.BOOLEAN_OPERATOR, GeneratorAdapter.LE); }
+	">=" 				{ return createSymbol("greater than or equal to", sym.BOOLEAN_OPERATOR, GeneratorAdapter.GE); }
+	"==" 				{ return createSymbol("Equal to", sym.BOOLEAN_OPERATOR, GeneratorAdapter.EQ); }
 
 	/* Identifiers */
     // TODO: Space is being added before var name

@@ -70,7 +70,7 @@ non terminal Consumer<Context> stmt_if_maybe_else;
 non terminal Consumer<Context> stmt_if;
 non terminal Consumer<Context> stmt_while;
 non terminal Consumer<Context> stmt_io;
-non terminal Consumer<Context> stmt_exit;
+non terminal Consumer<Context> stmt_return;
 non terminal Consumer<Context> stmt_method_call;
 non terminal Function<Context, Type> expr;
 non terminal Function<Context, Type> expr_bool;
@@ -178,9 +178,9 @@ stmt
 			Parser.l.log(Level.INFO, "stmt_io -> stmt");
 			RESULT = s;
 		:}
-	| stmt_exit:s
+	| stmt_return:s
 		{:
-			Parser.l.log(Level.INFO, "stmt_exit -> stmt");
+			Parser.l.log(Level.INFO, "stmt_return -> stmt");
 			RESULT = s;
 		:}
 	| stmt_method_call:s EOL
@@ -215,14 +215,14 @@ stmt_while
 		:}
 ;
 
-stmt_exit
+stmt_return
 	::= RET EOL
 		{:
-			Parser.l.log(Level.INFO, "RET EOL -> stmt_exit");
+			Parser.l.log(Level.INFO, "RET EOL -> stmt_return");
 		:}
 	| RET SP expr EOL
 		{:
-			Parser.l.log(Level.INFO, "RET SP expr EOL -> stmt_exit");
+			Parser.l.log(Level.INFO, "RET SP expr EOL -> stmt_return");
 		:}
 ;
 

@@ -72,9 +72,9 @@
 
 \clearpage
 
-\section{Introduccion}
+\section{Introducción}
 \par El objetivo del proyecto es crear un lenguaje procedural simple, sintético, y que fuerce el buen estilo de programación, junto con un compilador para dicho lenguaje.\\
-\par El lenguaje creado se llama JV. Procura, en todo momento, simplificar la experiencia del programador, para permitir que se concentre en las ideas abstractas. Por otro lado, para aquellas personas que se quieran inicial en el mundo de la programación, ofrece la posibilidad de aprender, con menor friccion, los principales conceptos de la programación, e implementar, con mayor sencillez, sus ideas.\\
+\par El lenguaje creado se llama JV. Procura, en todo momento, simplificar la experiencia del programador, para permitir que se concentre en las ideas abstractas. Por otro lado, para aquellas personas que se quieran inicial en el mundo de la programación, ofrece la posibilidad de aprender, con menor fricción, los principales conceptos de la programación, e implementar, con mayor sencillez, sus ideas.\\
 \par El compilador de JV genera  programas objeto que corren como una aplicación Java, dentro de una Java Virtual Machine. Estos programas pueden ser usados en conjunto con cualquier programa en dicho lenguaje.\\
 \clearpage
 
@@ -82,7 +82,7 @@
 \section{Gramática del Lenguaje}
 
 \subsection{Definición del Lenguaje}
-\par Para correr la version exacta de nuestro programa, es necesario ejecutar por consola los siguientes comandos, una vez ubicados en la raiz del proyecto:
+\par Para correr la version exacta de nuestro programa, es necesario ejecutar por consola los siguientes comandos, una vez ubicados en la raíz del proyecto:
 \subsection{Constantes y delimitadores}
 \par Se decidió utilizar como delimitadores las comillas simples para delimitar el inicio y el final de una cadena de caracteres o \textit{string}.
 \par Las constantes encontradas en este proyecto son números enteros, cadenas de caracteres y el valor análogo a \textit{True} y \textit{False} que serían \textit{yes} y \textit{no} respectivamente.
@@ -94,7 +94,7 @@
 \subsubsection{Relacionales}
 \par Para los operadores relacionales se tomó la decisión de implementar los siguientes: menor, mayor, menor igual, mayor igual, igual y diferente. Todos ellos son los equivalentes a los operadores de Java. Se pueden encontrar listados en el archivo \textit{Scanner.flex} de la carpeta \textit{jflex}. 
 \subsubsection{Lógicos}
-\par Para las operadores lógicos se tomó la decisión de implemtnar los siguientes: not, and y or. Todos ellos son los equivales a los operadores de Java. Se pueden encontrar listados en el archivo \textit{Scanner.flex} de la carpeta \textit{jflex}.
+\par Para las operadores lógicos se tomó la decisión de implementar los siguientes: not, and y or. Todos ellos son los equivales a los operadores de Java. Se pueden encontrar listados en el archivo \textit{Scanner.flex} de la carpeta \textit{jflex}.
 \subsubsection{De asignación}
 \par Par los operadores de asignación se tomó la decisión de implementar la asignación con el símbolo \textit{=} para la asignación de valor a una variable y el símbolo \textit{:} para la asignación de tipo a una variable. Se pueden encontrar listados en el archivo \textit{Scanner.flex} de la carpeta \textit{jflex}.
 \subsection{Bloque Condicional}
@@ -111,13 +111,13 @@
 
 \section{Compilador}
 \subsection{Analizador Léxico}
-\par La primera herramienta utilizada es JFlex. JFlex es un generador de analizadores léxicos – o también conocido como generador de \textit{scanners} – para Java. Cuando recibe una entrada, JFlex se encarga de transformar dicho \textit{stream} de caracteres, en una cadena de \textit{tokens} predefinidos. La ventaja de utilizar JFlex es su integración con CUP, un generador de \textit{parsers} también para Java. Otra ventaja de JFlex es el hecho de poder extender su funcionalidad fácilmente, ya sea mediante codigo Java \textit{inline}, o importando clases externas.
+\par La primera herramienta utilizada es JFlex. JFlex es un generador de analizadores léxicos – o también conocido como generador de \textit{scanners} – para Java. Cuando recibe una entrada, JFlex se encarga de transformar dicho \textit{stream} de caracteres, en una cadena de \textit{tokens} predefinidos. La ventaja de utilizar JFlex es su integración con CUP, un generador de \textit{parsers} también para Java. Otra ventaja de JFlex es el hecho de poder extender su funcionalidad fácilmente, ya sea mediante código Java \textit{inline}, o importando clases externas.
 \\
-\par Una de las caracterísitcas más notorias de esta herramienta es la capacidad de definir estados de \textit{lexing}. En este caso se definieron 4: YYINITIAL, NORMAL, STRING y FINAL.
+\par Una de las características más notorias de esta herramienta es la capacidad de definir estados de \textit{lexing}. En este caso se definieron 4: YYINITIAL, NORMAL, STRING y FINAL.
 \par Cada vez que comienza una línea, el \textit{lexer} entra en el estado YYINITIAL. Dicho estado tiene la tarea de contar cuántas veces aparece el caracter '\t', y en base a eso, decidir si tiene que generar el \textit{token} \textbf{<indent>} ó \textbf{<dedent>}.
 \par En este estado, cuando aparece cualquier otro caracter – que no sea un final de línea – el \textit{lexer} cambia su estado a modo NORMAL, en el cual convierte el texto en los correspondientes \textit{tokens}. Al llegar al final de la línea, se vuelve al estado inicial.
 \par Otro estado importante es STRING. Para ingresar en este estado, el \textit{lexer} debe haber leído el caracter '"'. Dentro del mismo, se consume el texto, hasta llegar nuevamente al caracter '"'. A partir de eso, crea el \textit{token} \textbf{<string>}, que tiene un atributo cuyo valor es el texto entre las comillas.
-\par Finalmente, el estado FINAL es un estado que sirve para completar las \textit{desindentaciones} que pudieron haber quedado al final del código.
+\par Finalmente, el estado FINAL es un estado que sirve para completar las \textit{des-indentaciones} que pudieron haber quedado al final del código.
 
 \subsection{Analizador Sintáctico}
 \par Como analizador semántico, se decidió utilizar CUP  (\textit{Construction of Useful Parsers}), el cual es un generador de \textit{parsers} para Java. 

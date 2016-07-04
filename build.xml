@@ -8,7 +8,7 @@
   <property name="tools"   location="tools"     />
   <property name="jvgen"   location="examples/jv/gen" />
 
-  <target name="init">
+  <target name="init" depends="clean">
     <mkdir dir="${classes}"/>
     <mkdir dir="${dist}"/>
   </target>

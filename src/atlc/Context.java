@@ -30,7 +30,7 @@ public class Context implements Opcodes {
     
     public void addLocal(String name, Type type) {
     	if (type == Type.INT_TYPE) {
-    		addLocal(name, type, new Integer(0));
+    		addLocal(name, type, 0);
     	}
     }
     
@@ -42,10 +42,12 @@ public class Context implements Opcodes {
 
     public void assignLocal(String name, Object value) {
     	int localId = getLocalVariables().get(name);
-    	Type localType = ga.getLocalType(localId);
+    	Type localType = getVariableType(localId);
     	if (localType == Type.INT_TYPE) {
-    		ga.push((Integer)value);
-    	}
+            ga.push((Integer) value);
+        } else if (localType == Type.getType(String.class)) {
+            ga.push((String) value);
+        }
     	ga.storeLocal(localId);
     }
     
@@ -53,6 +55,14 @@ public class Context implements Opcodes {
         ga.returnValue();
         ga.endMethod();
         ga = null;
+    }
+
+    public int getVariableId(String name) {
+      return getLocalVariables().get(name);
+    }
+
+    public Type getVariableType(int variableId) {
+        return ga.getLocalType(variableId);
     }
 
     public GeneratorAdapter getGa() {
@@ -65,7 +75,7 @@ public class Context implements Opcodes {
 
     private Map<String, Integer> getLocalVariables() {
     	if (localVariablesStack.isEmpty()) {
-    		localVariablesStack.push(new HashMap<String, Integer>());
+    		localVariablesStack.push(new HashMap<>());
     	}
     	return localVariablesStack.peekFirst();
     }

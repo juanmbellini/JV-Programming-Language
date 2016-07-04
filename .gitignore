@@ -3,6 +3,8 @@
 *.class
 *~
 
+informe/.texpadtmp/
+
 src/atlc/Parser.java
 src/atlc/Scanner.java
 src/atlc/sym.java

@@ -45,25 +45,11 @@
   </target>
 
   <!-- Test the parser in a single run -->
-  <target name="hello" depends="jar">
+  <target name="run" depends="jar">
     <java jar="${dist}/Compiler.jar" fork="true">
-      <arg value="examples/jv/hello_world.jv" />
+        <arg value="${jv}" />
     </java>
-    <java classpath="${jvgen}" classname="Hello_world"/>
-  </target>
-
-  <target name="expr" depends="jar">
-    <java jar="${dist}/Compiler.jar" fork="true">
-      <arg value="examples/jv/expressions.jv" />
-    </java>
-    <java classpath="${jvgen}" classname="Expressions"/>
-  </target>
-
-  <target name="func" depends="jar">
-    <java jar="${dist}/Compiler.jar" fork="true">
-      <arg value="examples/jv/functions.jv" />
-    </java>
-    <java classpath="${jvgen}" classname="Functions"/>
+    <java jar="app.jar" fork="true"/>
   </target>
 
   <target name="clean">
@@ -74,5 +60,6 @@
     <delete dir="${dist}" />
     <delete file="examples/java/gen/*" />
     <delete file="examples/jv/gen/*" />
+    <delete file="app.jar" />
   </target>
 </project>

@@ -1,14 +1,16 @@
 package atlc;
 
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 public class Context implements Opcodes {
     private final ClassWriter cw;
@@ -29,25 +31,19 @@ public class Context implements Opcodes {
     }
     
     public void addLocal(String name, Type type) {
-    	if (type == Type.INT_TYPE) {
-    		addLocal(name, type, 0);
-    	}
+        // TODO: Default values
+        int localId = ga.newLocal(type);
+        getLocalVariables().put(name, localId);
     }
     
-    public void addLocal(String name, Type type, Object value) {
-    	int localId = ga.newLocal(type);
-    	getLocalVariables().put(name, localId);
+    public void addLocal(String name, Type type, Function<Context, Type> value) {
+    	addLocal(name, type);
     	assignLocal(name, value);
     }
 
-    public void assignLocal(String name, Object value) {
+    public void assignLocal(String name, Function<Context, Type> value) {
     	int localId = getLocalVariables().get(name);
-    	Type localType = getVariableType(localId);
-    	if (localType == Type.INT_TYPE) {
-            ga.push((Integer) value);
-        } else if (localType == Type.getType(String.class)) {
-            ga.push((String) value);
-        }
+    	value.apply(this);
     	ga.storeLocal(localId);
     }
     

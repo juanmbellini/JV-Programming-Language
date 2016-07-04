@@ -63,7 +63,7 @@ non terminal Consumer<Context> stmt_list;
 non terminal Consumer<Context> stmt;
 non terminal method_argument;
 non terminal Consumer<Context> stmt_def_maybe_assign;
-non terminal stmt_assign;
+non terminal Consumer<Context> stmt_assign;
 non terminal stmt_if_maybe_else, stmt_if;
 non terminal stmt_while;
 non terminal Consumer<Context> stmt_io;
@@ -158,8 +158,9 @@ stmt
 		    RESULT = e;
 			Parser.l.log(Level.INFO, "stmt_def_maybe_assign -> stmt");
 		:}
-	| stmt_assign
+	| stmt_assign:s
 		{:
+		    RESULT = s;
 			Parser.l.log(Level.INFO, "assign -> stmt");
 		:}
 	| stmt_io:s
@@ -260,6 +261,7 @@ method_argument
 stmt_assign
 	::= VAR_NAME:name SP ASSIGN SP expr:value EOL
 		{:
+		    RESULT = context -> context.assignLocal(name, value);
 			Parser.l.log(Level.INFO, "VAR_NAME SP ASSIGN SP expr EOL -> stmt_assign");
 		:}
 ;

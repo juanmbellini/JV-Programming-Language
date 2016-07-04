@@ -2,6 +2,7 @@ package atlc;
 
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory.Location;
+import org.objectweb.asm.Type;
 import java.io.StringReader;
 import atlc.constants.*;
 
@@ -99,9 +100,9 @@ VarName = [_a-z] [_a-z0-9]*
 	[ ]					{ return createSymbol("Space", sym.SP); }
 
 	/* Data types */
-	"int"				{ return createSymbol("IntType", sym.TYPE, VarTypeEnum.INT); }
-	"bln"				{ return createSymbol("BoolType", sym.TYPE, VarTypeEnum.BOOL); }
-	"str"				{ return createSymbol("StrType", sym.TYPE, VarTypeEnum.STR); }
+	"int"				{ return createSymbol("IntType", sym.TYPE, Type.getType(Integer.class)); }
+	"bln"				{ return createSymbol("BoolType", sym.TYPE, Type.getType(Boolean.class)); }
+	"str"				{ return createSymbol("StrType", sym.TYPE, Type.getType(String.class)); }
 	"=" 				{ return createSymbol("Assign", sym.ASSIGN); }
 	":" 				{ return createSymbol("TypeAssign", sym.ASSIGN_TYPE); }
 

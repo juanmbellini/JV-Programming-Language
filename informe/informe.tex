@@ -74,15 +74,15 @@
 
 \section{Introducción}
 \par El objetivo del proyecto es crear un lenguaje procedural simple, sintético, y que fuerce el buen estilo de programación, junto con un compilador para dicho lenguaje.\\
-\par El lenguaje creado se llama JV. Procura, en todo momento, simplificar la experiencia del programador, para permitir que se concentre en las ideas abstractas. Por otro lado, para aquellas personas que se quieran inicial en el mundo de la programación, ofrece la posibilidad de aprender, con menor fricción, los principales conceptos de la programación, e implementar, con mayor sencillez, sus ideas.\\
-\par El compilador de JV genera  programas objeto que corren como una aplicación Java, dentro de una Java Virtual Machine. Estos programas pueden ser usados en conjunto con cualquier programa en dicho lenguaje.\\
+\par El lenguaje creado se llama JV. La idea detrás de JV fue tener un lenguaje de programación compacto, con un coding style forzado y un alto poder expresivo que nos permite prescindir de la necesidad de utilizar paréntesis u otros caracteres para forzar precedencia mediante el uso de operaciones prefijas.
+\par El compilador de JV genera  programas objeto que corren dentro de una Java Virtual Machine.
 \clearpage
 
 
 \section{Gramática del Lenguaje}
 
 \subsection{Definición del Lenguaje}
-\par Para correr la version exacta de nuestro programa, es necesario ejecutar por consola los siguientes comandos, una vez ubicados en la raíz del proyecto:
+\par Las reglas gramaticales que definen a JV pueden encontrarse dentro del archivo \textit{cup/Parser.cup} que recibe una lista de tokens producidos por la librería JFlex desde \textit{flex/Scanner.flex}.l
 \subsection{Constantes y delimitadores}
 \par Se decidió utilizar como delimitadores las comillas simples para delimitar el inicio y el final de una cadena de caracteres o \textit{string}.
 \par Las constantes encontradas en este proyecto son números enteros, cadenas de caracteres y el valor análogo a \textit{True} y \textit{False} que serían \textit{yes} y \textit{no} respectivamente.

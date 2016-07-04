@@ -1,6 +1,7 @@
 package atlc;
 
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.GeneratorAdapter;
@@ -26,11 +27,42 @@ public class Context implements Opcodes {
             throw new RuntimeException("CANNOT START");
         }
     }
+    
+    public void addLocal(String name, Type type) {
+    	if (type == Type.INT_TYPE) {
+    		addLocal(name, type, 0);
+    	}
+    }
+    
+    public void addLocal(String name, Type type, Object value) {
+    	int localId = ga.newLocal(type);
+    	getLocalVariables().put(name, localId);
+    	assignLocal(name, value);
+    }
 
+    public void assignLocal(String name, Object value) {
+    	int localId = getLocalVariables().get(name);
+    	Type localType = getVariableType(localId);
+    	if (localType == Type.INT_TYPE) {
+            ga.push((Integer) value);
+        } else if (localType == Type.getType(String.class)) {
+            ga.push((String) value);
+        }
+    	ga.storeLocal(localId);
+    }
+    
     public void endMethod() {
         ga.returnValue();
         ga.endMethod();
         ga = null;
+    }
+
+    public int getVariableId(String name) {
+      return getLocalVariables().get(name);
+    }
+
+    public Type getVariableType(int variableId) {
+        return ga.getLocalType(variableId);
     }
 
     public GeneratorAdapter getGa() {
@@ -41,4 +73,10 @@ public class Context implements Opcodes {
         return cw;
     }
 
+    private Map<String, Integer> getLocalVariables() {
+    	if (localVariablesStack.isEmpty()) {
+    		localVariablesStack.push(new HashMap<>());
+    	}
+    	return localVariablesStack.peekFirst();
+    }
 }

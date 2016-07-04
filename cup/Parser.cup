@@ -8,9 +8,11 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import org.objectweb.asm.Type;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Function;
+import java.util.function.Consumer;
 import org.objectweb.asm.Type;
 import atlc.expr.*;
 
@@ -33,8 +35,8 @@ parser code {:
 
 terminal FUNC, RET; // Functions
 terminal SP, INDENT, DEDENT, EOL; // Whitespace
-terminal TYPE;
-terminal VAR_NAME;
+terminal Type TYPE;
+terminal String VAR_NAME;
 terminal READ_LINE, WRITE_LINE, WRITE; // IO
 terminal LPAREN, RPAREN, COMMA;
 
@@ -50,19 +52,21 @@ terminal int ARITHMETIC_OPERATOR;
 terminal int BOOLEAN_OPERATOR;
 terminal int LOGIC_OPERATOR;
 terminal int UNARY_LOGIC_OPERATOR;
-terminal ASSIGN, ASSIGN_TYPE;
+terminal ASSIGN;
+terminal Type ASSIGN_TYPE;
 
 non terminal program;
 non terminal List<MethodNode> method_list;
 non terminal MethodNode method;
 non terminal param_list;
-non terminal InsnList stmt_list;
-non terminal InsnList stmt;
+non terminal Consumer<Context> stmt_list;
+non terminal Consumer<Context> stmt;
 non terminal method_argument;
-non terminal stmt_def_maybe_assign, stmt_assign;
+non terminal Consumer<Context> stmt_def_maybe_assign;
+non terminal stmt_assign;
 non terminal stmt_if_maybe_else, stmt_if;
 non terminal stmt_while;
-non terminal InsnList stmt_io;
+non terminal Consumer<Context> stmt_io;
 non terminal stmt_exit, stmt_method_call;
 non terminal Function<Context, Type> expr;
 non terminal Function<Context, Type> expr_bool;
@@ -82,6 +86,7 @@ start with program;
 program
 	::= method_list:ml stmt_list:sl
 		{:
+		    sl.accept(context);
             context.endMethod();
 			context.getCw().visitEnd();
 			Parser.l.log(Level.INFO, "stmt_list -> PARSE COMPLETE!");
@@ -128,13 +133,14 @@ stmt_list
 	::= stmt:s stmt_list:sl
 		{:
 			Parser.l.log(Level.INFO, "stmt stmt_list -> stmt_list ");
-			if (s != null) sl.add(s);
-			RESULT = sl;
+			if (s != null) {
+			    RESULT = s.andThen(sl);
+			}
 		:}
 	| // empty
 		{:
 			Parser.l.log(Level.INFO, "lambda -> stmt_list");
-			RESULT = new InsnList();
+			RESULT = context -> {};
 		:}
 ;
 
@@ -147,8 +153,9 @@ stmt
 		{:
 			Parser.l.log(Level.INFO, "stmt_while -> stmt");
 		:}
-	| stmt_def_maybe_assign
+	| stmt_def_maybe_assign:e
 		{:
+		    RESULT = e;
 			Parser.l.log(Level.INFO, "stmt_def_maybe_assign -> stmt");
 		:}
 	| stmt_assign
@@ -207,12 +214,14 @@ stmt_exit
 ;
 
 stmt_def_maybe_assign
-	::= TYPE ASSIGN_TYPE VAR_NAME EOL
+	::= TYPE:type ASSIGN_TYPE VAR_NAME:name EOL
 		{:
+		    RESULT = context -> context.addLocal(name, type);
 			Parser.l.log(Level.INFO, "TYPE ASSIGN_TYPE VAR_NAME EOL -> stmt_def_maybe_assign");
 		:}
-	| TYPE ASSIGN_TYPE stmt_assign
+	| TYPE:type ASSIGN_TYPE VAR_NAME:name SP ASSIGN SP expr:value EOL
 		{:
+			RESULT = context -> context.addLocal(name, type, value);
 			Parser.l.log(Level.INFO, "TYPE ASSIGN_TYPE stmt_assign -> stmt_def_maybe_assign");
 		:}
 ;
@@ -249,7 +258,7 @@ method_argument
 // TODO: ARRAY
 
 stmt_assign
-	::= VAR_NAME SP ASSIGN SP expr EOL
+	::= VAR_NAME:name SP ASSIGN SP expr:value EOL
 		{:
 			Parser.l.log(Level.INFO, "VAR_NAME SP ASSIGN SP expr EOL -> stmt_assign");
 		:}
@@ -262,7 +271,7 @@ stmt_io
 		:}
 	| WRITE_LINE LPAREN expr:e RPAREN EOL
 		{:
-			FunctionFactory.writeLine(e, context);
+			RESULT = context -> FunctionFactory.writeLine(e, context);
 			Parser.l.log(Level.INFO, "WRITE_LINE SP expr EOL -> stmt_io");
 		:}
 	| WRITE LPAREN expr RPAREN EOL
@@ -287,9 +296,13 @@ expr
 		    RESULT = e;
 			Parser.l.log(Level.INFO, "expr_str -> expr");
 		:}
-	| VAR_NAME
+	| VAR_NAME:name
 		{:
-			// TODO;
+			RESULT = context -> {
+			    int id = context.getVariableId(name);
+                context.getGa().loadLocal(id);
+                return context.getVariableType(id);
+			};
 			Parser.l.log(Level.INFO, "VAR_NAME -> expr");
 		:}
 	| stmt_method_call

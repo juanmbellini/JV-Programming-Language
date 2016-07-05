@@ -7,7 +7,7 @@ import org.objectweb.asm.Type;
 import java.io.StringReader;
 
 %%
-
+%debug
 %class Scanner
 %cup
 %line
@@ -86,7 +86,8 @@ VarName = [_a-z] [_a-z0-9]*
 <NORMAL> {
 	/* Comments */
 	^{Comment}{EndOfLine}			{ /* Ignore Comments */ }
-	[ ]*{Comment}					{ /* Ignore Comments */ }
+	^[\t ]*{Comment}{EndOfLine}     { /* Ignore Comments */ }
+	[\t ]*{Comment}                 { /* Ignore Comments */ }
 	^{EndOfLine}					{ /* Ignore empty line */ }
 
     /* Functions */
@@ -137,7 +138,6 @@ VarName = [_a-z] [_a-z0-9]*
 	"==" 				{ return createSymbol("Equal to", sym.BOOL_BINOP, GeneratorAdapter.EQ); }
 
 	/* Identifiers */
-    // TODO: Space is being added before var name
 	{VarName} 			{ return createSymbol("Var Name", sym.VAR_NAME, yytext()); }
 
 	/* Literal */
@@ -161,7 +161,8 @@ VarName = [_a-z] [_a-z0-9]*
 
 <YYINITIAL> {
 \t { currentLineIndent++; }
-^[\t]*{EndOfLine}	{/* Ignore blank lines. */}
+^[\t ]*{EndOfLine}	{/* Ignore blank lines. */}
+^[\t ]*{Comment}{EndOfLine}			{ /* Ignore Comments */ }
 <<EOF>> {
 			if (currentLineIndent < indentLevel) {
 				indentLevel--;

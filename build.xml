@@ -53,9 +53,9 @@
   </target>
 
   <target name="clean">
-    <delete file="${src}/atlc/Scanner.java" />
-    <delete file="${src}/atlc/Parser.java" />
-    <delete file="${src}/atlc/sym.java" />
+    <!--<delete file="${src}/atlc/Scanner.java" />-->
+    <!--<delete file="${src}/atlc/Parser.java" />-->
+    <!--<delete file="${src}/atlc/sym.java" />-->
     <delete dir="${classes}" />
     <delete dir="${dist}" />
     <delete file="examples/java/gen/*" />

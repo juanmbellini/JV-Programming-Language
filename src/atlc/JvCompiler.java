@@ -24,7 +24,7 @@ public class JvCompiler implements Opcodes {
     private static String SOURCE_EXTENSION = ".jv";
 
     public static void main(String args[]) throws Exception {
-        Parser.l.setLevel(Level.WARNING);
+        // Parser.l.setLevel(Level.WARNING);
         String sourceFile = args[0];
 
         if (sourceFile.lastIndexOf(SOURCE_EXTENSION) == -1) {

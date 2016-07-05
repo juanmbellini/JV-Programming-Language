@@ -61,7 +61,7 @@ terminal     Type ASSIGN_TYPE;
 non terminal program;
 non terminal Consumer<Context>              method_list;
 non terminal Consumer<Context>              method;
-non terminal Consumer<Context>  param_list;
+non terminal Function<Context, List<Type>>  param_list;
 non terminal Consumer<Context>              closure;
 non terminal Consumer<Context>              stmt_list;
 non terminal Consumer<Context>              stmt;
@@ -76,8 +76,8 @@ non terminal Function<Context, Type>        expr_bool;
 non terminal Function<Context, Type>        expr_int;
 non terminal Function<Context, Type>        expr_str;
 non terminal Function<Context, Type>        stmt_method_call;
-non terminal Consumer<Context>  method_argument_list;
-non terminal Consumer<Context>        method_argument;
+non terminal Function<Context, List<Type>>  method_argument_list;
+non terminal Consumer<Context>              method_argument;
 
 precedence left ELSE;
 precedence left SP;
@@ -277,15 +277,15 @@ stmt_method_call
 ;
 
 method_argument_list
-	::= method_argument:ma method_argument_list:mal
+	::= method_argument_list:mal method_argument:ma
 		{:
 			Parser.l.log(Level.INFO, "method_argument_list method_argument -> method_argument_list");
-			RESULT = ma.andThen(mal);
+			RESULT = mal.compose(ml);
 		:}
 	| // empty
 		{:
 			Parser.l.log(Level.INFO, "lambda -> method_argument_list");
-            RESULT = context -> {};
+            RESULT = context -> new ArrayList<>();
 		:}
 ;
 

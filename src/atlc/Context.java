@@ -23,11 +23,10 @@ public class Context implements Opcodes {
     }
 
     public void start(Method method) {
-        if (ga == null) {
-            this.ga = new GeneratorAdapter(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, method, null, null, cw);
-        } else {
-            throw new RuntimeException("CANNOT START");
+        if (ga != null) {
+            throw new RuntimeException("METHOD ALREADY STARTED");
         }
+        this.ga = new GeneratorAdapter(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, method, null, null, cw);
     }
 
     public void addLocal(String name, Type type, Function<Context, Type> value) {
@@ -43,6 +42,9 @@ public class Context implements Opcodes {
     }
     
     public void endMethod() {
+        if (ga == null) {
+            throw new RuntimeException("METHOD NOT STARTED");
+        }
         ga.returnValue();
         ga.endMethod();
         ga = null;

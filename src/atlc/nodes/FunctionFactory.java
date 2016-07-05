@@ -30,18 +30,25 @@ public final class FunctionFactory {
     public Consumer<Context> createFn(
             Type returnType,
             String name,
-            Consumer<Context> params,
+            Function<Context, List<Type>> arguments,
             Consumer<Context> closure
             ) {
-        return context -> {};
+        return context -> {
+            List<Type> tl = arguments.apply(context);
+            Type[] types = tl.toArray(new Type[tl.size()]);
+            context.start(new Method(name, returnType, types));
+            closure.accept(context);
+            // TODO save reference (and maybe create invoker code) to invoke later
+            context.endMethod();
+        };
     }
 
     public Consumer<Context> createFn(
             String name,
-            Consumer<Context> params,
+            Function<Context, List<Type>> arguments,
             Consumer<Context> closure
     ) {
-        return this.createFn(Type.VOID_TYPE, name, params, closure);
+        return this.createFn(Type.VOID_TYPE, name, arguments, closure);
     }
 
     public Function<Context, Type> createFnParam(
@@ -53,8 +60,9 @@ public final class FunctionFactory {
 
     public Function<Context, Type> invokeFn(
             String name,
-            Consumer<Context> argumentList
+            Function<Context, List<Type>> arguments
     ) {
+        // TODO invoke pushing arguments.
         return context -> Type.VOID_TYPE;
     }
 }

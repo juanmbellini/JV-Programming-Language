@@ -33,7 +33,6 @@ public class Context implements Opcodes {
     public void addLocal(String name, Type type) {
         // TODO: Default values
         int localId = ga.newLocal(type);
-        System.out.println("Created " + name + " with id " + localId + " and type " + type);
         getLocalVariables().put(name, localId);
     }
     
@@ -45,7 +44,6 @@ public class Context implements Opcodes {
     public void assignLocal(String name, Function<Context, Type> value) {
     	int localId = getLocalVariables().get(name);
     	Type type = value.apply(this);
-        System.out.println("Storing..." + localId);
     	ga.storeLocal(localId, type);
     }
     

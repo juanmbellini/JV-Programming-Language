@@ -1,0 +1,260 @@
+~ Prints the board according to the variables passed to it
+int:printBoard(int:var1, int:var2, int:var3, int:var4, int:var5, int:var6, int:var7, int:var8, int:var9)
+	
+	str:pos1
+	str:pos1
+	str:pos1
+	str:pos1
+	str:pos1
+	str:pos1
+	str:pos1
+	str:pos1
+	str:pos1
+
+	if == var1 1
+		pos1 = "X"
+	else
+		if == var1 2
+			pos1 = "O"
+		else
+			pos1 = " "
+
+	if == var2 1
+		pos2 = "X"
+	else
+		if == var2 2
+			pos2 = "O"
+		else
+			pos2 = " "
+
+	if == var3 1
+		pos3 = "X"
+	else
+		if == var3 2
+			pos3 = "O"
+		else
+			pos3 = " "
+
+	if == var4 1
+		pos4 = "X"
+	else
+		if == var4 2
+			pos4 = "O"
+		else
+			pos4 = " "
+
+	if == var5 1
+		pos5 = "X"
+	else
+		if == var5 2
+			pos5 = "O"
+		else
+			pos5 = " "
+
+	if == var6 1
+		pos6 = "X"
+	else
+		if == var6 2
+			pos6 = "O"
+		else
+			pos6 = " "
+
+	if == var7 1
+		pos7 = "X"
+	else
+		if == var7 2
+			pos7 = "O"
+		else
+			pos7 = " "
+
+	if == var8 1
+		pos8 = "X"
+	else
+		if == var8 2
+			pos8 = "O"
+		else
+			pos8 = " "
+
+	if == var9 1
+		pos9 = "X"
+	else
+		if == var9 2
+			pos9 = "O"
+		else
+			pos9 = " "
+	
+	wl(" ------------ ")
+	w("| ")
+	w(pos1)
+	w(" | ")
+	w(pos2)
+	w(" | ")
+	w(pos3)
+	wl(" |")
+
+	wl(" ------------ ")
+	w("| ")
+	w(pos4)
+	w(" | ")
+	w(pos5)
+	w(" | ")
+	w(pos6)
+	wl(" |")
+
+	wl(" ------------ ")
+	w("| ")
+	w(pos7)
+	w(" | ")
+	w(pos8)
+	w(" | ")
+	w(pos9)
+	wl(" |")
+
+	wl(" ------------ ")
+
+
+bln:checkWin(int:var1, int:var2, int:var3, int:var4, int:var5, int:var6, int:var7, int:var8, int:var9)
+
+	~ Horizontal wins
+	if && == var1 var2 == var2 var3
+		return yes
+	if && == var4 var5 == var5 var6
+		return yes
+	if && == var7 var8 == var8 var9
+		return yes
+
+	~ Vertical wins
+	if && == var1 var4 == var4 var7
+		return yes
+	if && == var2 var5 == var5 var8
+		return yes
+	if && == var3 var6 == var6 var9
+		return yes
+
+	~ Cross wins
+	if && == var1 var5 == var5 var9
+		return yes
+	if && == var3 var5 == var5 var7
+		return yes
+
+	return no
+
+
+
+
+
+
+wl("Welcome to Tic Tac Toe")
+wl("Press 1 to start the game, or 2 for help")
+int:key
+rl (key)
+
+if == key 2
+	wl("Think the board as a telephone keyboard.")
+	wl("For example, to play the central position, press 5")
+
+wl("Let's play")
+wl("Player 1 is X, and player 2 is O")
+
+int:var1 = 0
+int:var2 = 0
+int:var3 = 0
+int:var4 = 0
+int:var5 = 0
+int:var6 = 0
+int:var7 = 0
+int:var8 = 0
+int:var9 = 0
+
+bln:game = yes
+int:player = 1
+int:otherPlayer = 2
+bln:mustPrint = yes
+
+whl(game)
+
+	if mustPrint
+		w("Now turn of player ")
+		wl(player)
+
+	bln:validPos = no
+	wl("Insert a number")
+	int:aux
+	rl aux
+
+	if == aux 1
+		if == var1 0
+			var1 = player
+			validPos = yes
+
+	if == aux 2
+		if == var2 0
+			var2 = player
+			validPos = yes
+
+	if == aux 3
+		if == var3 0
+			var3 = player
+			validPos = yes
+
+	if == aux 4
+		if == var4 0
+			var4 = player
+			validPos = yes
+
+	if == aux 5
+		if == var5 0
+			var5 = player
+			validPos = yes
+
+	if == aux 6
+		if == var6 0
+			var6 = player
+			validPos = yes
+
+	if == aux 7
+		if == var7 0
+			var7 = player
+			validPos = yes
+
+	if == aux 8
+		if == var8 0
+			var8 = player
+			validPos = yes
+
+	if == aux 9
+		if == var9 0
+			var9 = player
+			validPos = yes
+
+
+	if validPos
+		if checkWin(var1, var2, var3, var4, var5, var6, var7, var8, var9)
+			game = no
+		ls
+			int:swap = player
+			player = otherPlayer
+			otherPlayer = swap
+	ls
+		w("Position ")
+		w(aux)
+		w(" is already occupied by player ")
+		wl(player)
+		mustPrint = no
+		wl("Insert a valid position!")
+
+
+w("The winner is player ")
+wl(player)
+wl("To play again, re-start the program")
+wl("Bye-bye!")
+
+
+
+
+
+
+
+
+
+

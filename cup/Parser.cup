@@ -69,7 +69,6 @@ non terminal method_argument;
 non terminal Consumer<Context> stmt_def_maybe_assign;
 non terminal Consumer<Context> stmt_assign;
 non terminal Consumer<Context> stmt_if_maybe_else;
-non terminal Consumer<Context> stmt_if;
 non terminal Consumer<Context> stmt_while;
 non terminal Consumer<Context> stmt_io;
 non terminal Consumer<Context> stmt_return;
@@ -79,7 +78,7 @@ non terminal Function<Context, Type> expr_bool;
 non terminal Function<Context, Type> expr_int;
 non terminal Function<Context, Type> expr_str;
 non terminal method_argument_list;
-non terminal block;
+non terminal Consumer<Context> closure;
 
 precedence left ELSE;
 precedence left SP; // TODO: CHECK IF OK
@@ -114,13 +113,13 @@ method_list
 ;
 
 method
-	::= FUNC ASSIGN_TYPE TYPE SP VAR_NAME param_list block
+	::= FUNC ASSIGN_TYPE TYPE SP VAR_NAME param_list closure
 		{:
-			Parser.l.log(Level.INFO, "FUNC ASSIGN_TYPE TYPE SP VAR_NAME param_list block -> method");
+			Parser.l.log(Level.INFO, "FUNC ASSIGN_TYPE TYPE SP VAR_NAME param_list closure -> method");
 		:}
-	| FUNC SP VAR_NAME param_list block
+	| FUNC SP VAR_NAME param_list closure
 		{:
-			Parser.l.log(Level.INFO, "FUNC SP VAR_NAME param_list block -> method");
+			Parser.l.log(Level.INFO, "FUNC SP VAR_NAME param_list closure -> method");
 		:}
 ;
 
@@ -193,27 +192,22 @@ stmt
 ;
 
 stmt_if_maybe_else
-	::= stmt_if
+	::= IF SP expr_bool:expr closure:cl
 		{:
-			Parser.l.log(Level.INFO, "stmt_if -> stmt_if_maybe_else");
+			Parser.l.log(Level.INFO, "IF SP expr_bool closure -> stmt_if_maybe_else");
+			RESULT = FlowControlFactory.createIf(expr, cl, null);
 		:}
-	| stmt_if ELSE block
+	| IF SP expr_bool:expr closure:cl ELSE closure:ecl
 		{:
-			Parser.l.log(Level.INFO, "stmt_if ELSE block -> stmt_if_maybe_else");
-		:}
-;
-
-stmt_if
-	::= IF SP expr_bool block
-		{:
-			Parser.l.log(Level.INFO, "IF SP expr_bool block -> stmt_if");
+			Parser.l.log(Level.INFO, "IF SP expr_bool closure ELSE closure -> stmt_if_maybe_else");
+			RESULT = FlowControlFactory.createIf(expr, cl, ecl);
 		:}
 ;
 
 stmt_while
-	::= WHILE SP expr_bool block
+	::= WHILE SP expr_bool closure
 		{:
-			Parser.l.log(Level.INFO, "WHILE expr_bool block -> stmt_while");
+			Parser.l.log(Level.INFO, "WHILE expr_bool closure -> stmt_while");
 		:}
 ;
 
@@ -462,9 +456,11 @@ expr_str
 		:}
 ;
 
-block
-	::= EOL INDENT stmt_list DEDENT
+closure
+	::= EOL INDENT stmt_list:sl DEDENT
 		{:
-			Parser.l.log(Level.INFO, "EOL INDENT stmt_list DEDENT -> block");
+			Parser.l.log(Level.INFO, "EOL INDENT stmt_list DEDENT -> closure");
+			// TODO manage closure stack
+			RESULT = sl;
 		:}
 ;

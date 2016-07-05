@@ -13,4 +13,16 @@ wl(YES)
 w("'!NO' expect 'true' ")
 wl(!NO)
 ~ String
-wl("Hello")
+
+
+w("IF expect 'foo' ")
+if YES
+	wl("foo-in-if #1")
+ls
+	wl("bar-in-else #1")
+
+w("IF expect 'bar' ")
+if !YES
+	wl("foo-in-if #2")
+ls
+	wl("bar-in-else #2")

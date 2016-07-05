@@ -71,7 +71,7 @@ terminal     Type ASSIGN_TYPE;
 non terminal program;
 non terminal Consumer<Context>              method_list;
 non terminal Consumer<Context>              method;
-non terminal List<Function<Context, Type>>  param_list;
+non terminal List<Function<Context, Type>>  argument_list;
 non terminal Consumer<Context>              closure;
 non terminal Consumer<Context>              stmt_list;
 non terminal Consumer<Context>              stmt;
@@ -125,28 +125,28 @@ method_list
 ;
 
 method
-	::= FUNC ASSIGN_TYPE TYPE:t SP VAR_NAME:n param_list:p closure:c
+	::= FUNC ASSIGN_TYPE TYPE:t SP VAR_NAME:n argument_list:p closure:c
 		{:
-			Parser.l.log(Level.INFO, "FUNC ASSIGN_TYPE TYPE SP VAR_NAME param_list closure -> method");
+			Parser.l.log(Level.INFO, "FUNC ASSIGN_TYPE TYPE SP VAR_NAME argument_list closure -> method");
 			RESULT = fnFactory.createFn(t, n, p, c);
 		:}
-	| FUNC SP VAR_NAME:n param_list:p closure:c
+	| FUNC SP VAR_NAME:n argument_list:p closure:c
 		{:
-			Parser.l.log(Level.INFO, "FUNC SP VAR_NAME param_list closure -> method");
+			Parser.l.log(Level.INFO, "FUNC SP VAR_NAME argument_list closure -> method");
 			RESULT = fnFactory.createFn(n, p, c);
 		:}
 ;
 
-param_list
-	::= SP TYPE:type ASSIGN_TYPE VAR_NAME:name param_list:pl
+argument_list
+	::= SP TYPE:type ASSIGN_TYPE VAR_NAME:name argument_list:pl
 		{:
-			Parser.l.log(Level.INFO, "SP TYPE ASSIGN_TYPE VAR_NAME param_list -> param_list");
-			// TODO_QCHO pl.add(...);
-			RESULT = po;
+			Parser.l.log(Level.INFO, "SP TYPE ASSIGN_TYPE VAR_NAME argument_list -> argument_list");
+			pl.add(context -> type);
+			RESULT = pl;
 		:}
 	| // empty
 		{:
-			Parser.l.log(Level.INFO, "lambda -> param_list");
+			Parser.l.log(Level.INFO, "lambda -> argument_list");
 			RESULT = new ArrayList<>();
 		:}
 ;

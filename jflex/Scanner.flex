@@ -7,7 +7,7 @@ import org.objectweb.asm.Type;
 import java.io.StringReader;
 
 %%
-%debug
+
 %class Scanner
 %cup
 %line

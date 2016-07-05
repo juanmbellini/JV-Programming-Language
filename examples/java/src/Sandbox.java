@@ -1,27 +1,13 @@
 public class Sandbox {
     public static void main(String[] args) {
-        int number = 12345;
-        int number2 = 432;
-        System.out.println(fun1(number, number2));
-        if (fun2()) {
-            number = 40;
-        } else {
-            number = 50;
-        }
-        System.out.println(number);
-    }
+        int n1, n2;
+        boolean b1;
+        n1 = 4;
+        n2 = n1 * 2;
 
-    private static int fun1(int number, int number2) {
-        return number + 98765 / number2;
-    }
+        b1 = n2 == n1;
 
-    private static boolean fun2() {
-        int n = 20;
-        return 4 > n;
-    }
 
-    private static boolean fun3() {
-        int n = 2;
-        return !(n<3);
+        System.out.println(b1);
     }
 }

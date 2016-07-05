@@ -12,10 +12,14 @@ abstract class ExprFactory<T> {
 
     public Function<Context, Type> createBinary(final int op, Function<Context, Type> e1, Function<Context, Type> e2) {
         return context -> {
-            e1.apply(context);
-            e2.apply(context);
-            context.getGa().math(op, this.getType());
-            return this.getType();
+            Type t1 = e1.apply(context);
+            Type t2 = e2.apply(context);
+            if (t1.equals(t2)) {
+                context.getGa().math(op, t1);
+                return t1;
+            } else {
+                return ExceptionFactory.createRuntime("Type mismatch: " + t1 + " vs. " + t2).apply(context);
+            }
         };
     }
 

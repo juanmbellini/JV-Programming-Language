@@ -223,7 +223,7 @@ wl(aux)
             \end{lstlisting}
 
         \subsection{Bloques de ejecución}
-            \par En el lenguaje JV existe el concepto de bloque. Así como en C \cite{c_strings} o en Java \cite{java_strings} los bloques están delimitados por llaves, en este lenguaje los bloques se determinan mediante la indentación (Como en python \cite{python_grammar}). De esta manera se simplifica la generación de código, evitando la verbosidad.
+            \par En el lenguaje JV existe el concepto de bloque. Así como en C o en Java los bloques están delimitados por llaves, en este lenguaje los bloques se determinan mediante la indentación. De esta manera se simplifica la generación de código, evitando la verbosidad.
             \par Dentro de un bloque se pueden definir variables propias de él así como también se pueden utilizar variables externas anteriormente definidas. Como en cualquier lenguaje, una variable declarada dentro de un bloque existe únicamente dentro de este. Un bloque define un contexto de ejecución.
             \par A continuación se explica cada uno de los tres tipos de bloques del lenguaje.
 
@@ -410,7 +410,7 @@ stmt
 
         \subsection{Dificultades con ASM}
             \par ASM es una herramienta compleja de utilizar. Gran parte debido a que la manipulación de \textit{bytecode} es complicada. Sumado a eso, la documentación de ASM es escasa e incompleta. Hay poca información en internet acerca de ella, ejemplos de utilización y no tiene una gran comunidad a la que se le pueda consultar problemas.
-            \par En cuanto al uso de ASM, inicialmente se pensó utilizar el \textit{visitor pattern} utilizando la clase \textit{ClassWriter} de ASM. Sin embargo, este método de generación de \textit{bytecode} se notó ser muy a bajo nivel, lo cual complicó inicialmente el desarrollo del parser. Afortunadamente, se descubrió la clase \textit{GeneratorAdapter} \cite{asm_doc_ga}, que contiene algunas funciones que simplificaron la generación del código objeto.
+            \par En cuanto al uso de ASM, inicialmente se pensó utilizar el \textit{visitor pattern} utilizando la clase \textit{ClassWriter} de ASM. Sin embargo, este método de generación de \textit{bytecode} se notó ser muy a bajo nivel, lo cual complicó inicialmente el desarrollo del parser. Afortunadamente, se descubrió la clase \textit{GeneratorAdapter}, que contiene algunas funciones que simplificaron la generación del código objeto.
         \subsection{Dificultades con la implementación}
                 \par Si bien está definido el parseo de funciones dentro de la gramática, no se pudo terminar de implementar debido a problemas a la hora de generar las instrucciones ASM. Por lo que su implementación quedó inconclusa. Debido a eso, varios de los programas de ejemplo son parseados correctamente pero no funcionan al ser ejecutados, por lo que su funcionamiento no pudo ser validado.
                 \par Otro problema de implementación surge en la definición del scope de variables. No se llegó a implementar la validación semántica a la hora de querer usar una variable definida en otro scope, por lo que el siguiente código compila bien pero no funciona como sería esperado:
@@ -426,15 +426,13 @@ wl(bar) ~ Shouldn't compile since bar doesn't exist in this scope
         \begin{center}
             \par\textit{"Any sufficiently advanced technology is indistinguishable from magic."}\\Arthur C. Clarke\\
         \end{center}
-
         \par JV es un lenguaje con muchas posibilidades de extensión. Debido a que es un lenguaje simple, la lista de opciones es alta. A continuación se exponen algunas de ellas.
-        \\
         \par Para empezar, únicamente se cuentan con tres tipos de datos (enteros, booleanos, y cadenas de caracteres). Sería ideal, en un futuro, contar con otros tipos, como punto flotante, carácter, o \textit{arrays}. Además, también sería favorable poder contar con operaciones sobre \textit{strings}, ya sea para concatenar dos cadenas de caracteres, o poder compararlas.
         \par Junto con lo anterior, otra mejora que se le puede hacer es agregarle soporte para objetos y/o estructuras de datos. De esta manera, el poder expresivo de JV, y la utilidad que se le podría dar, sería aún mayor.
         \par También, sería bueno poder importar código de fuentes externas. Por ejemplo, se podría definir un archivo \textit{math.jv}, que contenga distintas funciones matemáticas, y que luego pueda ser utilizado en distintas aplicaciones desarrolladas en JV. Si se tuviese esta \textit{feature}, se podría desarrollar una biblioteca estándar del lenguaje, lo cual le permitiría crecer en número de usuarios y nivel de utilidad.
         \par En cuanto a estas extensiones, para lograr implementarlas, es necesario redefinir ligeramente el lenguaje, de manera que la gramática soporte dichas funcionalidades. Por ejemplo, se podría definir el operador '.', para acceder a los distintos campos de una estructura.
         \par Se podría agregar un mecanismo más completo de entrada y salida. Por ejemplo, se podrían implementar funciones para crear \textit{sockets}, o para acceder a archivos en disco. En cuanto a esto, el lenguaje no debe ser adaptado, aunque si sería necesario contar con una interfaz a Java que permitiera realizar dichas operaciones.
-            \par Sumado a lo anterior, a lo largo de la implementación del trabajo práctico se investigaron otras tecnologías para usar en lugar de CUP y JFlex. Las encontradas fueron \textit{ANTLR} \cite{antlr_home} y \textit{Grammar Kit} \cite{gkit_home}. Migrar a alguna de esas librerías haría la extensión del lenguaje más simple dado que nos daría un mayor poder expresivo a la hora de definir la gramática junto con su semántica y son herramientas mejor soportadas, más modernas y utilizadas en para varios lenguajes actuales.
+            \par Sumado a lo anterior, a lo largo de la implementación del trabajo práctico se investigaron otras tecnologías para usar en lugar de CUP y JFlex. Las encontradas fueron \textit{ANTLR} y \textit{Grammar Kit}. Migrar a alguna de esas librerías haría la extensión del lenguaje más simple dado que nos daría un mayor poder expresivo a la hora de definir la gramática junto con su semántica y son herramientas mejor soportadas, más modernas y utilizadas en para varios lenguajes actuales.
     \clearpage
 
     \section{Conclusiones}

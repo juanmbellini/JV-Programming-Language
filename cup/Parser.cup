@@ -141,7 +141,8 @@ param_list
 	::= SP TYPE:type ASSIGN_TYPE VAR_NAME:name param_list:pl
 		{:
 			Parser.l.log(Level.INFO, "SP TYPE ASSIGN_TYPE VAR_NAME param_list -> param_list");
-			// TODO_QCHO pl.add(...);
+			// TODO_QCHO
+			pl.add(context -> type);
 			RESULT = po;
 		:}
 	| // empty

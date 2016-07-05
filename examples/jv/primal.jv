@@ -4,7 +4,7 @@ rl(nro)
 
 if == nro 2
 	wl("Es primo")
-	exit 0
+	exit
 
 if || < nro 2 == % nro 2 0
 	wl("Not prime")
@@ -25,25 +25,23 @@ ls
 	int:right = * 2 nro_sqrt
 	int:middle = 0
 
-	bln:flag = no
+	bln:flag = NO
 
 	whl < left right
 		middle = + left / - right left 2
 
-		if < * middle middle number
+		if < * middle middle nro
 			left = + middle 1
 		ls
-			if > * middle middle number
+			if > * middle middle nro
 				right = - middle 1
 			ls
 				nro_sqrt = middle
-				flag = yes
+				flag = YES
 
 	if !flag
-
 		int:nro_sqrt = + middle 1
-
-		whl > * nro_sqrt nro_sqrt number
+		whl > * nro_sqrt nro_sqrt nro
 			nro_sqrt = - nro_sqrt 1
 
 
@@ -51,6 +49,7 @@ int:i = 3
 whl < 1 nro_sqrt
 	if == % nro i 0
 		wl("No es primo")
+		exit
 
 wl("Es primo")
 

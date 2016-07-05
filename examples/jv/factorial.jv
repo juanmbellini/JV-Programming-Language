@@ -1,8 +1,3 @@
-fn:int factorial int:numero
-	if || == numero 0 == numero 1
-		ret 1
-	ret * factorial(- n 1) n
-
 w("Factorial de: ")
 int:numero
 rl(numero)

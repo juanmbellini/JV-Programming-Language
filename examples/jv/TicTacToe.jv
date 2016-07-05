@@ -1,5 +1,5 @@
 ~ Prints the board according to the variables passed to it
-int:printBoard(int:var1, int:var2, int:var3, int:var4, int:var5, int:var6, int:var7, int:var8, int:var9)
+fn:int print_board int:var1 int:var2 int:var3 int:var4 int:var5 int:var6 int:var7 int:var8 int:var9
 	
 	str:pos1
 	str:pos1
@@ -13,74 +13,74 @@ int:printBoard(int:var1, int:var2, int:var3, int:var4, int:var5, int:var6, int:v
 
 	if == var1 1
 		pos1 = "X"
-	else
+	ls
 		if == var1 2
 			pos1 = "O"
-		else
+		ls
 			pos1 = " "
 
 	if == var2 1
 		pos2 = "X"
-	else
+	ls
 		if == var2 2
 			pos2 = "O"
-		else
+		ls
 			pos2 = " "
 
 	if == var3 1
 		pos3 = "X"
-	else
+	ls
 		if == var3 2
 			pos3 = "O"
-		else
+		ls
 			pos3 = " "
 
 	if == var4 1
 		pos4 = "X"
-	else
+	ls
 		if == var4 2
 			pos4 = "O"
-		else
+		ls
 			pos4 = " "
 
 	if == var5 1
 		pos5 = "X"
-	else
+	ls
 		if == var5 2
 			pos5 = "O"
-		else
+		ls
 			pos5 = " "
 
 	if == var6 1
 		pos6 = "X"
-	else
+	ls
 		if == var6 2
 			pos6 = "O"
-		else
+		ls
 			pos6 = " "
 
 	if == var7 1
 		pos7 = "X"
-	else
+	ls
 		if == var7 2
 			pos7 = "O"
-		else
+		ls
 			pos7 = " "
 
 	if == var8 1
 		pos8 = "X"
-	else
+	ls
 		if == var8 2
 			pos8 = "O"
-		else
+		ls
 			pos8 = " "
 
 	if == var9 1
 		pos9 = "X"
-	else
+	ls
 		if == var9 2
 			pos9 = "O"
-		else
+		ls
 			pos9 = " "
 	
 	wl(" ------------ ")
@@ -112,46 +112,54 @@ int:printBoard(int:var1, int:var2, int:var3, int:var4, int:var5, int:var6, int:v
 
 	wl(" ------------ ")
 
+	ret 0
 
-bln:checkWin(int:var1, int:var2, int:var3, int:var4, int:var5, int:var6, int:var7, int:var8, int:var9)
 
-	~ Horizontal wins
+fn:bln check_win int:var1 int:var2 int:var3 int:var4 int:var5 int:var6 int:var7 int:var8 int:var9
+
+
 	if && == var1 var2 == var2 var3
-		return yes
+		ret YES
 	if && == var4 var5 == var5 var6
-		return yes
+		ret YES
 	if && == var7 var8 == var8 var9
-		return yes
+		ret YES
 
-	~ Vertical wins
+
 	if && == var1 var4 == var4 var7
-		return yes
+		ret YES
 	if && == var2 var5 == var5 var8
-		return yes
+		ret YES
 	if && == var3 var6 == var6 var9
-		return yes
+		ret YES
 
-	~ Cross wins
+
 	if && == var1 var5 == var5 var9
-		return yes
+		ret YES
 	if && == var3 var5 == var5 var7
-		return yes
+		ret YES
 
-	return no
-
-
+	ret NO
 
 
 
 
 wl("Welcome to Tic Tac Toe")
-wl("Press 1 to start the game, or 2 for help")
-int:key
-rl (key)
+int:key = 0
+whl !== key 1
+	wl("Press 1 to start the game, or 2 for help, and then start")
+	int:key
+	rl(key)
 
-if == key 2
-	wl("Think the board as a telephone keyboard.")
-	wl("For example, to play the central position, press 5")
+	if !== key 1
+		if == key 2
+			wl("Think the board as a telephone keyboard.")
+			wl("For example, to play the central position, press 5")
+			wl("Now starting the game...")
+			key = 1
+		ls
+			wl("Not a valid key!")
+
 
 wl("Let's play")
 wl("Player 1 is X, and player 2 is O")
@@ -166,18 +174,21 @@ int:var7 = 0
 int:var8 = 0
 int:var9 = 0
 
-bln:game = yes
+bln:game = YES
 int:player = 1
-int:otherPlayer = 2
-bln:mustPrint = yes
+int:other_player = 2
+bln:must_print = YES
 
-whl(game)
+whl game
 
-	if mustPrint
+	if must_print
 		w("Now turn of player ")
 		wl(player)
+		wl("")
+		print_board(var1, var2, var3, var4, var5, var6, var7, var8, var9)
 
-	bln:validPos = no
+	must_print = YES
+	bln:valid_pos = NO
 	wl("Insert a number")
 	int:aux
 	rl aux
@@ -185,62 +196,62 @@ whl(game)
 	if == aux 1
 		if == var1 0
 			var1 = player
-			validPos = yes
+			valid_pos = YES
 
 	if == aux 2
 		if == var2 0
 			var2 = player
-			validPos = yes
+			valid_pos = YES
 
 	if == aux 3
 		if == var3 0
 			var3 = player
-			validPos = yes
+			valid_pos = YES
 
 	if == aux 4
 		if == var4 0
 			var4 = player
-			validPos = yes
+			valid_pos = YES
 
 	if == aux 5
 		if == var5 0
 			var5 = player
-			validPos = yes
+			valid_pos = YES
 
 	if == aux 6
 		if == var6 0
 			var6 = player
-			validPos = yes
+			valid_pos = YES
 
 	if == aux 7
 		if == var7 0
 			var7 = player
-			validPos = yes
+			valid_pos = YES
 
 	if == aux 8
 		if == var8 0
 			var8 = player
-			validPos = yes
+			valid_pos = YES
 
 	if == aux 9
 		if == var9 0
 			var9 = player
-			validPos = yes
+			valid_pos = YES
 
 
-	if validPos
-		if checkWin(var1, var2, var3, var4, var5, var6, var7, var8, var9)
-			game = no
+	if valid_pos
+		if check_win(var1, var2, var3, var4, var5, var6, var7, var8, var9)
+			game = NO
 		ls
 			int:swap = player
-			player = otherPlayer
-			otherPlayer = swap
+			player = other_player
+			other_player = swap
 	ls
 		w("Position ")
 		w(aux)
 		w(" is already occupied by player ")
 		wl(player)
-		mustPrint = no
+		must_print = NO
 		wl("Insert a valid position!")
 
 

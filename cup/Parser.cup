@@ -2,6 +2,8 @@ package atlc;
 
 import java_cup.runtime.*;
 import atlc.nodes.*;
+import atlc.expr.*;
+import atlc.var.*;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.commons.Method;
 import org.objectweb.asm.Opcodes;
@@ -14,7 +16,6 @@ import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.function.Consumer;
 import org.objectweb.asm.Type;
-import atlc.expr.*;
 
 parser code {:
 	public static final Logger l = Logger.getLogger("PARSER");
@@ -22,6 +23,7 @@ parser code {:
 	protected ArithmeticFactory arithmeticFactory = new ArithmeticFactory();
 	protected LogicalFactory logicalFactory = new LogicalFactory();
 	protected StrExprFactory strExprFactory = new StrExprFactory();
+	protected VariableFactory varFactory = new VariableFactory();
 
 	public Parser(Scanner scanner, SymbolFactory factory, ClassWriter classWriter) {
 		this(scanner, factory);
@@ -230,12 +232,12 @@ stmt_def_maybe_assign
 	::= TYPE:type ASSIGN_TYPE VAR_NAME:name EOL
 		{:
 			Parser.l.log(Level.INFO, "TYPE ASSIGN_TYPE VAR_NAME EOL -> stmt_def_maybe_assign");
-			RESULT = context -> context.addLocal(name, type);
+			RESULT = varFactory.createLocal(name, type);
 		:}
 	| TYPE:type ASSIGN_TYPE VAR_NAME:name SP ASSIGN SP expr:value EOL
 		{:
 			Parser.l.log(Level.INFO, "TYPE ASSIGN_TYPE stmt_assign -> stmt_def_maybe_assign");
-			RESULT = context -> context.addLocal(name, type, value);
+			RESULT = varFactory.createLocal(name, type, value);
 		:}
 ;
 
@@ -273,8 +275,8 @@ method_argument
 stmt_assign
 	::= VAR_NAME:name SP ASSIGN SP expr:value EOL
 		{:
-		    RESULT = context -> context.assignLocal(name, value);
 			Parser.l.log(Level.INFO, "VAR_NAME SP ASSIGN SP expr EOL -> stmt_assign");
+			RESULT = varFactory.assignLocal(name, value);
 		:}
 ;
 
@@ -314,11 +316,7 @@ expr
 	| VAR_NAME:name
 		{:
 			Parser.l.log(Level.INFO, "VAR_NAME -> expr");
-			RESULT = context -> {
-				int id = context.getVariableId(name);
-				context.getGa().loadLocal(id);
-				return context.getVariableType(id);
-			};
+			RESULT = varFactory.loadLocal(name);
 		:}
 	| stmt_method_call
 		{:
@@ -423,30 +421,30 @@ expr_int
 			// TODO
 			Parser.l.log(Level.INFO, "MATH_BINOP SP stmt_method_call SP stmt_method_call -> expr_int");
 		:}
-	| MATH_BINOP:op SP VAR_NAME SP expr_int
+	| MATH_BINOP:op SP VAR_NAME:v1 SP expr_int:e1
 		{:
-			// TODO
 			Parser.l.log(Level.INFO, "MATH_BINOP SP VAR_NAME SP expr_int -> expr_int");
+			RESULT = logicalFactory.createBinary(op, varFactory.loadLocal(v1), e1);
 		:}
 	| MATH_BINOP:op SP VAR_NAME SP stmt_method_call
 		{:
 			// TODO
 			Parser.l.log(Level.INFO, "MATH_BINOP SP VAR_NAME SP stmt_method_call -> expr_int");
 		:}
-	| MATH_BINOP:op SP expr_int SP VAR_NAME
+	| MATH_BINOP:op SP expr_int:e1 SP VAR_NAME:v1
 		{:
-			// TODO
 			Parser.l.log(Level.INFO, "MATH_BINOP SP expr_int SP VAR_NAME -> expr_int");
+			RESULT = logicalFactory.createBinary(op, e1, varFactory.loadLocal(v1));
 		:}
 	| MATH_BINOP:op SP stmt_method_call SP VAR_NAME
 		{:
 			// TODO
 			Parser.l.log(Level.INFO, "MATH_BINOP SP stmt_method_call SP VAR_NAME -> expr_int");
 		:}
-	| MATH_BINOP:op SP VAR_NAME SP VAR_NAME
+	| MATH_BINOP:op SP VAR_NAME:v1 SP VAR_NAME:v2
 		{:
-			// TODO
 			Parser.l.log(Level.INFO, "MATH_BINOP SP VAR_NAME SP VAR_NAME -> expr_int");
+			RESULT = logicalFactory.createBinary(op, varFactory.loadLocal(v1), varFactory.loadLocal(v2));
 		:}
 ;
 

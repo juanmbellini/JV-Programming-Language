@@ -128,15 +128,15 @@
     \clearpage
 
     \section{Introducción}
-        \par El objetivo del proyecto es crear un lenguaje procedural simple, sintético, y que fuerce el buen estilo de programación, junto con un compilador para el mismo.\\
-        \par El lenguaje creado se llama JV. La idea detrás fue tener un lenguaje de programación compacto, con un coding style forzado y un alto poder expresivo que nos permite prescindir de la necesidad de utilizar paréntesis u otros caracteres para forzar precedencia debido al uso de operaciones prefijas.
-        \par El compilador de JV genera  programas objeto que corren dentro de una Java Virtual Machine.
+        \par El objetivo del proyecto es crear un lenguaje procedural simple, sintético y que fuerce un buen estilo de programación, así  como con un compilador para este.\\
+        \par El lenguaje creado se llama JV y su finalidad es tener un lenguaje de programación compacto, con un coding style forzado y un alto poder expresivo que nos permita prescindir de la necesidad de utilizar paréntesis u otros caracteres para forzar precedencia debido al uso de operaciones prefijas.
+        \par El compilador de JV genera programas objeto que corren dentro de una Java Virtual Machine.
     \clearpage
 
 
-    \section{Gramática del Lenguaje}
+    \section{Gramática del lenguaje}
 
-        \par JV es un lenguaje simple y fácil de usar. A continuación se exponen las distintas características del mismo, junto con ejemplos y casos de uso de algunas de ellas.
+        \par JV es un lenguaje simple y de fácil utilización. A continuación se describen sus distintas características y se brindan ejemplos y casos de uso de algunas de ellas.
         \\
 
         \subsection{Constantes y delimitadores}
@@ -148,53 +148,53 @@
             \item Texto delimitado por el caracter \textit{"}
             \end{itemize}
 
-        \subsection{Tipos y Variables}
+        \subsection{Tipos y variables}
             \par El lenguaje soporta tres tipos:
             \begin{itemize}
                 \item Integer: \textit{int}
                 \item Booleano: \textit{bln}
                 \item Texto: \textit{str}
             \end{itemize}
-            \par Dado que JV es un lenguaje fuertemente tipado, una variable tiene que tener obligatoriamente un tipo asignado. Por ende, al momento de crearla, es necesario decir de qué tipo es.
+            \par Dado que JV es un lenguaje fuertemente tipado, una variable debe tener un tipo asociado. Por ende, al momento de crearla, es necesario especificar de qué tipo es.
             \begin{lstlisting}
-str:foo = "Hola mundo!"
+str:foo = "Hello world!"
             \end{lstlisting}
-            \par Los nombres de las variables tienen cierta restricción. Un nombre válido es aquel que comience con un guión bajo ('\_'), o una letra minúscula, seguido por letras minúsculas, números, o guiones bajos:
+            \par Los nombres de las variables tienen ciertas restricciones. Se considera válido solo a aquellos nombres que comienzan con un guión bajo ('\_'), o una letra minúscula, y se encuentran seguidos por letras minúsculas, números o guiones bajos:
             \begin{lstlisting}
 VarName = [_a-z][_a-z0-9]*
             \end{lstlisting}
 
         \subsection{Operadores}
-            \par El lenguaje cuenta con distintos tipos de operadores: aritméticos, relacionales, lógicos, y de asignación. Todos ellos se los puede ver en el archivo \textit{Scanner.flex} del directorio \textit{/jflex}, en la raíz del proyecto.
+            \par El lenguaje cuenta con distintos tipos de operadores: aritméticos, relacionales, lógicos y de asignación. Todos ellos se pueden ver en el archivo \textit{Scanner.flex} del directorio \textit{/jflex} en la raíz del proyecto.
             \subsubsection{Operadores aritméticos}
-                \par Para los operadores relacionales se tomó la decisión de implementar los siguientes: "suma", "resta", "multiplicación", "división", y "módulo". Todos ellos son los equivalentes a los operadores built-in de Java.
+                \par Se decidió implementar los siguientes operadores aritméticos: "suma", "resta", "multiplicación", "división", y "módulo", los cuales son equivalentes a los operadores nativos de Java.
             \subsubsection{Operadores relacionales}
-                \par Para los operadores relacionales se han implementado: \textit{menor}, \textit{mayor}, \textit{menor o igual}, \textit{mayor o igual}, e \textit{igual}. Todos ellos son los equivalentes a los operadores de Java. Nótese la falta del comparador "distinto de". El resultado del mismo puedo lograrse utilizando uno de los operadores lógicos explicado a continuación.
+                \par Se decidió implementar los siguientes operadores relacionales: \textit{menor}, \textit{mayor}, \textit{menor o igual}, \textit{mayor o igual}, e \textit{igual}. Todos ellos son los equivalentes a los operadores de Java. Nótese la falta del comparador "distinto de". La funcionalidad de dicho comparador puede lograrse utilizando uno de los operadores lógicos explicados a continuación.
             \subsubsection{Operadores lógicos}
-                \par Para las operadores lógicos se decidió implementar los siguientes: \textit{not}, \textit{and} y \textit{or}. Todos ellos son los equivales a los operadores de Java. Mediante el uso del \textit{not}, y el \textit{igual}, se logra el operador \textit{distinto de}.
+                \par Se decidió implementar los siguientes operadores lógicos: \textit{not}, \textit{and} y \textit{or}, los cuales son equivalentes a los operadores nativos de Java. Mediante el uso del operador \textit{not} y del \textit{igual}, se consigue el operador \textit{distinto de}.
                 \begin{lstlisting}
 !== foo bar
                 \end{lstlisting}
             \subsubsection{Operadores de asignación}
-                \par Hay dos tipos de asignaciones, de tipo y de valor. Al momento de crear una variable, se le debe asignar su tipo. Para ello, se utiliza el operador de tipo ':'. En caso de querer asignarle un valor a la variable, se utiliza el operador de asignación de valor, '='. 
+                \par Hay dos tipos de asignaciones: de tipo y de valor. Al momento de crear una variable, se le debe asignar su tipo. Para ello, se utiliza el operador de tipo ':'. En caso de querer asignarle un valor a la variable, se utiliza el operador de asignación de valor '='. 
                 \begin{lstlisting}
 int:foo ~ Tipo
 foo = 5 ~ Valor
                 \end{lstlisting}
 
         \subsection{Expresiones}
-            \par El lenguaje cuenta con tres tipos de expresiones: aritméticas , lógicas y booleanas. Dichas expresiones se logran mediante la utilización de constantes, variables y operadores.
-            \par A diferencia de otros lenguajes convencionales, JV implementa la notación pre-fija. Por lo tanto, si se quiere expresar la suma entre la constante \textit{2} y la variable \textit{result}, por ejemplo, la expresión es
+            \par El lenguaje cuenta con tres tipos de expresiones: aritméticas, lógicas y booleanas. Dichas expresiones se logran mediante la utilización de constantes, variables y operadores.
+            \par A diferencia de otros lenguajes convencionales, JV implementa la notación pre-fija. Por lo tanto, si se quisiera expresar la suma entre la constante \textit{2} y la variable \textit{result} la expresión sería:
             \begin{lstlisting}
 + 2 result
             \end{lstlisting}
-            Lo mismo para expresiones \textit{booleanas} y \textit{lógicas}. Si se quiere expresar la disyunción entre una variable y una comparación, se debe escribir 
+            Lo mismo ocurre en el caso de las expresiones \textit{booleanas} y \textit{lógicas}. Si se quisiera expresar la disyunción entre una variable y una comparación, se debería escribir: 
             \begin{lstlisting}
 bln:foo = YES
 bln:bar = NO
 || bar <= 1 foo
             \end{lstlisting}
-            \par Como ya se ha mencionado anteriormente, una de las ventajas de la notación pre-fija es poder prescindir del operador "distinto de", sin perder la facilidad de lectura que un simbolo como '!=' o '<>' ofrece. Al tener notación pre-fija, el operador es lo primero que aparece en la cadena por lo que, al negarlo se tienen operadores como "no menor", o "no igual", que es lo mismo a "distinto de". Por ejemplo, la expresión en Java
+            \par Como fue mencionado anteriormente, una de las ventajas de la notación pre-fija es la posibilidad de prescindir del operador "distinto de" sin resignar facilidad de lectura así como sucede con '!=' o '<>'. Al tener notación pre-fija, el operador es lo primero que aparece en la cadena, por lo que al negarlo se obtienen operadores tales como "no menor" o "no igual", que es lo mismo que "distinto de". Por ejemplo, la expresión en Java
             \begin{lstlisting}
 num_var != 0
             \end{lstlisting}
@@ -205,16 +205,16 @@ num_var != 0
         \clearpage
         
         \subsection{Mecanismos de entrada y salida}
-            \par JV cuenta con un mecanismo de entrada y salida muy simple. Existen tres funciones \textit{built-in} para poder realizar estas tareas:
+            \par JV cuenta con mecanismos de entrada y salida muy simples, realizables a través de las siguientes tres funciones \textit{built-in}:
             \begin{itemize}
-                \item rl (\textbf{r}ead\textbf{l}ine): Lee un valor de \textit{stdin}. Acepta cualquiera de los 3 tipos del lenguaje.
+                \item rl (\textbf{r}ead\textbf{l}ine): Lee un valor de \textit{stdin} y acepta cualquiera de los 3 tipos del lenguaje.
                 \item wl (\textbf{w}rite\textbf{l}ine): Escribe una línea junto con un \textit{carriage-return}.
                 \item w (\textbf{w}rite): Escribe una línea sin el \textit{carriage-return}.
             \end{itemize}
             \par Un ejemplo de uso podría ser el siguiente:
 
             \begin{lstlisting}
-wl("Ingrese el texto que quiera imprimir en pantalla:");
+wl("Ingrese el texto que quiera imprimir en la pantalla:");
 str:aux
 rl(aux)
 w("Usted escribio: ")
@@ -222,14 +222,13 @@ wl(aux)
             \end{lstlisting}
 
         \subsection{Bloques de ejecución}
-            \par En JV existe el concepto de bloque. Así como en C o en Java los bloques están delimitados por llaves, en este lenguaje los bloques se dan mediante la indentación. De esta manera se simplifica la generación de código, evitando la verbosidad del mismo.
-            \par Dentro de un bloque, se pueden definir variables internas a él, como también se pueden utilizar las externas que ya hayan sido creadas anteriormente. Como en cualquier lenguaje, una variable declarada dentro de un bloque, únicamente existe dentro de él. Un bloque define un contexto de ejecución.
-            \par Existen tres tipos de bloques en el lenguaje. A continuación se explica cada uno.
+            \par En el lenguaje JV existe el concepto de bloque. Así como en C o en Java los bloques están delimitados por llaves, en este lenguaje los bloques se determinan mediante la indentación. De esta manera se simplifica la generación de código, evitando la verbosidad.
+            \par Dentro de un bloque se pueden definir variables propias de él así como también se pueden utilizar variables externas anteriormente definidas. Como en cualquier lenguaje, una variable declarada dentro de un bloque existe únicamente dentro de este. Un bloque define un contexto de ejecución.
+            \par A continuación se explica cada uno de los tres tipos de bloques del lenguaje.
 
-            \subsubsection{Bloque Condicional}
-                \par El lenguaje cuenta con estructuras de decisión. En este caso, se ha implementado el bloque \textit{if-else}. Dicha estructura no tiene ninguna diferencia con otros lenguajes, a excepción de las palabras reservadas escogidas. En JV, se utiliza \textit{if} y \textit{ls}. De esta forma se logra simplificar el uso código, sin perder la capacidad de explicar por sí mismo qué es lo que está haciendo. Sólo con leer la palabra \textit{ls}, uno se puede dar cuenta fácilmente que significa \textit{else}.
+            \subsubsection{Bloque condicional}
+                \par El lenguaje cuenta con estructuras de decisión. Para este caso, se ha implementado el bloque \textit{if-else}. Dicha estructura no tiene ninguna diferencia con otros lenguajes, excepto por las palabras reservadas escogidas. En JV se utiliza \textit{if} y \textit{ls}. De esta forma se logra simplificar el uso del código sin perder la capacidad de explicar por sí mismo qué es lo que se está haciendo. Sólo con leer la palabra \textit{ls} uno puede darse cuenta fácilmente qué significa \textit{else}.
                 \par Un bloque condicional en JV tiene la siguiente forma:
-
                 \begin{lstlisting}
 if !== foo 0
     wl("Distinto de cero!")
@@ -237,9 +236,9 @@ ls
     wl("Igual a cero!")
                 \end{lstlisting}      
 
-            \subsubsection{Bloque Do-While}
-                \par JV cuenta con dos estructuras de repetición. Ellas son el bloque \textit{while}, y el bloque \textit{do-while}. En este caso, la palabra \textit{while} se la remplazó por \textit{whl}, nuevamente simplificando el lenguaje, en concordancia con la primicia del proyecto.
-                \par Respecto al funcionamiento de dichos bloques, el mecanismo de ejecución no difiere de otros lenguajes, como C o Java. En uno, se verifica la condición previamente, y en el otro, al final.
+            \subsubsection{Bloque do-while}
+                \par JV cuenta con dos estructuras de repetición: el bloque \textit{while} y el bloque \textit{do-while}. Para este caso, la palabra \textit{while} se reemplazó por \textit{whl}.
+                \par Respecto al funcionamiento de dichos bloques, el mecanismo de ejecución no difiere de aquel de otros lenguajes tales como C o Java. En uno se verifica la condición al principio del bloque y en el otro, al final.
                 \par Ejemplos de uso de estos bloques podrían ser los siguientes:
 
                 \begin{lstlisting}
@@ -273,9 +272,9 @@ wl(" cifras")
                 \end{lstlisting}
 
             \subsubsection{Funciones}
-                \par En JV se pueden definir funciones. Una función es un bloque de ejecución que tiene asignado un nombre, y que recibe parámetros de entrada, y puede retornar un resultado. Al igual que el resto de los bloques, una función define un \textit{namespace} dentro de la misma. Las variables declaradas en una función únicamente existen dentro de ella.
-                \par Una función ejecuta el código contenido en ella desde la primera hasta el final, o hasta llegar a la palabra reservada \textit{ret}, que sirve retornar de la función, posiblemente con un valor.
-                \par Gracias a las funciones, un código en JV puede ser simplificado drásticamente. Por ejemplo, si se necesita calcular la potencia de un número entero, se puede hacer lo siguiente:
+                \par En el lenguaje JV se pueden definir funciones. Una función es un bloque de ejecución que tiene asignado un nombre, que recibe parámetros de entrada y que puede retornar un resultado. Al igual que el resto de los bloques, una función define un \textit{closure} dentro de si. Las variables definidas en una función existen únicamente dentro de ella.
+                \par Una función ejecuta su código desde la primera instrucción hasta el final del closure o hasta llegar a la palabra reservada \textit{ret} que sirve para salir de dicha función con la posibilidad de devolver un valor.
+                \par Gracias a las funciones, un código en lenguaje JV puede ser simplificado drásticamente. Por ejemplo, si se necesita calcular la potencia de un número entero, se puede hacer lo siguiente:
                 \begin{lstlisting}
 ~ fn function
 ~ :int returns an int
@@ -312,12 +311,12 @@ run_pow()
                 \par JV contiene tres funciones \textit{built-int}: \textit{wl}, \textit{rl}, y \textit{w}, las cuales fueron explicadas en la sección "Mecanismos de entrada y salida".
 
             \subsection{Bloque principal de ejecución}
-                \par JV no tiene un "bloque principal de ejecución", sino que funciona similar a un lenguaje de \textit{scripting}. Primero se deben definir todas las funciones que van a ser utilizadas y luego, una vez que se alcanza la primera instrucción distinta a \textit{fn}, se comienza a ejecutar el código.
-                \par Como se puede ver en el ejemplo anterior, primero se definen dos funciones – \textit{ipow} y \textit{ipow\_wrapper}, y luego, en la linea 29, se llama a la función \textit{wl}. Se podría considerar que ese es el punto de entrada al bloque principal de ejecución. 
+                \par JV no tiene un bloque principal de ejecución, sino que funciona de forma similar a un lenguaje de \textit{scripting}. Primero se deben definir todas las funciones que van a ser utilizadas y luego, una vez alcanzada la primera instrucción distinta a \textit{fn}, se comienza a ejecutar el código.
+                \par Como se puede ver en el ejemplo anterior, primero se definen dos funciones: \textit{ipow} y \textit{ipow\_wrapper}, y luego en la linea 29 se llama a la función \textit{wl}. Ese punto se podría considerar como la entrada de la aplicación. 
 
             \subsection{Comentarios}
-                \par El lenguaje cuenta con comentarios. Los mismos se indican con el símbolo \url{~} y llegan hasta el final de la linea. Como en cualquier lenguaje, sirven para explicar el código, facilitando el mantenimiento del mismo.
-                \par Debido a que no son necesarios para la compilación del programa, al momento de ser procesados por el lexer se decidió ignorarlos, haciendo que no se generen tokens.
+                \par El lenguaje cuenta con comentarios que se indican con el símbolo \url{~} y llegan hasta el final de la linea. Como en cualquier lenguaje, sirven para explicar el código, lo cual facilita su mantenimiento.
+                \par Debido a que no son necesarios para la compilación del programa, al momento de ser procesados por el lexer se decidió ignorarlos, evitando la generación de tokens.
                 \begin{lstlisting}
 wl("Hello, world!") ~ Prints hello world on the screen
                 \end{lstlisting} 
@@ -328,14 +327,14 @@ wl("Hello, world!") ~ Prints hello world on the screen
         \clearpage
 
     \section{Compilador}
-        \par JV cuenta con un compilador de código fuente a código objeto para la JVM. El mismo es el resultado de la interacción entre \textit{JFlex}, \textit{CUP} y \textit{ASM}
+        \par JV cuenta con un compilador de código fuente a código objeto para la JVM, el cual resulta de la interacción entre \textit{JFlex}, \textit{CUP} y \textit{ASM}
 
-        \subsection{Analizador Léxico JFlex}
-             \textit{JFlex} es un generador de analizadores léxicos, también conocido como generador de \textit{scanners}, para Java. Cuando recibe una entrada, JFlex se encarga de transformar un \textit{stream} de caracteres en una cadena de \textit{tokens} definidos dentro del archivo de gramática.
-            \par La ventaja de utilizar JFlex es su integración con CUP, un generador de \textit{parsers} también para Java. Otra ventaja de JFlex es el hecho de poder extender su funcionalidad fácilmente, ya sea mediante código Java \textit{inline}, o importando clases externas.
+        \subsection{Analizador léxico JFlex}
+             \textit{JFlex} es un generador de analizadores léxicos, y también es conocido como generador de \textit{scanners} para Java. Cuando recibe una entrada, JFlex se encarga de transformar un \textit{stream} de caracteres en una cadena de \textit{tokens} definidos dentro del archivo de gramática.
+            \par La ventaja de utilizar JFlex radica en su integración con CUP, un generador de \textit{parsers} también para Java. Otra ventaja de JFlex es la fácil extensión de su funcionalidad ya sea mediante código Java \textit{inline} o la importación clases externas.
             \\
             \par Una de las características más notorias de esta herramienta es la capacidad de definir estados de \textit{lexing}. En este caso se definieron 4: YYINITIAL, NORMAL, STRING y FINAL.
-            \par Al comenzar el procesamiento del código fuente, el \textit{lexer} entra en el estado YYINITIAL. Dicho estado tiene la tarea de contar cuántas veces aparece el caracter '\t', y en base a eso, decidir si tiene que generar el \textit{token} \textbf{<INDENT>} ó \textbf{<DEDENT>}.
+            \par Al comenzar el procesamiento del código fuente, el \textit{lexer} entra en el estado YYINITIAL. Dicho estado tiene la tarea de contar cuántas veces aparece el caracter '\t' y, en base a eso, decidir si tiene que generar el \textit{token} \textbf{<INDENT>} o \textbf{<DEDENT>}.
             \par En este estado, cuando aparece cualquier otro caracter que no sea un final de línea, el \textit{lexer} cambia su estado a modo NORMAL, en el cual convierte el texto en los correspondientes \textit{tokens}. Al llegar al final de la línea, se vuelve al estado \textit{YYINITIAL}.
             \par Otro estado importante es \textit{STRING}. Para ingresar en este estado, el \textit{lexer} debe haber leído el caracter '"'. Dentro del mismo, se consume el texto, hasta llegar nuevamente al caracter '"'. A partir de eso, crea el \textit{token} \textit{<LIT\_STR>}, que tiene como atributo el texto entre las comillas.
             \par Finalmente, el estado \textit{FINAL} es un estado que sirve para completar las \textit{des-indentaciones} que pudieron haber quedado al final del código:
@@ -366,7 +365,7 @@ if < 1 3
 }
 <FINAL> \n { currentLineIndent = 0; yybegin(YYINITIAL); }
             \end{lstlisting}
-        \subsection{Analizador Sintáctico}
+        \subsection{Analizador sintáctico}
             \par Como analizador sintáctico se decidió utilizar \textit{CUP}, el cual es un generador de \textit{parsers} implementado en Java. 
             \par En CUP se definen los símbolos terminales y no terminales, y se definen las producciones de la gramática. Con ellas, \textit{CUP} crea el objeto \textit{Parser} que va a validar y procesar la cadena de token provista por el lexer.
             \par A su vez, \textit{funcionalidad} CUP permite definir reglas semánticas para el lenguaje, permitiendo generar el árbol sintáctico decorado que luego será utilizado para generar el código objeto del código JV.
@@ -386,7 +385,7 @@ if < 1 3
 int:minus_val = - 0 5 ~ yields -5
             \end{lstlisting} 
 
-        \subsection{Dificultades con Cup}
+        \subsection{Dificultades con CUP}
             \par En cuanto a CUP, se notó que es una herramienta cuyo poder de expresividad es notablemente limitado. A la hora de definir la gramática y las reglas semánticas del lenguaje, CUP ofrece pocas utilidades. Por lo tanto, para poder definir un lenguaje como JV, fue necesario crear una gramática mas "verbosa" – con muchas más producciones ya que no podía utilizarse una misma regla para distintas producciones como por ejemplo las siguientes producciones podrían haber sido compactadas en 1 ya que todos sus retornos son iguales:
             \begin{lstlisting}
 stmt

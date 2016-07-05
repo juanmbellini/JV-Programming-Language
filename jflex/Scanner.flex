@@ -75,7 +75,7 @@ Comment = "~" [ ][^\n]*
 IntegerLiteral = 0 | [1-9][0-9]*
 BooleanLiteral = "YES" | "NO"
 
-VarName = [_a-z] [_a-z0-9]*
+VarName = [_a-z][_a-z0-9]*
 
 %state STRING
 %state NORMAL

@@ -36,6 +36,12 @@ parser code {:
 
 	public void syntax_error(Symbol s) {
 		System.err.println("Syntax error at " + s);
+		this.done_parsing();
+	}
+
+	public void report_fatal_error(String message) {
+	    System.err.println("Error parsing: " + message);
+	    this.done_parsing();
 	}
 :}
 

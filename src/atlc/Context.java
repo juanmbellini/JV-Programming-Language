@@ -58,8 +58,7 @@ public class Context implements Opcodes {
     }
 
     public Type getVariableType(int variableId) {
-        Type out = ga.getLocalType(variableId);
-        return out;
+        return ga.getLocalType(variableId);
     }
 
     public GeneratorAdapter getGa() {

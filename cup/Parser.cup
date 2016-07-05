@@ -87,7 +87,7 @@ non terminal Function<Context, Type>        expr_int;
 non terminal Function<Context, Type>        expr_str;
 non terminal Function<Context, Type>        stmt_method_call;
 non terminal Function<Context, List<Type>>  method_argument_list;
-non terminal Consumer<Context>              method_argument;
+non terminal Function<Context, Type>        method_argument;
 non terminal FunctionTuple bin_arg;
 
 precedence left ELSE;
@@ -307,7 +307,7 @@ method_argument_list
 	::= method_argument_list:mal method_argument:ma
 		{:
 			Parser.l.log(Level.INFO, "method_argument_list method_argument -> method_argument_list");
-			RESULT = mal.compose(ml);
+			RESULT = mal.compose(ma);
 		:}
 	| // empty
 		{:

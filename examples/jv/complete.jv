@@ -67,4 +67,4 @@ ls
 			whl YES
 				int:var_aux = 0
 				if == aux 300000
-					ret 1
+					exit 1

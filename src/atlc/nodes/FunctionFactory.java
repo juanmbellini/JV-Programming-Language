@@ -37,7 +37,7 @@ public final class FunctionFactory {
         if (type.equals(Type.getType(Boolean.TYPE)) || type.equals(Type.BOOLEAN_TYPE)) {
             return new Method("nextBoolean", Type.BOOLEAN_TYPE, new Type[] {});
         }
-        return new Method("next", Type.getType(String.class), new Type[] {});
+        return new Method("nextLine", Type.getType(String.class), new Type[] {});
     }
 
     private static void write(Function<Context, Type> expr, Context context, boolean newLine) {

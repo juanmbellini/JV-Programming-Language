@@ -1,6 +1,6 @@
 fn:int ipow_wrapper int:base int:exp
 	if < exp 0
-		ret 1
+		ret - 0 1
 	ret ipow(base, exp)
 
 fn:int ipow int:base int:exp

@@ -424,7 +424,7 @@ expr_int
 	| MATH_BINOP:op SP VAR_NAME:v1 SP expr_int:e1
 		{:
 			Parser.l.log(Level.INFO, "MATH_BINOP SP VAR_NAME SP expr_int -> expr_int");
-			RESULT = logicalFactory.createBinary(op, varFactory.loadLocal(v1), e1);
+			RESULT = arithmeticFactory.createBinary(op, varFactory.loadLocal(v1), e1);
 		:}
 	| MATH_BINOP:op SP VAR_NAME SP stmt_method_call
 		{:
@@ -434,7 +434,7 @@ expr_int
 	| MATH_BINOP:op SP expr_int:e1 SP VAR_NAME:v1
 		{:
 			Parser.l.log(Level.INFO, "MATH_BINOP SP expr_int SP VAR_NAME -> expr_int");
-			RESULT = logicalFactory.createBinary(op, e1, varFactory.loadLocal(v1));
+			RESULT = arithmeticFactory.createBinary(op, e1, varFactory.loadLocal(v1));
 		:}
 	| MATH_BINOP:op SP stmt_method_call SP VAR_NAME
 		{:
@@ -444,7 +444,7 @@ expr_int
 	| MATH_BINOP:op SP VAR_NAME:v1 SP VAR_NAME:v2
 		{:
 			Parser.l.log(Level.INFO, "MATH_BINOP SP VAR_NAME SP VAR_NAME -> expr_int");
-			RESULT = logicalFactory.createBinary(op, varFactory.loadLocal(v1), varFactory.loadLocal(v2));
+			RESULT = arithmeticFactory.createBinary(op, varFactory.loadLocal(v1), varFactory.loadLocal(v2));
 		:}
 ;
 

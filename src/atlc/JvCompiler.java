@@ -1,6 +1,7 @@
 package atlc;
 
 import java_cup.runtime.ComplexSymbolFactory;
+import java_cup.runtime.Symbol;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 
@@ -43,10 +44,14 @@ public class JvCompiler implements Opcodes {
         ClassWriter cw = new ClassWriter(COMPUTE_MAXS | COMPUTE_FRAMES);
         ComplexSymbolFactory symbolFactory = new ComplexSymbolFactory();
         cw.visit(V1_8, ACC_PUBLIC + ACC_SUPER, className, null, "java/lang/Object", null);
-        new Parser(new Scanner(reader, symbolFactory), symbolFactory, cw).parse();
-
-        writeClass(className, cw);
-        generateJar(className);
+        Symbol out = new Parser(new Scanner(reader, symbolFactory), symbolFactory, cw, () -> {
+            try {
+                writeClass(className, cw);
+                generateJar(className);
+            } catch (Exception e) {
+                // Nothing to do
+            }
+        }).parse();
     }
 
     private static void writeClass(String className, ClassWriter cw) throws IOException {

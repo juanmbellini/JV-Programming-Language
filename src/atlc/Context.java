@@ -36,11 +36,19 @@ public class Context implements Opcodes {
     }
 
     public void assignLocal(String name, Function<Context, Type> value) {
-    	int localId = getLocalVariables().get(name);
     	Type type = value.apply(this);
-    	ga.storeLocal(localId, type);
+        assignLocal(name, type);
     }
-    
+
+    public void assignLocal(String name, Type type) { // Stores value from stack
+        ga.storeLocal(getLocalVariables().get(name), type);
+    }
+
+    public void assignLocal(String name) {
+        int varId = getLocalVariables().get(name);
+        ga.storeLocal(varId, getVariableType(varId));
+    }
+
     public void endMethod() {
         if (ga == null) {
             throw new RuntimeException("METHOD NOT STARTED");

@@ -11,6 +11,10 @@ import java.util.function.Function;
 
 public class VariableFactory {
 
+    public Function<Context, Type> getType(String name) {
+        return context -> context.getVariableType(context.getVariableId(name));
+    }
+
     public Function<Context, Type> loadLocal(String name) {
         return context -> {
               int id = context.getVariableId(name);
@@ -21,6 +25,10 @@ public class VariableFactory {
 
     public Consumer<Context> assignLocal(String name, Function<Context, Type> value) {
         return context -> context.assignLocal(name, value);
+    }
+
+    public Consumer<Context> assignLocal(String name) {
+        return context -> context.assignLocal(name);
     }
 
     public Consumer<Context> createLocal(String name, Type type) {

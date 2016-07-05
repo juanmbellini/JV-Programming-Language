@@ -27,6 +27,7 @@ public final class FunctionFactory {
         context.getGa().invokeConstructor(Type.getType(Scanner.class), Method.getMethod("void <init> (java.io.InputStream)"));
         Type type = targetType.apply(context);
         context.getGa().invokeVirtual(Type.getType(Scanner.class), getReadMethod(type));
+        target.accept(context);
     }
 
     private static Method getReadMethod(Type type) {

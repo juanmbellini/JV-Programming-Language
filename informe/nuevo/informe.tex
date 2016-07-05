@@ -357,7 +357,7 @@
         \par A continuación se incluye la gramática completa de JV, según la sintaxis de CUP.
         \\
         \begin{lstlisting}
-            terminal FUNC, RET; // Functions
+            terminal FUNC, RET, EXIT; // Functions
             terminal SP, INDENT, DEDENT, EOL; // Whitespace
             terminal Type TYPE;
             terminal String VAR_NAME;
@@ -392,6 +392,7 @@
             non terminal Consumer<Context>              stmt_while;
             non terminal Consumer<Context>              stmt_io;
             non terminal Consumer<Context>              stmt_return;
+            non terminal Consumer<Context>              stmt_exit;
             non terminal Function<Context, Type>        expr;
             non terminal Function<Context, Type>        expr_bool;
             non terminal Function<Context, Type>        expr_int;
@@ -439,6 +440,7 @@
             	| stmt_assign:s
             	| stmt_io:s
             	| stmt_return:s
+            	| stmt_exit:s
             	| stmt_method_call:s EOL
             ;
             
@@ -463,6 +465,11 @@
             stmt_return
             	::= RET EOL
             	| RET SP expr EOL
+            ;
+
+            stmt_exit
+            	::= EXIT EOL
+            	| EXIT SP expr EOL
             ;
             
             stmt_def_maybe_assign

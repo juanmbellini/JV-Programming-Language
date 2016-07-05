@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.function.Consumer;
 import org.objectweb.asm.Type;
+import java.lang.Runnable;
 
 parser code {:
 	public static final Logger l = Logger.getLogger("PARSER");
@@ -25,10 +26,12 @@ parser code {:
 	protected LogicalFactory logicalFactory = new LogicalFactory();
 	protected StrExprFactory strExprFactory = new StrExprFactory();
 	protected VariableFactory varFactory = new VariableFactory();
+	protected Runnable endCallback;
 
-	public Parser(Scanner scanner, SymbolFactory factory, ClassWriter classWriter) {
+	public Parser(Scanner scanner, SymbolFactory factory, ClassWriter classWriter, Runnable endCallback) {
 		this(scanner, factory);
 		this.context = new Context(classWriter);
+		this.endCallback = endCallback;
 	}
 
 	public void syntax_error(Symbol s) {
@@ -97,6 +100,7 @@ program
 			sl.accept(context);
 			context.endMethod();
 			context.getCw().visitEnd();
+			parser.endCallback.run();
 		:}
 ;
 

@@ -26,13 +26,13 @@
     <files includes="${lib}/java-cup-11b-runtime.jar" />
     <files includes="${lib}/asm-all-5.1.jar" />
   </path>
-  <target name="compile" depends="generate">
+  <target name="compiler" depends="generate">
     <javac includeantruntime="false" srcdir="${src}" destdir="${classes}">
       <classpath refid="libraries" />
     </javac>
   </target>
 
-  <target name="jar" depends="compile">
+  <target name="jar" depends="compiler">
     <jar jarfile="${dist}/Compiler.jar" basedir="${classes}">
      <manifest>
        <attribute name="Main-Class" value="atlc.JvCompiler" />
@@ -44,11 +44,13 @@
     </copy>
   </target>
 
-  <!-- Test the parser in a single run -->
-  <target name="run" depends="jar">
+  <target name="compile" depends="jar">
     <java jar="${dist}/Compiler.jar" fork="true">
-        <arg value="${jv}" />
+      <arg value="${jv}" />
     </java>
+  </target>
+
+  <target name="run" depends="compile">
     <java jar="app.jar" fork="true"/>
   </target>
 

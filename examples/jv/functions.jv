@@ -1,6 +1,6 @@
 wl("Function sandbox")
 
-fn:int f1 int:p1 bool:p2 str:p3
+fn:int f1 int:p1 bln:p2 str:p3
 	wl("Hello f1")
 	wl(p1)
 	wl(p2)

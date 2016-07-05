@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[spanish]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[spanish]{babel}
 \usepackage{graphicx}
@@ -14,7 +14,8 @@
 \usepackage{listings}
 \usepackage{url}
 
-
+\usepackage{hyperref} % for references to link.
+\usepackage{cite} % for cite references.
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -129,7 +130,7 @@
 
     \section{Introducción}
         \par El objetivo del proyecto es crear un lenguaje procedural simple, sintético y que fuerce un buen estilo de programación, así  como con un compilador para este.\\
-        \par El lenguaje creado se llama JV y su finalidad es tener un lenguaje de programación compacto, con un coding style forzado y un alto poder expresivo que nos permita prescindir de la necesidad de utilizar paréntesis u otros caracteres para forzar precedencia debido al uso de operaciones prefijas.
+        \par El lenguaje creado se llama JV y su finalidad es tener un lenguaje de programación compacto, con un coding style forzado y un alto poder expresivo que nos permita prescindir de la necesidad de utilizar paréntesis u otros caracteres para forzar precedencia debido al uso de operaciones prefijas (Notación Polaca \cite{polish}).
         \par El compilador de JV genera programas objeto que corren dentro de una Java Virtual Machine.
     \clearpage
 
@@ -330,7 +331,7 @@ wl("Hello, world!") ~ Prints hello world on the screen
         \par JV cuenta con un compilador de código fuente a código objeto para la JVM, el cual resulta de la interacción entre \textit{JFlex}, \textit{CUP} y \textit{ASM}
 
         \subsection{Analizador léxico JFlex}
-             \textit{JFlex} es un generador de analizadores léxicos, y también es conocido como generador de \textit{scanners} para Java. Cuando recibe una entrada, JFlex se encarga de transformar un \textit{stream} de caracteres en una cadena de \textit{tokens} definidos dentro del archivo de gramática.
+             \textit{JFlex} \cite{flex_home} es un generador de analizadores léxicos, y también es conocido como generador de \textit{scanners} para Java. Cuando recibe una entrada, JFlex se encarga de transformar un \textit{stream} de caracteres en una cadena de \textit{tokens} definidos dentro del archivo de gramática.
             \par La ventaja de utilizar JFlex radica en su integración con CUP, un generador de \textit{parsers} también para Java. Otra ventaja de JFlex es la fácil extensión de su funcionalidad ya sea mediante código Java \textit{inline} o la importación clases externas.
             \\
             \par Una de las características más notorias de esta herramienta es la capacidad de definir estados de \textit{lexing}. En este caso se definieron 4: YYINITIAL, NORMAL, STRING y FINAL.
@@ -366,13 +367,13 @@ if < 1 3
 <FINAL> \n { currentLineIndent = 0; yybegin(YYINITIAL); }
             \end{lstlisting}
         \subsection{Analizador sintáctico}
-            \par Como analizador sintáctico se decidió utilizar \textit{CUP}, el cual es un generador de \textit{parsers} implementado en Java. 
+            \par Como analizador sintáctico se decidió utilizar \textit{CUP} \cite{cup_home}, el cual es un generador de \textit{parsers} implementado en Java. 
             \par En CUP se definen los símbolos terminales y no terminales, y se definen las producciones de la gramática. Con ellas, \textit{CUP} crea el objeto \textit{Parser} que va a validar y procesar la cadena de token provista por el lexer.
             \par A su vez, \textit{funcionalidad} CUP permite definir reglas semánticas para el lenguaje, permitiendo generar el árbol sintáctico decorado que luego será utilizado para generar el código objeto del código JV.
 
         \subsection{Generación de código objeto}
-            \par Finalmente, el último eslabón de la cadena del compilador es \textit{ASM}. \textit{ASM} es una librería cuya función es la manipulación del \textit{bytecode} de la Java Virtual Machine.
-            \par En este caso, ASM se utiliza para generar el código objeto del programa en base al árbol decorado creado por CUP. El compilador recorre los nodos del árbol decorado, y en base a los atributos que contienen, se generan las instrucciones del programa que una vez recorrido completamente, se obtiene el bytecode del programa.
+            \par Finalmente, el último eslabón de la cadena del compilador es \textit{ASM} \cite{asm_guide}. \textit{ASM} es una librería cuya función es la manipulación del \textit{bytecode} de la Java Virtual Machine.
+            \par En este caso, ASM v5.1 \cite{asm_doc} se utiliza para generar el código objeto  del programa en base al árbol decorado creado por CUP. El compilador recorre los nodos del árbol decorado, y en base a los atributos que contienen, se generan las instrucciones del programa que una vez recorrido completamente, se obtiene el bytecode del programa.
 
         \clearpage
 
@@ -636,5 +637,9 @@ wl(bar) ~ Shouldn't compile since bar doesn't exist in this scope
             	::= EOL INDENT stmt_list:sl DEDENT
             ;
         \end{lstlisting}
+
+        \clearpage
+        \bibliography{biblio}{}
+        \bibliographystyle{plain}
 \end{document}
 

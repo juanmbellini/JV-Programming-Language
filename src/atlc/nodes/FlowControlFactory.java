@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class FlowControlFactory {
+
     public static Consumer<Context> createIf (
             Function<Context, Type> expr,
             Consumer<Context> ifTrueBlock,
@@ -20,8 +21,7 @@ public class FlowControlFactory {
             final Label elseRun = ga.newLabel();
             final Label endIf = ga.newLabel();
 
-            Type type = expr.apply(context);
-            // TODO: use ga.ifCmp(type, ...);
+            expr.apply(context);
             ga.ifZCmp(GeneratorAdapter.NE, ifTrueRun);
             ga.goTo(elseRun);
 

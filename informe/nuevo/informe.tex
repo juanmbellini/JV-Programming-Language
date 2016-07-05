@@ -1,0 +1,549 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{moreverb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fancybox}
+\usepackage{float}
+\usepackage{fancyvrb}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{url}
+
+
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+
+% Define Language
+\lstdefinelanguage{JV}
+{
+  % list of keywords
+  morekeywords={
+    int,
+    bln,
+    str,
+    YES,
+    NO,
+    if,
+    ls,
+    whl,
+    do,
+    fn,
+    rl,
+    wl,
+    w
+  },
+  sensitive=true, % keywords are case-sensitive
+  morecomment=[l]{~}, % l is for line comment
+  morestring=[b]" % defines that strings are enclosed in double quotes
+}
+
+\lstset{frame=tb,
+  language=JV,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=left,
+  numberstyle=\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{dkgreen},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+
+
+
+
+
+\selectlanguage{spanish}
+
+
+% UTF-8, font and 'pdf copy & paste fix'
+\usepackage{tgtermes}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\input{glyphtounicode}
+
+\renewcommand{\shorthandsspanish}{}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\begin{document}
+    \begin{titlepage}
+        \begin{center}
+
+            \includegraphics[scale=0.40]{./logo_itba.png}\\[1cm]
+
+            \textsc{\LARGE Autómatas, Teoría de Lenguajes y Compiladores}\\[1.5cm]
+            \textsc{\Large Trabajo Práctico Especial}\\[0.5cm]
+            \textsc{\Large Primer Cuatrimestre 2016}\\[0.5cm]
+
+
+            \HRule \\[0.4cm]
+            { \huge \bfseries JV}\\[0.4cm]
+            \HRule \\[1.5cm]
+            
+            
+            \Large Autores: \\ [0.25cm]
+            \begin{tabular}{l @{\ \ -\ \ }l}
+            \emph{\Large Juan Pablo Orsay} & \Large 49373\\[0.2cm]
+            \emph{\Large Horacio Miguel Gomez} & \Large 50825\\[0.2cm]
+            \emph{\Large Daniel Alejandro Lobo} & \Large 51171\\[0.2cm]
+            \emph{\Large Juan Marcos Bellini} & \Large 52056\\[0.2cm]
+            \end{tabular}
+
+            \begin{abstract}
+                \begin{center}
+                    \par\textit{A modern weapon for a more civilised era} \\
+                \end{center}
+
+            \end{abstract}
+
+            \vfill
+            % La fecha queda abajo.
+            {\large 3 de Julio de 2016}
+
+        \end{center}
+
+    \end{titlepage}
+
+
+    % Seteo marcos para lo que esta en el entorno verbatim
+    \fvset{frame=single}
+    
+    \clearpage
+    \tableofcontents
+    
+    \clearpage
+
+    \section{Introducción}
+        \par El objetivo del proyecto es crear un lenguaje procedural simple, sintético, y que fuerce el buen estilo de programación, junto con un compilador para dicho lenguaje.\\
+        \par El lenguaje creado se llama JV. La idea detrás de JV fue tener un lenguaje de programación compacto, con un coding style forzado y un alto poder expresivo que nos permite prescindir de la necesidad de utilizar paréntesis u otros caracteres para forzar precedencia mediante el uso de operaciones prefijas.
+        \par El compilador de JV genera  programas objeto que corren dentro de una Java Virtual Machine.
+    \clearpage
+
+
+    \section{Gramática del Lenguaje}
+
+        \par JV es un lenguaje simple y fácil de usar. A continuación se exponen las distintas caracterísiticas del mismo, junto con ejemplos y casos de uso de algunas de ellas.
+        \\
+
+        \subsection{Constantes y delimitadores}
+
+            \par El lenguaje cuenta con una serie de literales. Los más simples son los números enteros. También se cuenta con los valores \textit{YES} y \textit{NO}, cuyos valores equivalentes son \textit{true} y \textit{false}. Finalmente, existen las cadenas de caracteres, o \textit{strings}. Un \textit{string} literal es un texto delimitado por comillas. Por ejemplo, "Hola, mundo!" es un literal. 
+
+        \subsection{Tipos y Variables}
+            \par El lenguaje soporta tres tipos: \textit{int}, \textit{bln} y \textit{str}. El primero es analogo al tipo \textit{int} de Java. Respecto a \textit{bln}, su equivalente es \textit{boolean}. Finalmente, \textit{str} corresponde a la clase \textit{String} de Java. 
+            \par Una variable tiene que tener obligatoriamente un tipo asignado. Por ende, al momento de crearla, es necesario decir de qué tipo es. JV es un lenguaje fuertemente tipado.
+            \par Los nombres de las variables tienen cierta restricción. Un nombre válido es aquel que comience con un guion bajo ('\_'), o una letra minúscula, seguido por letras minusculas, o números, o guiones bajos.
+
+        \subsection{Operadores}
+            \par El lenguaje cuenta con distintos tipos de operadores: aritméticos, relacionales, lógicos, y de asignación. Todos ellos se los puede ver en el archivo \textit{Scanner.flex} del directorio \textit{/jflex}, en la raíz del proyecto.
+            \subsubsection{Operadores aritméticos}
+                \par Para los operadores relacionales se tomó la decisión de implementar los siguientes: "suma", "resta", "multiplicación", "división", y "módulo". Todos ellos son los equivalentes a los operadores built-in de Java.
+            \subsubsection{Operadores relacionales}
+                \par Para los operadores relacionales se han implementado: "menor", "mayor", "menor o igual", "mayor o igual", e "igual". Todos ellos son los equivalentes a los operadores de Java. Nótese la falta del comparador "distinto de". El resultado del mismo puedo lograrse utilizando uno de los operadores lógicos explicado a continuación.
+            \subsubsection{Operadores lógicos}
+                \par Para las operadores lógicos se decidió implementar los siguientes: \textit{"not"}, \textit{"and"} y \textit{"or"}. Todos ellos son los equivales a los operadores de Java. Mediante el uso del \textit{"not"}, y el "igual", se logra el operador "distinto de".
+            \subsubsection{Operadores de asignación}
+                \par Hay dos tipos de asignaciones, de tipo y de valor. Al momento de crear una variable, se le debe asignar su tipo. Para ello, se utiliza el operador de tipo ':'. En caso de querer asignarle un valor a la variable, se utiliza el operador de asignación de valor, '='. 
+        \\
+
+        \subsection{Expresiones}
+            \par El lenguaje cuenta con dos tipos de expresiones: aritméticas y lógicas. Dichas expresiones se logran mediante la utilización de constantes, variables y operadores.
+            \par A diferencia de otros lenguajes convencionales, JV implementa la notación pre-fija. Por lo tanto, si se quiere expresar la suma entre la constante \textit{2} y la variable \textit{result}, por ejemplo, la expresión es
+            \begin{lstlisting}
+                + 2 result
+            \end{lstlisting}
+            Lo mismo para expresiones \textit{booleanas}. Si se quiere expresar la disyunción entre una variable y una comparación, se debe escribir 
+            \begin{lstlisting}
+                || bool_var1 <= 1 2
+            \end{lstlisting}
+            \par Como ya se ha mencionado anteriormente, una de las ventajas de la notación pre-fija es poder prescindir del operador "distinto de", sin perder la facilidad de lectura que un simbolo como '!=' o '<>' ofrece. Al tener notación pre-fija, el operador es lo primero que aparece en la cadena por lo que, al negarlo, se tiene – implicitamente – operadores como "no menor", o "no igual", que es lo mismo a "distinto de". Por ejemplo, la expresión en Java
+            \begin{lstlisting}
+                num_var != 0
+            \end{lstlisting}
+            se traduca a JV de la siguiente manera:
+            \begin{lstlisting}
+                !== num_var 0
+            \end{lstlisting}
+            Se compara la igualdad, y luego se la niega.  
+        
+        \clearpage
+        
+        \subsection{Mecanismos de entrada y salida}
+            \par JV cuenta con un mecanismo de entrada y salida muy simple. Existen dos funciones \textit{built-in} para poder realizar estas tareas. Ellas son \textit{rl} y \textit{wl} – \textit{readline} y \textit{writeline}. También se tiene la función \textit{w} (de \textit{write}), que únicamente imprime. A diferencia de \textit{wl}, cuyo funcionamiento es el de imprimir en pantalla el parametro que se le ha pasado, junto con un \textit{carriage-return}, \textit{w} no termina la linea, pudiendose luego imprimir a continuación. En cuanto a \textit{rl}, la misma sirve para tomar un valor por entrada estándar, y \textit{castearlo} al tipo de la variable que ha pasado como parametro.
+            \par Un ejemplo de uso podría ser el siguiente:
+
+            \begin{lstlisting}
+                wl("Ingrese el texto que quiera imprimir en pantalla:");
+                str:aux
+                rl(aux)
+                w("Usted escribio: ")
+                wl(aux)
+            \end{lstlisting}
+
+
+        \subsection{Bloques de ejecución}
+            \par En JV existe el concepto de bloque. Así como en C o en Java los bloques están delimitados por llaves, en este lenguaje los bloques se dan mediante la indentación. De esta manera se simplifica la generación de código, evitando la verbosidad del mismo.
+            \par Dentro de un bloque, se pueden definir variables internas a él, como también se pueden utilizar las externas que ya hayan sido creadas anteriormente. Como en cualquier lenguaje, una variable declarada dentro de un bloque, únicamente existe dentro de él. Un bloque define un contexto de ejecución.
+            \par Existen tres tipos de bloques en el lenguaje. A continuación se explica cada uno.
+
+            \subsubsection{Bloque Condicional}
+                \par El lenguaje cuenta con estructuras de decisión. En este caso, se ha implementado el bloque \textit{if-else}. Dicha estructura no tiene ninguna diferencia con otros lenguajes, a excepción de las palabras reservadas escogidas. En JV, se utiliza \textit{if} y \textit{ls}. De esta forma se logra simplificar el uso código, sin perder la capacidad de explicar por sí mismo qué es lo que está haciendo. Sólo con leer la palabra \textit{ls}, uno se puede dar cuenta fácilmente que significa \textit{else}.
+                \par Un bloque condicional en JV tiene la siguiente forma:
+
+                \begin{lstlisting}
+                    if !== var_1 0
+                        wl("Distinto de cero!")
+                    ls
+                        wl("Igual a cero!")
+                \end{lstlisting}      
+
+
+            \subsubsection{Bloque Do-While}
+
+                \par JV cuenta con dos estructuras de repetición. Ellas son el bloque \textit{while}, y el bloque \textit{do-while}. En este caso, la palabra \textit{while} se la remplazó por \textit{whl}, nuevamente simplificando el lenguaje, en concordancia con la primicia del proyecto.
+                \par Respecto al funcionamiento de dichos bloques, el mecanismo de ejecución no difiere de otros lenguajes, como C o Java. En uno, se verifica la condición previamente, y en el otro, al final.
+                \par Ejemplos de uso de estos bloques podrían ser los siguientes:
+
+                \begin{lstlisting}
+                    wl("Ingrese un numero: ")
+                    int:num
+                    rl(num)
+                    int:result = 0
+                    do
+                        result = + result 1
+                        num = / num 10
+                    whl !== num 0
+                    w("El numero ingresado tiene ")
+                    w(result)
+                    wl(" cifras")
+                \end{lstlisting}
+                \begin{lstlisting}
+                    wl("Ingrese un numero: ")
+                    int:num
+                    rl(num)
+                    int:result = 1
+                    if != num 0
+                        result = 0
+                        whl !== num 0
+                            num = / num 10
+                            result = + result 1
+                    w("El numero ingresado tiene ")
+                    w(result)
+                    wl(" cifras")
+                \end{lstlisting}
+
+            \subsubsection{Funciones}
+                \par En JV se pueden definir funciones. Una función es un bloque de ejecución que tiene asignado un nombre, y que recibe parametros de entrada, y retorna un resultado. Al igual que el resto de los bloques, una función define un \textit{namespace} dentro de la misma. Las variables declaradas en una función únicamente existen dentro de ella.
+                \par Una función ejecuta el código contendio en ella desde la primera hasta el final, o hasta llegar a la palabra reservada \textit{ret}, que sirve para terminar la ejecución, y retornar un valor al llamador.
+                \par Gracias a las funciones, un código en JV puede ser simplificado drásticamente. Por ejemplo, si se necesita calcular la potencia de un número entero, se puede hacer lo siguiente:
+                \begin{lstlisting}
+                    fn:int ipow_wrapper int:base int:exp
+                    	if < exp 0
+                    		ret - 0 1 ~ Error code
+                    	ret ipow(base, exp)
+                    fn:int ipow int:base int:exp
+                    	if == exp 0
+                    		ret 1
+                    	ret * base ipow(base, - exp 1)
+                    wl("Exponentiation")
+                    wl("Insert the base")
+                    int:base
+                    rl(base)
+                    wl("Insert the exponent")
+                    int:exp
+                    rl(exp)
+                    int:result = ipow_wrapper(base, exp)
+                    w("Result: ")
+                    wl(result)
+                \end{lstlisting}
+
+                \par JV contiene tres funciones \textit{built-int}: \textit{wl}, \textit{rl}, y \textit{w}, las cuales fueron explicadas en la sección "Mecanismos de entrada y salida".
+
+
+            \subsection{Bloque principal de ejecución}
+                \par JV no tiene un "bloque principal de ejecución", sino que funciona como un lenguaje de \textit{scripting}. Primero se deben definir todas las funciones que van a ser utilizadas, y luego, una vez que se alcanza la primera instrucción disinta a \textit{fn:}, se comienza a ejecutar el código.
+                \par Como se puede ver en el ejemplo anterior, primero se definen dos funciones – \textit{ipow} y \textit{ipow\_wrapper}, y luego, en la linea 9, se llama a la función \textit{wl}. Se podría considerar que ese es el punto de entrada al bloque principal de ejecución. 
+
+            \subsection{Comentarios}
+                \par El lenguaje cuenta con comentarios. Los mismos se indican con el símbolo \url{~}, y llegan hasta el final de la linea. Como en cualquier lenguaje, sirven para explicar el código, facilitando la mantención del mismo.
+                \begin{lstlisting}
+                    wl("Hello, world!") ~ Prints hello world on the scren
+                \end{lstlisting} 
+
+        \clearpage
+
+    \section{Compilador}
+        \par JV cuenta con un compilador de código fuente a codigo objeto para la JVM. Dicho \textit{software} transforma el código a \textit{bytecode}.
+        \par A continuación se explican las herramientas utilizadas para construir el compilador.
+
+        \subsection{Analizador Léxico}
+            \par La primera herramienta utilizada es \textit{JFlex}. \textit{JFlex} es un generador de analizadores léxicos – o también conocido como generador de \textit{scanners} – para Java. Cuando recibe una entrada, JFlex se encarga de transformar dicho \textit{stream} de caracteres, en una cadena de \textit{tokens} predefinidos.
+            \par La ventaja de utilizar JFlex es su integración con CUP, un generador de \textit{parsers} también para Java. Otra ventaja de JFlex es el hecho de poder extender su funcionalidad fácilmente, ya sea mediante código Java \textit{inline}, o importando clases externas.
+            \\
+            \par Una de las características más notorias de esta herramienta es la capacidad de definir estados de \textit{lexing}. En este caso se definieron 4: YYINITIAL, NORMAL, STRING y FINAL.
+            \par Cada vez que comienza una línea, el \textit{lexer} entra en el estado YYINITIAL. Dicho estado tiene la tarea de contar cuántas veces aparece el caracter '\t', y en base a eso, decidir si tiene que generar el \textit{token} \textbf{<indent>} ó \textbf{<dedent>}.
+            \par En este estado, cuando aparece cualquier otro caracter – que no sea un final de línea – el \textit{lexer} cambia su estado a modo NORMAL, en el cual convierte el texto en los correspondientes \textit{tokens}. Al llegar al final de la línea, se vuelve al estado inicial.
+            \par Otro estado importante es STRING. Para ingresar en este estado, el \textit{lexer} debe haber leído el caracter '"'. Dentro del mismo, se consume el texto, hasta llegar nuevamente al caracter '"'. A partir de eso, crea el \textit{token} \textbf{<string>}, que tiene un atributo cuyo valor es el texto entre las comillas.
+            \par Finalmente, el estado FINAL es un estado que sirve para completar las \textit{des-indentaciones} que pudieron haber quedado al final del código.
+
+        \subsection{Analizador Sintáctico}
+            \par Como analizador sintáctico se decidió utilizar CUP, el cual es un generador de \textit{parsers} para Java. 
+            \par En CUP se define la gramática del lenguaje. Se declaran símbolos terminales y no terminales, y se crean las producciones de la misma. Con ellas, crea el \textit{parser} que va a aceptar cadenas que pertenezcan al lenguaje. Obviamente, los símbolos terminales son los mismos que generó previamente JFLEX.
+            \par Además, otra \textit{feature} de CUP es la capacidad de definir reglas semánticas para el lenguaje. Gracias a esto, se puede generar el árbol sintáctico, junto con el árbol decorado, que luego será utilizado para generar el código objeto del programa.
+
+        \subsection{Generación de código objeto}
+            \par Finalmente, el último eslabón de la cadena del compilador es ASM. ASM es un \textit{framework} cuya utilidad es la de manipular \textit{bytecode} de la Java Virtual Machine.
+            \par En este caso, ASM se utiliza para generar el código objeto del programa en base al árbol decorado creado por CUP. El compilador recorre los nodos del árbol decorado, y en base a los atributos que contienen, genera las instrucciones del programa, traducidas a \textit{bytecode}.
+
+        \clearpage
+
+    \section{Dificultades encontradas}
+        \par Durante el desarrollo del lenguaje, y de su compilador, se han encontrado distintos tipos de dificultades. A continuación se comenta cada una, y en caso de haber tenido solución, se explica qué fue lo que se hizo.
+
+        \subsection{Problemas con la gramática}
+            \par 
+
+        \subsection{Dificultades con Cup}
+            \par En cuanto a CUP, se notó que es una herramienta cuyo poder de expresividad es notablemente limitado. A la hora de definir la gramática y las reglas semánticas del lenguaje, CUP ofrece pocas utilidades. Por lo tanto, para poder definir un lenguaje como JV, fue necesario crear una gramática mas "verbosa" – con muchas más producciones.
+
+        \subsection{Dificultades con ASM}
+            \par ASM es una herramienta muy díficil de utilizar. En parte, debido a que la manipulación de \textit{bytecode} es sumamente complicada. Sumado a eso, la documentación de ASM es excasa y limitada. Hay poca información en internet acerca de ella, y no tiene una gran comunidad a la que se le pueda consultar problemas.
+            \par En cuanto al uso de ASM, inicialmente se pensó utilizar el \textit{visitor pattern} utilizando la clase \textit{ClassWriter} de ASM. Sin embargo, este método de generación de \textit{bytecode} es muy a bajo nivel, lo cual complica el desarrollo del producto. Afortunadamente, se descubrió la clase \textit{GeneratorAdapter}, que contiene algunas funciones que simplifican de sobremanera la generación del código objeto.
+
+
+        \clearpage
+
+    \section{El futuro de JV}
+        \begin{center}
+            \par\textit{"Any sufficiently advanced technology is indistinguishable from magic."}\\Arthur C. Clarke\\
+        \end{center}
+        \\
+        \par JV es un lenguaje con muchas posibilidades de extensión. Ya que es un lenguaje simple, la lista de opciones es alta. A continuación se exponen algunas de ellas.
+        \\
+        \par Para empezar, únicamente se cuentan con tres tipos de datos (enteros, booleanos, y cadenas de caracteres). Sería ideal, en un futuro, contar con otros tipos, como punto flotante, carácter, o \textit{arrays}. Además, también sería bueno poder contar con operaciones sobre \textit{strings}, ya sea para concatenar dos cadenas de caracteres, como compararlas entre ellas.
+        \par Junto con lo anterior, otra mejora que se le puede hacer es agregarle soporte para objetos y/o estructuras de datos. De esta manera, el poder expresivo de JV, y la utilidad que se le podría dar, sería aún mayor.
+        \par También, sería bueno poder importar – o incluir – código de fuentes externas. Por ejemplo, se podría definir un archivo \textit{math.jv}, que contenga distintas funciones matemáticas, y que luego pueda ser utilizado en distintas aplicaciones desarrolladas en JV. Si se tuviese esta \textit{feature}, se podría desarrollar una biblioteca estándar del lenguajge, lo cual le permitiría crecer en número de usuarios, y nivel de utilidad.
+        \par En cuanto a estas extensiones, para lograr implementarlas, es necesario redefinir ligeramente el lenguaje, de manera que la gramática soporte dichas funcionalidades. Por ejemplo, se podría definir el operador '.', para acceder a los distintos campos de una estructura.
+        \\
+        \par Además de lo anterior, también se le podría agregar un mecanismo más completo de entrada y salida. Por ejemplo, se podrían implementar funciones para crear \textit{sockets}, o para acceder a archivos en disco. En cuanto a esto, el lenguaje no debe ser adaptado, aunque si sería necesario contar con algo que permitiera realizar dichas operaciones.
+
+
+    \clearpage
+
+    \section{Conclusiones}
+    \par Desarrollar un compilador no es tarea fácil. Se requieren muchos conocimientos teóricos y técnicos. Sin conocimientos sobre teoría de lenguajes, es prácticamente imposible llevar esta tarea a cabo. Lo mismo en cuanto a los conocimientos teóricos. Para poder compilar un programa para la JVM, o para un procesador Intel, en necesario conocer el funcionamiento de dichas plataformas.
+    \par Es por ello que este proyecto permitió afianzar todo lo aprendido durante el cuatrimestre en el curso. Gracias a este desarrollo, también se ha logrado entender cómo funciona un compilador – herramienta básica para cualquier persona de la industria del \textit{software} – así como también el funcionamiento de la Java Virtual Machine. Siempre, la tarea de crear una herramienta ofrece la posibilidad de conocer el funcionamiento de muchas otras cosas.
+    \\
+
+
+
+    \clearpage
+
+    \section{Anexo A: Gramática completa de JV}
+        \par A continuación se incluye la gramática completa de JV, según la sintaxis de CUP.
+        \\
+        \begin{lstlisting}
+            terminal FUNC, RET; // Functions
+            terminal SP, INDENT, DEDENT, EOL; // Whitespace
+            terminal Type TYPE;
+            terminal String VAR_NAME;
+            terminal READ_LINE, WRITE_LINE, WRITE; // IO
+            terminal LPAREN, RPAREN, COMMA; // Function Invoke
+            
+            // Literals
+            terminal Integer LIT_INT;
+            terminal Boolean LIT_BOOL;
+            terminal String  LIT_STR;
+            
+            terminal IF, ELSE;
+            terminal DO, WHILE;
+            
+            terminal MATH_BINOP;
+            terminal BOOL_BINOP;
+            terminal LOGIC_BINOP;
+            terminal LOGIC_UNOP_NOT;
+            terminal ASSIGN;
+            terminal Type ASSIGN_TYPE;
+            
+            non terminal program;
+            non terminal Consumer<Context>              method_list;
+            non terminal Consumer<Context>              method;
+            non terminal List<Function<Context, Type>>  param_list;
+            non terminal Consumer<Context>              closure;
+            non terminal Consumer<Context>              stmt_list;
+            non terminal Consumer<Context>              stmt;
+            non terminal Consumer<Context>              stmt_def_maybe_assign;
+            non terminal Consumer<Context>              stmt_assign;
+            non terminal Consumer<Context>              stmt_if_maybe_else;
+            non terminal Consumer<Context>              stmt_while;
+            non terminal Consumer<Context>              stmt_io;
+            non terminal Consumer<Context>              stmt_return;
+            non terminal Function<Context, Type>        expr;
+            non terminal Function<Context, Type>        expr_bool;
+            non terminal Function<Context, Type>        expr_int;
+            non terminal Function<Context, Type>        expr_str;
+            non terminal Function<Context, Type>        stmt_method_call;
+            non terminal List<Function<Context, Type>>  method_argument_list;
+            non terminal Function<Context, Type>        method_argument;
+            non terminal FunctionTuple bin_arg;
+            
+            precedence left ELSE;
+            precedence left SP;
+            precedence left LPAREN;
+            
+            
+            // ESTRUCTURA
+            start with program;
+            
+            program
+            	::= method_list:ml stmt_list:sl
+            ;
+            
+            method_list
+            	::= method:m method_list:ml
+            ;
+            
+            method
+            	::= FUNC ASSIGN_TYPE TYPE:t SP VAR_NAME:n param_list:p closure:c
+            	| FUNC SP VAR_NAME:n param_list:p closure:c
+            ;
+            
+            param_list
+            	::= SP TYPE:type ASSIGN_TYPE VAR_NAME:name param_list:pl
+            	| // empty
+            ;
+            
+            stmt_list
+            	::= stmt:s stmt_list:sl
+            	| // empty
+            ;
+            
+            stmt
+            	::= stmt_if_maybe_else:s
+            	| stmt_while:s
+            	| stmt_def_maybe_assign:s
+            	| stmt_assign:s
+            	| stmt_io:s
+            	| stmt_return:s
+            	| stmt_method_call:s EOL
+            ;
+            
+            stmt_if_maybe_else
+            	::= IF SP expr_bool:expr closure:cl
+            	| IF SP VAR_NAME:v1 closure:cl
+                | IF SP stmt_method_call:mc closure:cl
+            	| IF SP expr_bool:expr closure:cl ELSE closure:ecl
+                | IF SP VAR_NAME:v1 closure:cl ELSE closure:ecl
+                | IF SP stmt_method_call:mc closure:cl ELSE closure:ecl
+            ;
+            
+            stmt_while
+            	::= WHILE SP expr_bool:expr closure:cl
+            	| WHILE SP VAR_NAME:v1 closure:cl
+               	| WHILE SP stmt_method_call:mc closure:cl
+               	| DO closure:cl WHILE SP expr_bool:expr EOL
+               	| DO closure:cl WHILE SP VAR_NAME:v1 EOL
+               	| DO closure:cl WHILE SP stmt_method_call:mc EOL
+            ;
+            
+            stmt_return
+            	::= RET EOL
+            	| RET SP expr EOL
+            ;
+            
+            stmt_def_maybe_assign
+            	::= TYPE:type ASSIGN_TYPE VAR_NAME:name EOL
+            	| TYPE:type ASSIGN_TYPE VAR_NAME:name SP ASSIGN SP expr:value EOL
+            ;
+            
+            stmt_method_call
+            	::= VAR_NAME:v LPAREN method_argument_list:mal RPAREN
+            ;
+            
+            method_argument_list
+            	::= method_argument_list:mal method_argument:ma
+            	| // empty
+            ;
+            
+            method_argument
+            	::= expr:e COMMA SP
+            	| expr:e
+            ;
+            
+            // TODO: ARRAY
+            
+            stmt_assign
+            	::= VAR_NAME:name SP ASSIGN SP expr:value EOL
+            ;
+            
+            stmt_io
+            	::= READ_LINE LPAREN VAR_NAME:v1 RPAREN EOL
+            	| WRITE_LINE LPAREN expr:e RPAREN EOL
+            	| WRITE LPAREN expr:e RPAREN EOL
+            ;
+            
+            expr
+            	::= expr_bool:e
+            	| expr_int:e
+            	| expr_str:e
+            	| VAR_NAME:name
+            	| stmt_method_call
+            ;
+            
+            // TODO PREFIX BOOL CONDITIONS
+            expr_bool
+            	::= LIT_BOOL:lb
+            	| BOOL_BINOP:op SP bin_arg:ba
+            	| LOGIC_BINOP:op SP bin_arg:ba
+            	| LOGIC_UNOP_NOT:op expr_bool:e
+            	| LOGIC_UNOP_NOT stmt_method_call
+            	| LOGIC_UNOP_NOT VAR_NAME:v1
+            ;
+            
+            expr_int
+            	::= LIT_INT:li
+            	| MATH_BINOP:op SP bin_arg:ba
+            ;
+            
+            expr_str
+            	::= LIT_STR:ls
+            ;
+            
+            bin_arg
+                ::= VAR_NAME:v1 SP VAR_NAME:v2
+                | expr_int:e1 SP VAR_NAME:v1
+                | VAR_NAME:v1 SP expr_int:e1
+                | expr_int:e1 SP expr_int:e2
+                | expr_bool:e1 SP expr_bool:e2
+                | expr_bool:e1 SP VAR_NAME:v1
+                | VAR_NAME:v1 SP expr_bool:e1
+                | VAR_NAME:v1 SP stmt_method_call:mc	
+                | stmt_method_call:mc SP VAR_NAME:v1
+                | stmt_method_call:mc SP expr_bool:e1
+                | stmt_method_call:mc SP expr_int:e1
+                | expr_int:e1 SP stmt_method_call:mc
+                | expr_bool:e1 SP stmt_method_call:mc
+                | stmt_method_call:mc1 SP stmt_method_call:mc2
+                    
+            ;
+            
+            closure
+            	::= EOL INDENT stmt_list:sl DEDENT
+            ;
+        \end{lstlisting}
+\end{document}
+

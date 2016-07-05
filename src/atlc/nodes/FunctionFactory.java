@@ -1,18 +1,20 @@
 package atlc.nodes;
 
 import atlc.Context;
+import atlc.expr.ExceptionFactory;
 import org.objectweb.asm.commons.Method;
 import org.objectweb.asm.Type;
 
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public final class FunctionFactory {
+
+    private Map<String, Method> methods = new HashMap<>();
 
     public void writeLine(Function<Context, Type> expr, Context context) {
         write(expr, context, true);
@@ -62,10 +64,10 @@ public final class FunctionFactory {
             for (Function<Context, Type> argument : arguments) {
                 tl.add(argument.apply(context));
             }
-            Type[] types = tl.toArray(new Type[tl.size()]);
-            context.start(new Method(name, returnType, types));
+            Method method = new Method(name, returnType, this.toTypeArray(tl));
+            context.start(method);
             closure.accept(context);
-            // TODO save reference (and maybe create invoker code) to invoke later
+            methods.put(name, method);
             context.endMethod();
         };
     }
@@ -87,9 +89,29 @@ public final class FunctionFactory {
 
     public Function<Context, Type> invokeFn(
             String name,
-            Function<Context, List<Type>> arguments
+            List<Function<Context, Type>> arguments
     ) {
-        // TODO invoke pushing arguments.
-        return context -> Type.VOID_TYPE;
+        return context -> {
+            final Method method = methods.get(name);
+            if (method == null) {
+                return ExceptionFactory.createRuntime("Invalid method: " + name).apply(context);
+            }
+            List<Type> tl = arguments.stream().map(argument -> argument.apply(context)).collect(Collectors.toList());
+            Type[] types = this.toTypeArray(tl);
+            if (!Arrays.equals(types, method.getArgumentTypes())) {
+                for (Type ignored : types) {
+                    context.getGa().pop();
+                }
+                return ExceptionFactory.createRuntime("Invalid arguments for method <" + name + ">: \n" +
+                        "\tExpected: " + Arrays.toString(method.getArgumentTypes()) + "\n" +
+                        "\t     Got: " + Arrays.toString(types)).apply(context);
+            }
+            context.getGa().invokeStatic(context.getClassType(), method);
+            return method.getReturnType();
+        };
+    }
+
+    private Type[] toTypeArray(List<Type> list) {
+        return list.toArray(new Type[list.size()]);
     }
 }

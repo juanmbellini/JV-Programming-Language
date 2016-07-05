@@ -1,20 +1,20 @@
 package atlc.nodes;
 
 import atlc.Context;
+import atlc.expr.ArithmeticFactory;
 import atlc.expr.ExceptionFactory;
 import org.objectweb.asm.commons.Method;
 import org.objectweb.asm.Type;
 
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public final class FunctionFactory {
-
-    private Map<String, Method> methods = new HashMap<>();
 
     public void writeLine(Function<Context, Type> expr, Context context) {
         write(expr, context, true);
@@ -53,6 +53,22 @@ public final class FunctionFactory {
         );
     }
 
+    public static void exit(Context context) {
+        exit(context, new ArithmeticFactory().createLiteral(0));
+    }
+
+    public static void exit(Context context, Function<Context, Type> expr) {
+        Type outType = expr.apply(context);
+        if (!outType.equals(Type.INT_TYPE) || !outType.equals(Type.getType(Integer.class))) {
+            // TODO: Throw exception since input is invalid
+        }
+        context.getGa().invokeStatic(
+                Type.getType(System.class),
+                new Method("exit", Type.VOID_TYPE, new Type[] {Type.INT_TYPE})
+        );
+
+    }
+
     public Consumer<Context> createFn(
             Type returnType,
             String name,
@@ -64,10 +80,10 @@ public final class FunctionFactory {
             for (Function<Context, Type> argument : arguments) {
                 tl.add(argument.apply(context));
             }
-            Method method = new Method(name, returnType, this.toTypeArray(tl));
-            context.start(method);
+            Type[] types = tl.toArray(new Type[tl.size()]);
+            context.start(new Method(name, returnType, types));
             closure.accept(context);
-            methods.put(name, method);
+            // TODO save reference (and maybe create invoker code) to invoke later
             context.endMethod();
         };
     }
@@ -89,29 +105,9 @@ public final class FunctionFactory {
 
     public Function<Context, Type> invokeFn(
             String name,
-            List<Function<Context, Type>> arguments
+            Function<Context, List<Type>> arguments
     ) {
-        return context -> {
-            final Method method = methods.get(name);
-            if (method == null) {
-                return ExceptionFactory.createRuntime("Invalid method: " + name).apply(context);
-            }
-            List<Type> tl = arguments.stream().map(argument -> argument.apply(context)).collect(Collectors.toList());
-            Type[] types = this.toTypeArray(tl);
-            if (!Arrays.equals(types, method.getArgumentTypes())) {
-                for (Type ignored : types) {
-                    context.getGa().pop();
-                }
-                return ExceptionFactory.createRuntime("Invalid arguments for method <" + name + ">: \n" +
-                        "\tExpected: " + Arrays.toString(method.getArgumentTypes()) + "\n" +
-                        "\t     Got: " + Arrays.toString(types)).apply(context);
-            }
-            context.getGa().invokeStatic(context.getClassType(), method);
-            return method.getReturnType();
-        };
-    }
-
-    private Type[] toTypeArray(List<Type> list) {
-        return list.toArray(new Type[list.size()]);
+        // TODO invoke pushing arguments.
+        return context -> Type.VOID_TYPE;
     }
 }

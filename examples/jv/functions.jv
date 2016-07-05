@@ -1,12 +1,8 @@
-fn f1
+fn:int f1 int:p1 bln:p2 str:p3
 	wl("Hello f1")
+	wl(p1)
+	wl(p2)
+	wl(p3)
+	wl("Bye f1")
 
-fn f2 int:n
-	w("Hello ")
-	wl(n)
-
-f1()
-f1()
-
-f2()
-
+f1(1, YES, "Hello")

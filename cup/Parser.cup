@@ -414,7 +414,6 @@ expr
 		:}
 ;
 
-// TODO PREFIX BOOL CONDITIONS
 expr_bool
 	::= LIT_BOOL:lb
 		{:

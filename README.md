@@ -1,27 +1,23 @@
-# Cafe
+# JV
 
-## Project setup
-### Intellij Idea
-From the root of the repository run:
-```
-./gradlew idea
-```
-And open `cafe.ipr` or `cafe.iml`
+## Compilación de un programa
+Los programas ejemplos se encuentran dentro de examples/jv/
 
-Create a run configuration for an Application selecting:
-1. Main as *Main class*
-2. *cafe_main* in *Use classpath of module*
-3. 1.8 for the project's JRE
-### Eclipse
-From the root of the repository run:
+Para compilar el compilador ejecutar:
 ```
-./gradlew eclipse
+ant compiler
 ```
-## Running from console
+
+Para compilar un archivo .jv ejecutar, por ejemplo:
 ```
-./gradlew run
+java -jar ./dist/Compiler.jar examples/jv/primal.jv
+# El resultado será un archivo jar llamado app en la raiz del proyecto
 ```
-## Packaging for distribution
+
+Para ejecutar un archivo .jv compilado:
 ```
-./gradlew assembleDist
+java -jar app.jar
 ```
+
+## Informe
+El informe se encuentra dentro del directorio *informe*

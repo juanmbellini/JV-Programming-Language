@@ -4,15 +4,12 @@ fn:int factorial int:numero
 	ret * factorial(- n 1) n
 
 w("Factorial de: ")
-int:numero_orig
-rl(numero_orig)
-int:numero = numero_orig
-int:result = numero
+int:numero
+rl(numero)
+int:result = 1
 whl > numero 0
-	numero = - numero 1
 	result = * result numero
+	numero = - numero 1
 
 w("El factorial es: ")
-wl(res)
-w("Factorial recursivo: ")
-wl(factorial(numero_orig))
+wl(result)

@@ -318,10 +318,14 @@ stmt_assign
 ;
 
 stmt_io
-	::= READ_LINE LPAREN VAR_NAME RPAREN EOL
+	::= READ_LINE LPAREN VAR_NAME:v1 RPAREN EOL
 		{:
 			Parser.l.log(Level.INFO, "READ_LINE SP VAR_NAME EOL -> stmt_io");
-			// TODO
+			RESULT = context -> FunctionFactory.read(
+			    varFactory.getType(v1),
+			    varFactory.assignLocal(v1),
+			    context
+            );
 		:}
 	| WRITE_LINE LPAREN expr:e RPAREN EOL
 		{:

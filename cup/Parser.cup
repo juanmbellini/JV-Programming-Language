@@ -399,9 +399,10 @@ expr_bool
 		{:
 			Parser.l.log(Level.INFO, "LOGILOGIC_UNOP_NOT_UNOP stmt_method_call -> expr_bool");
 		:}
-	| LOGIC_UNOP_NOT VAR_NAME
+	| LOGIC_UNOP_NOT:op VAR_NAME:v1
 		{:
 			Parser.l.log(Level.INFO, "LOGICLOGIC_UNOP_NOTUNOP VAR_NAME -> expr_bool");
+			RESULT = logicalFactory.createNot(varFactory.loadLocal(v1));
 		:}
 ;
 

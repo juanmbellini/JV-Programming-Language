@@ -202,19 +202,49 @@ stmt_if_maybe_else
 			Parser.l.log(Level.INFO, "IF SP expr_bool closure -> stmt_if_maybe_else");
 			RESULT = FlowControlFactory.createIf(expr, cl, null);
 		:}
+	| IF SP VAR_NAME:v1 closure:cl
+	    {:
+            Parser.l.log(Level.INFO, "IF SP VAR_NAME closure -> stmt_if_maybe_else");
+            RESULT = FlowControlFactory.createIf(varFactory.loadLocal(v1), cl, null);
+        :}
+    | IF SP stmt_method_call:mc closure:cl
+        {:
+            Parser.l.log(Level.INFO, "IF SP VAR_NAME closure -> stmt_if_maybe_else");
+            // TODO
+        :}
 	| IF SP expr_bool:expr closure:cl ELSE closure:ecl
 		{:
 			Parser.l.log(Level.INFO, "IF SP expr_bool closure ELSE closure -> stmt_if_maybe_else");
 			RESULT = FlowControlFactory.createIf(expr, cl, ecl);
 		:}
+    | IF SP VAR_NAME:v1 closure:cl ELSE closure:ecl
+        {:
+            Parser.l.log(Level.INFO, "IF SP VAR_NAME closure ELSE closure -> stmt_if_maybe_else");
+            RESULT = FlowControlFactory.createIf(varFactory.loadLocal(v1), cl, ecl);
+        :}
+    | IF SP stmt_method_call:mc closure:cl ELSE closure:ecl
+        {:
+            Parser.l.log(Level.INFO, "IF SP VAR_NAME closure ELSE closure -> stmt_if_maybe_else");
+            // TODO
+        :}
 ;
 
 stmt_while
 	::= WHILE SP expr_bool closure
 		{:
-			Parser.l.log(Level.INFO, "WHILE expr_bool closure -> stmt_while");
+			Parser.l.log(Level.INFO, "WHILE SP expr_bool closure -> stmt_while");
 			// TODO
 		:}
+	| WHILE SP VAR_NAME closure
+        {:
+            Parser.l.log(Level.INFO, "WHILE SP VAR_NAME closure -> stmt_while");
+            // TODO
+        :}
+   | WHILE SP stmt_method_call:mc closure
+       {:
+           Parser.l.log(Level.INFO, "WHILE SP VAR_NAME closure -> stmt_while");
+           // TODO
+       :}
 ;
 
 stmt_return

@@ -191,7 +191,7 @@ whl game
 	bln:valid_pos = NO
 	wl("Insert a number")
 	int:aux
-	rl aux
+	rl(aux)
 
 	if == aux 1
 		if == var1 0

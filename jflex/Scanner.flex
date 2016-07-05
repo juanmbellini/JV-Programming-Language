@@ -8,7 +8,6 @@ import java.io.StringReader;
 
 %%
 
-%debug
 %class Scanner
 %cup
 %line

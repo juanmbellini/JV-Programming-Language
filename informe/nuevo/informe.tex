@@ -484,8 +484,6 @@
             	| expr:e
             ;
             
-            // TODO: ARRAY
-            
             stmt_assign
             	::= VAR_NAME:name SP ASSIGN SP expr:value EOL
             ;
@@ -504,7 +502,6 @@
             	| stmt_method_call
             ;
             
-            // TODO PREFIX BOOL CONDITIONS
             expr_bool
             	::= LIT_BOOL:lb
             	| BOOL_BINOP:op SP bin_arg:ba

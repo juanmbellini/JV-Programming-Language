@@ -487,6 +487,30 @@ bin_arg
             // TODO
             RESULT = FunctionTuple.dummy();
         :}
+    | stmt_method_call:mc SP expr_bool:e1
+        {:
+            Parser.l.log(Level.INFO, "stmt_method_call SP expr_bool -> bin_arg");
+            // TODO
+            RESULT = FunctionTuple.dummy();
+        :}
+    | stmt_method_call:mc SP expr_int:e1
+        {:
+            Parser.l.log(Level.INFO, "stmt_method_call SP expr_int -> bin_arg");
+            // TODO
+            RESULT = FunctionTuple.dummy();
+        :}
+    | expr_int:e1 SP stmt_method_call:mc
+        {:
+            Parser.l.log(Level.INFO, "expr_int SP stmt_method_call -> bin_arg");
+            // TODO
+            RESULT = FunctionTuple.dummy();
+        :}
+    | expr_bool:e1 SP stmt_method_call:mc
+        {:
+            Parser.l.log(Level.INFO, "expr_int SP stmt_method_call -> bin_arg");
+            // TODO
+            RESULT = FunctionTuple.dummy();
+        :}
     | stmt_method_call:mc1 SP stmt_method_call:mc2
         {:
             Parser.l.log(Level.INFO, "stmt_method_call SP stmt_method_call -> bin_arg");

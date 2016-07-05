@@ -71,7 +71,7 @@ terminal     Type ASSIGN_TYPE;
 non terminal program;
 non terminal Consumer<Context>              method_list;
 non terminal Consumer<Context>              method;
-non terminal Function<Context, List<Type>>  param_list;
+non terminal List<Function<Context, Type>>  param_list;
 non terminal Consumer<Context>              closure;
 non terminal Consumer<Context>              stmt_list;
 non terminal Consumer<Context>              stmt;
@@ -86,7 +86,7 @@ non terminal Function<Context, Type>        expr_bool;
 non terminal Function<Context, Type>        expr_int;
 non terminal Function<Context, Type>        expr_str;
 non terminal Function<Context, Type>        stmt_method_call;
-non terminal Function<Context, List<Type>>  method_argument_list;
+non terminal List<Function<Context, Type>>  method_argument_list;
 non terminal Function<Context, Type>        method_argument;
 non terminal FunctionTuple bin_arg;
 
@@ -138,15 +138,16 @@ method
 ;
 
 param_list
-	::= SP TYPE ASSIGN_TYPE VAR_NAME param_list
+	::= SP TYPE:type ASSIGN_TYPE VAR_NAME:name param_list:pl
 		{:
 			Parser.l.log(Level.INFO, "SP TYPE ASSIGN_TYPE VAR_NAME param_list -> param_list");
-			// TODO
+			// TODO_QCHO pl.add(...);
+			RESULT = po;
 		:}
 	| // empty
 		{:
 			Parser.l.log(Level.INFO, "lambda -> param_list");
-			// TODO
+			RESULT = new ArrayList<>();
 		:}
 ;
 
@@ -307,12 +308,13 @@ method_argument_list
 	::= method_argument_list:mal method_argument:ma
 		{:
 			Parser.l.log(Level.INFO, "method_argument_list method_argument -> method_argument_list");
-			RESULT = mal.compose(ma);
+			mal.add(ma);
+			RESULT = mal;
 		:}
 	| // empty
 		{:
 			Parser.l.log(Level.INFO, "lambda -> method_argument_list");
-            RESULT = context -> new ArrayList<>();
+            RESULT = new ArrayList<>();
 		:}
 ;
 

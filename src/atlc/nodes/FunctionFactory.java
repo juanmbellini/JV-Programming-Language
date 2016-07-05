@@ -6,6 +6,7 @@ import org.objectweb.asm.Type;
 
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
@@ -53,11 +54,14 @@ public final class FunctionFactory {
     public Consumer<Context> createFn(
             Type returnType,
             String name,
-            Function<Context, List<Type>> arguments,
+            List<Function<Context, Type>> arguments,
             Consumer<Context> closure
             ) {
         return context -> {
-            List<Type> tl = arguments.apply(context);
+            List<Type> tl = new ArrayList<>();
+            for (Function<Context, Type> argument : arguments) {
+                tl.add(argument.apply(context));
+            }
             Type[] types = tl.toArray(new Type[tl.size()]);
             context.start(new Method(name, returnType, types));
             closure.accept(context);
@@ -68,7 +72,7 @@ public final class FunctionFactory {
 
     public Consumer<Context> createFn(
             String name,
-            Function<Context, List<Type>> arguments,
+            List<Function<Context, Type>> arguments,
             Consumer<Context> closure
     ) {
         return this.createFn(Type.VOID_TYPE, name, arguments, closure);

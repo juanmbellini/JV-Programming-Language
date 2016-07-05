@@ -58,9 +58,7 @@ public class Context implements Opcodes {
     }
 
     public Type getVariableType(int variableId) {
-        // TODO: Is this correct?
         Type out = ga.getLocalType(variableId);
-        System.out.println("Type for " + variableId + " is " + out);
         return out;
     }
 

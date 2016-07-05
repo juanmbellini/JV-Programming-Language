@@ -93,6 +93,7 @@ VarName = [_a-z] [_a-z0-9]*
     /* Functions */
     "fn"                { return createSymbol("Function", sym.FUNC); }
     "ret"               { return createSymbol("Return", sym.RET); }
+    "exit"               { return createSymbol("Return", sym.EXIT); }
     "("					{ return createSymbol("LParen", sym.LPAREN); }
     ")"					{ return createSymbol("RParen", sym.RPAREN); }
     ","					{ return createSymbol("RParen", sym.COMMA); }

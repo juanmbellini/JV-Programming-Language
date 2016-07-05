@@ -4,11 +4,11 @@ rl(nro)
 
 if == nro 2
 	wl("Es primo")
-	ret 0
+	exit 0
 
 if || < nro 2 == % nro 2 0
 	wl("Not prime")
-	ret 1
+	exit 1
 
 
 ~ Calculates the square root of nro

@@ -46,7 +46,7 @@ parser code {:
 	}
 :}
 
-terminal FUNC, RET; // Functions
+terminal FUNC, RET, EXIT; // Functions
 terminal SP, INDENT, DEDENT, EOL; // Whitespace
 terminal Type TYPE;
 terminal String VAR_NAME;
@@ -81,6 +81,7 @@ non terminal Consumer<Context>              stmt_if_maybe_else;
 non terminal Consumer<Context>              stmt_while;
 non terminal Consumer<Context>              stmt_io;
 non terminal Consumer<Context>              stmt_return;
+non terminal Consumer<Context>              stmt_exit;
 non terminal Function<Context, Type>        expr;
 non terminal Function<Context, Type>        expr_bool;
 non terminal Function<Context, Type>        expr_int;
@@ -198,6 +199,11 @@ stmt
 			Parser.l.log(Level.INFO, "stmt_return -> stmt");
 			RESULT = s;
 		:}
+	| stmt_exit:s
+		{:
+			Parser.l.log(Level.INFO, "stmt_exit -> stmt");
+			RESULT = s;
+		:}
 	| stmt_method_call:s EOL
 		{:
 			Parser.l.log(Level.INFO, "stmt_method_call EOL -> stmt");
@@ -281,6 +287,19 @@ stmt_return
 		{:
 			Parser.l.log(Level.INFO, "RET SP expr EOL -> stmt_return");
 			// TODO
+		:}
+;
+
+stmt_exit
+	::= EXIT EOL
+		{:
+			Parser.l.log(Level.INFO, "EXIT EOL -> stmt_exit");
+			RESULT = context -> FunctionFactory.exit(context);
+		:}
+	| EXIT SP expr:e EOL
+		{:
+			Parser.l.log(Level.INFO, "EXIT SP expr EOL -> stmt_exit");
+			RESULT = context -> FunctionFactory.exit(context, e);
 		:}
 ;
 

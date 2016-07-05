@@ -1,6 +1,8 @@
 package atlc.nodes;
 
 import atlc.Context;
+import atlc.expr.ArithmeticFactory;
+import atlc.expr.ExceptionFactory;
 import org.objectweb.asm.commons.Method;
 import org.objectweb.asm.Type;
 
@@ -49,6 +51,22 @@ public final class FunctionFactory {
                 Type.getType(PrintStream.class),
                 new Method(newLine ? "println" : "print", Type.VOID_TYPE, new Type[] {type})
         );
+    }
+
+    public static void exit(Context context) {
+        exit(context, new ArithmeticFactory().createLiteral(0));
+    }
+
+    public static void exit(Context context, Function<Context, Type> expr) {
+        Type outType = expr.apply(context);
+        if (!outType.equals(Type.INT_TYPE) || !outType.equals(Type.getType(Integer.class))) {
+            // TODO: Throw exception since input is invalid
+        }
+        context.getGa().invokeStatic(
+                Type.getType(System.class),
+                new Method("exit", Type.VOID_TYPE, new Type[] {Type.INT_TYPE})
+        );
+
     }
 
     public Consumer<Context> createFn(

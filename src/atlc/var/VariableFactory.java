@@ -1,7 +1,9 @@
 package atlc.var;
 
 import atlc.Context;
-
+import atlc.expr.ArithmeticFactory;
+import atlc.expr.LogicalFactory;
+import atlc.expr.StrExprFactory;
 import org.objectweb.asm.Type;
 
 import java.util.function.Consumer;
@@ -22,11 +24,19 @@ public class VariableFactory {
     }
 
     public Consumer<Context> createLocal(String name, Type type) {
-        return context -> context.addLocal(name, type);
+        if (type.equals(Type.getType(Boolean.class))) {
+            return createLocal(name, type, new LogicalFactory().createLiteral(false));
+        }
+        if (type.equals(Type.getType(Integer.class))) {
+            return createLocal(name, type, new ArithmeticFactory().createLiteral(0));
+        }
+        if (type.equals(Type.getType(String.class))) {
+            return createLocal(name, type, new StrExprFactory().createLiteral(""));
+        }
+        return null;
     }
 
     public Consumer<Context> createLocal(String name, Type type, Function<Context, Type> value) {
         return context -> context.addLocal(name, type, value);
     }
-
 }

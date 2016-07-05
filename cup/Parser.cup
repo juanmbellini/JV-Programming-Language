@@ -102,6 +102,7 @@ method_list
 	::= method:m method_list:ml
 		{:
 			Parser.l.log(Level.INFO, "method method_list -> method_list");
+			// TODO
 //			ml.add(m);
 //			RESULT = ml;
 		:}
@@ -116,10 +117,12 @@ method
 	::= FUNC ASSIGN_TYPE TYPE SP VAR_NAME param_list closure
 		{:
 			Parser.l.log(Level.INFO, "FUNC ASSIGN_TYPE TYPE SP VAR_NAME param_list closure -> method");
+			// TODO
 		:}
 	| FUNC SP VAR_NAME param_list closure
 		{:
 			Parser.l.log(Level.INFO, "FUNC SP VAR_NAME param_list closure -> method");
+			// TODO
 		:}
 ;
 
@@ -127,10 +130,12 @@ param_list
 	::= SP TYPE ASSIGN_TYPE VAR_NAME param_list
 		{:
 			Parser.l.log(Level.INFO, "SP TYPE ASSIGN_TYPE VAR_NAME param_list -> param_list");
+			// TODO
 		:}
 	| // empty
 		{:
 			Parser.l.log(Level.INFO, "lambda -> param_list");
+			// TODO
 		:}
 ;
 
@@ -208,6 +213,7 @@ stmt_while
 	::= WHILE SP expr_bool closure
 		{:
 			Parser.l.log(Level.INFO, "WHILE expr_bool closure -> stmt_while");
+			// TODO
 		:}
 ;
 
@@ -215,10 +221,12 @@ stmt_return
 	::= RET EOL
 		{:
 			Parser.l.log(Level.INFO, "RET EOL -> stmt_return");
+			// TODO
 		:}
 	| RET SP expr EOL
 		{:
 			Parser.l.log(Level.INFO, "RET SP expr EOL -> stmt_return");
+			// TODO
 		:}
 ;
 
@@ -239,6 +247,7 @@ stmt_method_call
 	::= VAR_NAME LPAREN method_argument_list RPAREN
 		{:
 			Parser.l.log(Level.INFO, "VAR_NAME LPAREN method_argument_list RPAREN -> stmt_method_call");
+			// TODO
 		:}
 ;
 
@@ -246,10 +255,12 @@ method_argument_list
 	::= method_argument_list method_argument
 		{:
 			Parser.l.log(Level.INFO, "method_argument_list method_argument -> method_argument_list");
+			// TODO
 		:}
 	| // empty
 		{:
 			Parser.l.log(Level.INFO, "lambda -> method_argument_list");
+			// TODO
 		:}
 ;
 
@@ -257,10 +268,12 @@ method_argument
 	::= expr COMMA SP
 		{:
 			Parser.l.log(Level.INFO, "expr COMMA SP -> method_argument");
+			// TODO
 		:}
 	| expr
 		{:
 			Parser.l.log(Level.INFO, "expr -> method_argument");
+			// TODO
 		:}
 ;
 
@@ -278,6 +291,7 @@ stmt_io
 	::= READ_LINE LPAREN VAR_NAME RPAREN EOL
 		{:
 			Parser.l.log(Level.INFO, "READ_LINE SP VAR_NAME EOL -> stmt_io");
+			// TODO
 		:}
 	| WRITE_LINE LPAREN expr:e RPAREN EOL
 		{:
@@ -314,8 +328,8 @@ expr
 		:}
 	| stmt_method_call
 		{:
-			// TODO;
 			Parser.l.log(Level.INFO, "stmt_method_call -> expr");
+			// TODO;
 		:}
 ;
 
@@ -334,26 +348,32 @@ expr_bool
 	| BOOL_BINOP SP stmt_method_call SP stmt_method_call
 		{:
 			Parser.l.log(Level.INFO, "BOOL_BINOP SP stmt_method_call SP stmt_method_call -> expr_bool");
+			// TODO
 		:}
-	| BOOL_BINOP SP VAR_NAME SP expr_int
+	| BOOL_BINOP:op SP VAR_NAME:v1 SP expr_int:e1
 		{:
 			Parser.l.log(Level.INFO, "BOOL_BINOP SP VAR_NAME SP expr_int -> expr_bool");
+			RESULT = logicalFactory.createBinary(op, varFactory.loadLocal(v1), e1);
 		:}
 	| BOOL_BINOP SP VAR_NAME SP stmt_method_call
 		{:
 			Parser.l.log(Level.INFO, "BOOL_BINOP SP VAR_NAME SP stmt_method_call -> expr_bool");
+			// TODO
 		:}
-	| BOOL_BINOP SP expr_int SP VAR_NAME
+	| BOOL_BINOP:op SP expr_int:e1 SP VAR_NAME:v1
 		{:
 			Parser.l.log(Level.INFO, "BOOL_BINOP SP expr_int SP VAR_NAME -> expr_bool");
+			RESULT = logicalFactory.createBinary(op, e1, varFactory.loadLocal(v1));
 		:}
 	| BOOL_BINOP SP stmt_method_call SP VAR_NAME
 		{:
 			Parser.l.log(Level.INFO, "BOOL_BINOP SP stmt_method_call SP VAR_NAME -> expr_bool");
+			// TODO
 		:}
-	| BOOL_BINOP SP VAR_NAME SP VAR_NAME
+	| BOOL_BINOP:op SP VAR_NAME:v1 SP VAR_NAME:v2
 		{:
 			Parser.l.log(Level.INFO, "BOOL_BINOP SP VAR_NAME SP VAR_NAME -> expr_bool");
+			RESULT = logicalFactory.createBinary(op, varFactory.loadLocal(v1), varFactory.loadLocal(v2));
 		:}
 	| LOGIC_BINOP:op SP expr_bool:e1 SP expr_bool:e2
 		{:
@@ -363,26 +383,32 @@ expr_bool
 	| LOGIC_BINOP SP stmt_method_call SP stmt_method_call
 		{:
 			Parser.l.log(Level.INFO, "LOGIC_BINOP SP stmt_method_call SP stmt_method_call -> expr_bool");
+			// TODO
 		:}
-	| LOGIC_BINOP SP VAR_NAME SP expr_bool
+	| LOGIC_BINOP:op SP VAR_NAME:v1 SP expr_bool:e1
 		{:
 			Parser.l.log(Level.INFO, "LOGIC_BINOP SP VAR_NAME SP expr_bool -> expr_bool");
+			RESULT = logicalFactory.createBinary(op, varFactory.loadLocal(v1), e1);
 		:}
 	| LOGIC_BINOP SP VAR_NAME SP stmt_method_call
 		{:
 			Parser.l.log(Level.INFO, "LOGIC_BINOP SP VAR_NAME SP stmt_method_call -> expr_bool");
+			// TODO
 		:}
-	| LOGIC_BINOP SP expr_bool SP VAR_NAME
+	| LOGIC_BINOP:op SP expr_bool:e1 SP VAR_NAME:v1
 		{:
 			Parser.l.log(Level.INFO, "LOGIC_BINOP SP VAR_NAME SP VAR_NAME -> expr_bool");
+			RESULT = logicalFactory.createBinary(op, e1, varFactory.loadLocal(v1));
 		:}
 	| LOGIC_BINOP SP stmt_method_call SP VAR_NAME
 		{:
 			Parser.l.log(Level.INFO, "LOGIC_BINOP SP stmt_method_call SP VAR_NAME -> expr_bool");
+			// TODO
 		:}
-	| LOGIC_BINOP SP VAR_NAME SP VAR_NAME
+	| LOGIC_BINOP:op SP VAR_NAME:v1 SP VAR_NAME:v2
 		{:
 			Parser.l.log(Level.INFO, "LOGIC_BINOP SP VAR_NAME SP VAR_NAME -> expr_bool");
+			RESULT = logicalFactory.createBinary(op, varFactory.loadLocal(v1), varFactory.loadLocal(v2));
 		:}
 	| LOGIC_UNOP_NOT:op expr_bool:e
 		{:
@@ -392,10 +418,12 @@ expr_bool
 	| LOGIC_UNOP_NOT stmt_method_call
 		{:
 			Parser.l.log(Level.INFO, "LOGILOGIC_UNOP_NOT_UNOP stmt_method_call -> expr_bool");
+			// TODO
 		:}
-	| LOGIC_UNOP_NOT VAR_NAME
+	| LOGIC_UNOP_NOT:op VAR_NAME:v1
 		{:
 			Parser.l.log(Level.INFO, "LOGICLOGIC_UNOP_NOTUNOP VAR_NAME -> expr_bool");
+			RESULT = logicalFactory.createNot(varFactory.loadLocal(v1));
 		:}
 ;
 

@@ -29,15 +29,10 @@ public class Context implements Opcodes {
             throw new RuntimeException("CANNOT START");
         }
     }
-    
-    public void addLocal(String name, Type type) {
-        // TODO: Default values
+
+    public void addLocal(String name, Type type, Function<Context, Type> value) {
         int localId = ga.newLocal(type);
         getLocalVariables().put(name, localId);
-    }
-    
-    public void addLocal(String name, Type type, Function<Context, Type> value) {
-    	addLocal(name, type);
     	assignLocal(name, value);
     }
 

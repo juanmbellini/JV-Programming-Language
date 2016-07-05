@@ -44,7 +44,7 @@ public class JvCompiler implements Opcodes {
         ClassWriter cw = new ClassWriter(COMPUTE_MAXS | COMPUTE_FRAMES);
         ComplexSymbolFactory symbolFactory = new ComplexSymbolFactory();
         cw.visit(V1_8, ACC_PUBLIC + ACC_SUPER, className, null, "java/lang/Object", null);
-        Symbol out = new Parser(new Scanner(reader, symbolFactory), symbolFactory, cw, () -> {
+        Symbol out = new Parser(new Scanner(reader, symbolFactory), symbolFactory, cw, className, () -> {
             try {
                 writeClass(className, cw);
                 generateJar(className);

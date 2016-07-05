@@ -10,7 +10,7 @@ ant compiler
 
 Para compilar un archivo .jv ejecutar, por ejemplo:
 ```
-java -jar ./dist/Compiler.jar examples/jv/primal.jv
+java -jar ./dist/Compiler.jar examples/jv/hello_world.jv
 # El resultado será un archivo jar llamado app en la raiz del proyecto
 ```
 

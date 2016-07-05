@@ -29,9 +29,9 @@ parser code {:
 	protected FunctionFactory fnFactory = new FunctionFactory();
 	protected Runnable endCallback;
 
-	public Parser(Scanner scanner, SymbolFactory factory, ClassWriter classWriter, Runnable endCallback) {
+	public Parser(Scanner scanner, SymbolFactory factory, ClassWriter classWriter, String className, Runnable endCallback) {
 		this(scanner, factory);
-		this.context = new Context(classWriter);
+		this.context = new Context(className, classWriter);
 		this.endCallback = endCallback;
 	}
 
@@ -142,7 +142,10 @@ argument_list
 	::= SP TYPE:type ASSIGN_TYPE VAR_NAME:name argument_list:pl
 		{:
 			Parser.l.log(Level.INFO, "SP TYPE ASSIGN_TYPE VAR_NAME argument_list -> argument_list");
-			pl.add(context -> type);
+			pl.add(context -> {
+				varFactory.createLocal(name, type);
+				return type;
+			});
 			RESULT = pl;
 		:}
 	| // empty
@@ -207,7 +210,7 @@ stmt
 	| stmt_method_call:s EOL
 		{:
 			Parser.l.log(Level.INFO, "stmt_method_call EOL -> stmt");
-			RESULT = context -> s.apply(context);
+			RESULT = s::apply;
 		:}
 ;
 
@@ -320,6 +323,7 @@ stmt_method_call
 	::= VAR_NAME:v LPAREN method_argument_list:mal RPAREN
 		{:
 			Parser.l.log(Level.INFO, "VAR_NAME LPAREN method_argument_list RPAREN -> stmt_method_call");
+			RESULT = fnFactory.invokeFn(v, mal);
 		:}
 ;
 
@@ -341,12 +345,12 @@ method_argument
 	::= expr:e COMMA SP
 		{:
 			Parser.l.log(Level.INFO, "expr COMMA SP -> method_argument");
-			// TODO
+			RESULT = e;
 		:}
 	| expr:e
 		{:
 			Parser.l.log(Level.INFO, "expr -> method_argument");
-			// TODO
+			RESULT = e;
 		:}
 ;
 

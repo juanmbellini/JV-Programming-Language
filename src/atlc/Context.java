@@ -13,12 +13,14 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class Context implements Opcodes {
+    private final String className;
     private final ClassWriter cw;
     private GeneratorAdapter ga = null;
     private Deque<Map<String, Integer>> localVariablesStack;
 
-    public Context(ClassWriter cw) {
+    public Context(String className, ClassWriter cw) {
         this.cw = cw;
+        this.className = className;
         this.localVariablesStack = new ArrayDeque<>();
     }
 
@@ -79,5 +81,9 @@ public class Context implements Opcodes {
     		localVariablesStack.push(new HashMap<>());
     	}
     	return localVariablesStack.peekFirst();
+    }
+
+    public Type getClassType() {
+        return Type.getObjectType(this.className);
     }
 }

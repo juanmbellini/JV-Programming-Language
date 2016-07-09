@@ -1,3 +1,6 @@
+~ NOTE: There's an error running this example. It must be due to the bytecode generator making a mistake
+~ when trying to load a different local from the one being requested (Type mismatch).
+
 w("Ingrese el numero que quiere saber si es primo: ")
 int:nro
 rl(nro)

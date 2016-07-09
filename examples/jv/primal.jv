@@ -6,7 +6,7 @@ int:nro
 rl(nro)
 
 if == nro 2
-	wl("Es primo")
+	wl("Prime")
 	exit
 
 if || < nro 2 == % nro 2 0
@@ -51,8 +51,8 @@ int:i = 1
 whl < i nro_sqrt
 	i = + 2 i
 	if == 0 % nro i
-		wl("No es primo")
+		wl("Not prime")
 		exit
-wl("Es primo")
+wl("Prime")
 
 

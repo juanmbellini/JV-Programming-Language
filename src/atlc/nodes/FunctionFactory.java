@@ -105,7 +105,7 @@ public final class FunctionFactory {
 
     public Function<Context, Type> invokeFn(
             String name,
-            Function<Context, List<Type>> arguments
+            List<Function<Context, Type>> arguments
     ) {
         // TODO invoke pushing arguments.
         return context -> Type.VOID_TYPE;

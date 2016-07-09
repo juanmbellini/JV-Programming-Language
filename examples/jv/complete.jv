@@ -1,3 +1,6 @@
+~ NOTE: This is just to test the whole grammar parsing.
+~ Running this example won't work since functions aren't implemented
+
 ~ Grammar check
 fn:int fibonacci int:n
 	if <= n 1

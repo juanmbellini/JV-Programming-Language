@@ -5,7 +5,7 @@ Los programas ejemplos se encuentran dentro de examples/jv/
 
 Para compilar el compilador ejecutar:
 ```
-ant compiler
+ant jar
 ```
 
 Para compilar un archivo .jv ejecutar, por ejemplo:

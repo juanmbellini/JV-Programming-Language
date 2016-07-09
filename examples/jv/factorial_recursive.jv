@@ -1,3 +1,5 @@
+~ NOTE: Doesn't work since we didn't finish implementing functions with parameters
+
 fn:int factorial int:numero
 	if || == numero 0 == numero 1
 		ret 1

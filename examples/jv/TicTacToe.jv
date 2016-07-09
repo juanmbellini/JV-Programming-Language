@@ -1,3 +1,6 @@
+~ NOTE: Doesn't work since we couldn't finish implementing functions with parameters
+
+
 ~ Prints the board according to the variables passed to it
 fn:int print_board int:var1 int:var2 int:var3 int:var4 int:var5 int:var6 int:var7 int:var8 int:var9
 	

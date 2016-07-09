@@ -13,46 +13,46 @@ if || < nro 2 == % nro 2 0
 	wl("Not prime")
 	exit 1
 
-if <= nro 0
-	wl("Negatives aren't prime")
-	exit 0
+~ START int sqrt
 
-~ Calculates the square root of nro
-int:nro_sqrt = 1
-whl <= * 4 * nro_sqrt nro_sqrt nro
-	nro_sqrt = * 2 nro_sqrt
+int:sqrt = 1
 
-int:left = nro_sqrt
-int:right = * 2 nro_sqrt
+~ Exponential search
+whl > nro * 4 * sqrt sqrt
+	sqrt = * 2 sqrt
+
+int:left = sqrt
+int:right = * 2 sqrt
 int:middle = 0
 
-bln:flag = NO
-
-whl < left right
+bln:searching = YES
+~ Do the binary search over the range that is guaranteed to contain
+~ the integer square root.
+whl && searching < left right
 	middle = + left / - right left 2
 
 	if < * middle middle nro
-		left = + middle 1
+		left = + 1 middle
 	ls
 		if > * middle middle nro
-			right = - middle 1
+			right = - 1 middle
 		ls
-			nro_sqrt = middle
-			flag = YES
+			searching = NO
 
-if !flag
-	int:nro_sqrt = + middle 1
-	whl > * nro_sqrt nro_sqrt nro
-		nro_sqrt = - nro_sqrt 1
+~ Correct the binary search "noise". This iterates no more than 3 times.
+int:nro_sqrt = + 1 middle
 
+whl > * nro_sqrt nro_sqrt nro
+	nro_sqrt = - nro_sqrt 1
 
-int:i = 3
-whl < 1 nro_sqrt
-	if == % nro i 0
+~ END sqrt
+
+int:i = 1
+whl < i nro_sqrt
+	i = + 2 i
+	if == 0 % nro i
 		wl("No es primo")
 		exit
-
 wl("Es primo")
-
 
 
